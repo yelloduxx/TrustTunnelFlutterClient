@@ -4,7 +4,7 @@
 
 из корневой папки проекта:
 
-flutter pub get
+make init
 
 из папки плагина plugins/vpn_plugin:
 
