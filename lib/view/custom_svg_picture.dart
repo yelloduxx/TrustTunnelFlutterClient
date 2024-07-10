@@ -1,6 +1,6 @@
-import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:vpn/common/extensions/context_extensions.dart';
 
 class CustomSvgPicture extends StatelessWidget {
   final String icon;

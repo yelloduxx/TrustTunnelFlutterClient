@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/extensions/theme_extensions.dart';
 import 'package:vpn/view/hover_theme_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class FilledButtonSvg extends StatelessWidget {
   final String icon;

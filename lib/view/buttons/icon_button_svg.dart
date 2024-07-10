@@ -1,6 +1,6 @@
-import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:vpn/common/extensions/context_extensions.dart';
 
 class IconButtonSvg extends StatefulWidget {
   final String icon;

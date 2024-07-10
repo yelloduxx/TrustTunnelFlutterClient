@@ -1,7 +1,7 @@
-import 'package:vpn/common/extensions/context_extensions.dart';
-import 'package:vpn/view/hover_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:vpn/common/extensions/context_extensions.dart';
+import 'package:vpn/view/hover_theme_provider.dart';
 
 enum FloatingActionButtonSvgType { extended, standart, small, large }
 

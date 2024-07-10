@@ -1,7 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:vpn/di/factory/bloc_factory.dart';
 import 'package:vpn/di/factory/dependency_factory.dart';
 import 'package:vpn/di/factory/repository_factory.dart';
-import 'package:flutter/widgets.dart';
 
 class DependencyScope extends StatefulWidget {
   final DependencyFactory dependenciesFactory;

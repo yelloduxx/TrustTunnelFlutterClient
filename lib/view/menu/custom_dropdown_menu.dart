@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/extensions/theme_extensions.dart';
-import 'package:flutter/material.dart';
 
 class CustomDropdownMenu<T> extends StatelessWidget {
   final bool expanded;

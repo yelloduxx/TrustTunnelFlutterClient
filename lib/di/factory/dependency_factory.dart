@@ -1,5 +1,5 @@
-import 'package:vpn/common/theme/light_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:vpn/common/theme/light_theme.dart';
 
 abstract class DependencyFactory {
   ThemeData get lightThemeData;

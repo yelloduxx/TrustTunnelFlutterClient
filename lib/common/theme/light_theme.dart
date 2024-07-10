@@ -1,8 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vpn/common/assets/asset_icons.dart';
 import 'package:vpn/common/assets/font_families.dart';
 import 'package:vpn/common/extensions/theme_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class LightTheme {
   static const _primary1 = Color(0xFF67B279);
@@ -85,8 +85,7 @@ class LightTheme {
         menuTheme: _menuThemeData,
         popupMenuTheme: _popupMenuThemeData,
         datePickerTheme: _datePickerThemeData,
-        drawerTheme: _drawerThemeData,
-        navigationDrawerTheme: _navigationDrawerThemeData,
+        navigationBarTheme: _navigationBarThemeData,
         appBarTheme: _appBarTheme,
         progressIndicatorTheme: _progressIndicatorThemeData,
         inputDecorationTheme: _inputDecorationTheme,
@@ -697,17 +696,9 @@ class LightTheme {
     centerTitle: true,
   );
 
-  late final _drawerThemeData = const DrawerThemeData(
-    backgroundColor: _background1,
-    surfaceTintColor: _staticWhite,
-    shape: Border(),
-    width: 314,
-  );
-
-  late final _navigationDrawerThemeData = const NavigationDrawerThemeData(
-    backgroundColor: _background1,
-    surfaceTintColor: _staticWhite,
-    indicatorColor: _blend1,
+  late final _navigationBarThemeData = const NavigationBarThemeData(
+    backgroundColor: _background2,
+    indicatorColor: _blend2,
   );
 
   late final _popupMenuThemeData = PopupMenuThemeData(
@@ -957,7 +948,7 @@ class LightTheme {
   );
 
   late final _navigationRailThemeData = NavigationRailThemeData(
-    indicatorColor: _blend1,
+    indicatorColor: _blend2,
     unselectedLabelTextStyle: _textTheme.labelMedium,
     selectedLabelTextStyle: _textTheme.labelMedium,
     backgroundColor: _background2,

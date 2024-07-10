@@ -1,7 +1,7 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:vpn/di/factory/bloc_factory.dart';
 import 'package:vpn/di/factory/dependency_factory.dart';
 import 'package:vpn/di/factory/repository_factory.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'initialization_result.freezed.dart';
 
