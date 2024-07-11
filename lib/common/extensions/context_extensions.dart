@@ -48,4 +48,9 @@ extension SnackBarExtension on BuildContext {
 
 extension NavigatorExtension on BuildContext {
   void pop() => Navigator.of(this).pop();
+
+  Future<T?> pushReplacement<T extends Object?, TO extends Object?>(Widget widget) =>
+      Navigator.of(this).pushReplacement(CommonUtils.getRoute(widget));
+
+  Future<T?> push<T extends Object?>(Widget widget) => Navigator.of(this).push(CommonUtils.getRoute(widget));
 }

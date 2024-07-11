@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vpn/data/model/breakpoint.dart';
 
@@ -18,4 +19,14 @@ class CommonUtils {
       };
 
   static Breakpoint getBreakpoint() => getBreakpointByWidth(getScreenWidth());
+
+  static Route<T> getRoute<T>(Widget widget) => kIsWeb
+      ? PageRouteBuilder<T>(
+          pageBuilder: (context, animation, secondaryAnimation) => widget,
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        )
+      : MaterialPageRoute<T>(
+          builder: (_) => widget,
+        );
 }

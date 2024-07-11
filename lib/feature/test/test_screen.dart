@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:vpn_plugin/api.dart';
 
-class TestWidget extends StatefulWidget {
-  const TestWidget({super.key});
+class TestScreen extends StatefulWidget {
+  const TestScreen({super.key});
 
   @override
-  State<TestWidget> createState() => _TestWidgetState();
+  State<TestScreen> createState() => _TestScreenState();
 }
 
-class _TestWidgetState extends State<TestWidget> {
+class _TestScreenState extends State<TestScreen> {
   final _api = PlatformApi();
 
   @override

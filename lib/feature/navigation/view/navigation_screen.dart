@@ -4,6 +4,10 @@ import 'package:vpn/common/assets/asset_icons.dart';
 import 'package:vpn/common/extensions/common_extensions.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/feature/navigation/view/widgets/custom_navigation_rail.dart';
+import 'package:vpn/feature/routers/routers_screen.dart';
+import 'package:vpn/feature/servers/servers_screen/servers_screen.dart';
+import 'package:vpn/feature/settings/settings_screen.dart';
+import 'package:vpn/feature/test/test_screen.dart';
 import 'package:vpn/view/custom_svg_picture.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -15,7 +19,7 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   late final ValueNotifier<int> _selectedTabNotifier;
-  final _contentKey = GlobalKey();
+  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -55,15 +59,38 @@ class _NavigationScreenState extends State<NavigationScreen> {
             : null,
       );
 
-  Widget _getContent() => Container(
-        color: Colors.white,
+  Widget _getContent() => Navigator(
+        key: _navigatorKey,
+        onGenerateInitialRoutes: (_, __) => [
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => const ServersScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+        ],
       );
 
   void _onDestinationSelected(int selectedIndex) {
     if (_selectedTabNotifier.value != selectedIndex) {
       _selectedTabNotifier.value = selectedIndex;
+
+      _navigatorKey.currentState!.pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => getScreenByIndex(selectedIndex),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
+      );
     }
   }
+
+  Widget getScreenByIndex(int selectedIndex) => switch (selectedIndex) {
+        0 => const ServersScreen(),
+        1 => const RoutersScreen(),
+        2 => const SettingsScreen(),
+        3 => const TestScreen(),
+        _ => throw Exception('Invalid index: $selectedIndex'),
+      };
 
   List<Map<String, String>> get destinations => [
         {
