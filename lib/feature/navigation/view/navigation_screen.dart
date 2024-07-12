@@ -1,14 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:vpn/common/assets/asset_icons.dart';
-import 'package:vpn/common/extensions/common_extensions.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
+import 'package:vpn/feature/navigation/view/common/navigation_screen_utils.dart';
 import 'package:vpn/feature/navigation/view/widgets/custom_navigation_rail.dart';
 import 'package:vpn/feature/routers/routers_screen.dart';
 import 'package:vpn/feature/servers/servers_screen/servers_screen.dart';
 import 'package:vpn/feature/settings/settings_screen.dart';
 import 'package:vpn/feature/test/test_screen.dart';
-import 'package:vpn/view/custom_svg_picture.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -29,6 +26,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        backgroundColor: context.colors.background2,
         body: context.isMobileBreakpoint
             ? _getContent()
             : Row(
@@ -39,7 +37,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     builder: (context, index, _) => CustomNavigationRail(
                       selectedIndex: index,
                       onDestinationSelected: _onDestinationSelected,
-                      destinations: _getNavigationRailDestinations(context),
+                      destinations: NavigationScreenUtils.getNavigationRailDestinations(context),
                     ),
                   ),
                   Expanded(
@@ -53,7 +51,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 builder: (context, index, _) => NavigationBar(
                   selectedIndex: index,
                   onDestinationSelected: _onDestinationSelected,
-                  destinations: _getBottomNavigationDestinations(context),
+                  destinations: NavigationScreenUtils.getBottomNavigationDestinations(context),
                 ),
               )
             : null,
@@ -91,59 +89,4 @@ class _NavigationScreenState extends State<NavigationScreen> {
         3 => const TestScreen(),
         _ => throw Exception('Invalid index: $selectedIndex'),
       };
-
-  List<Map<String, String>> get destinations => [
-        {
-          'icon': AssetIcons.add,
-          'label': 'Servers',
-        },
-        {
-          'icon': AssetIcons.error,
-          'label': 'Routing',
-        },
-        {
-          'icon': AssetIcons.cancel,
-          'label': 'Settings',
-        },
-        if (kDebugMode)
-          {
-            'icon': AssetIcons.arrowBack,
-            'label': 'Test',
-          },
-      ];
-
-  List<NavigationRailDestination> _getNavigationRailDestinations(
-    BuildContext context,
-  ) =>
-      destinations
-          .map(
-            (e) => NavigationRailDestination(
-              icon: CustomSvgPicture(
-                icon: e['icon'].toString(),
-                size: 24,
-                color: context.colors.contrast1,
-              ),
-              label: Text(
-                e['label'].toString(),
-                textAlign: TextAlign.center,
-              ).labelMedium(context),
-            ),
-          )
-          .toList();
-
-  List<NavigationDestination> _getBottomNavigationDestinations(
-    BuildContext context,
-  ) =>
-      destinations
-          .map(
-            (e) => NavigationDestination(
-              icon: CustomSvgPicture(
-                icon: e['icon'].toString(),
-                size: 24,
-                color: context.colors.contrast1,
-              ),
-              label: e['label'].toString(),
-            ),
-          )
-          .toList();
 }

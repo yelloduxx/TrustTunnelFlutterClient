@@ -50,7 +50,7 @@ class LightTheme {
         ],
 
         // COLOR
-        scaffoldBackgroundColor: _background2,
+        scaffoldBackgroundColor: _staticTransparent,
         brightness: Brightness.light,
         primaryColor: _primary1,
         colorScheme: _colorScheme,

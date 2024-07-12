@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:vpn/view/scaffold_wrapper.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
+  Widget build(BuildContext context) => ScaffoldWrapper(
+    child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Settings'),
+          ),
+          body: const Center(
+            child: Text('Settings'),
+          ),
         ),
-        body: const Center(
-          child: Text('Settings'),
-        ),
-      );
+  );
 }

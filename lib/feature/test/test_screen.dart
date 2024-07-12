@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vpn/view/scaffold_wrapper.dart';
 import 'package:vpn_plugin/api.dart';
 
 class TestScreen extends StatefulWidget {
@@ -12,14 +13,16 @@ class _TestScreenState extends State<TestScreen> {
   final _api = PlatformApi();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Test widget'),
-        ),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: _getPlatformType,
-            child: const Text('Get platform version'),
+  Widget build(BuildContext context) => ScaffoldWrapper(
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Test widget'),
+          ),
+          body: Center(
+            child: ElevatedButton(
+              onPressed: _getPlatformType,
+              child: const Text('Get platform version'),
+            ),
           ),
         ),
       );
