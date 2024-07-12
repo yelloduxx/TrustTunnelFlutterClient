@@ -3,21 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:vpn/common/assets/asset_icons.dart';
 import 'package:vpn/common/extensions/common_extensions.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
+import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/view/custom_svg_picture.dart';
 
 abstract class NavigationScreenUtils {
-  static List<Map<String, String>> get destinations => [
+  static List<Map<String, String>> getDestinations(BuildContext context) => [
         {
           'icon': AssetIcons.add,
-          'label': 'Servers',
+          'label': context.ln.servers,
         },
         {
           'icon': AssetIcons.error,
-          'label': 'Routing',
+          'label': context.ln.routing,
         },
         {
           'icon': AssetIcons.cancel,
-          'label': 'Settings',
+          'label': context.ln.settings,
         },
         if (kDebugMode)
           {
@@ -29,7 +30,7 @@ abstract class NavigationScreenUtils {
   static List<NavigationRailDestination> getNavigationRailDestinations(
     BuildContext context,
   ) =>
-      destinations
+      getDestinations(context)
           .map(
             (e) => NavigationRailDestination(
               icon: CustomSvgPicture(
@@ -48,7 +49,7 @@ abstract class NavigationScreenUtils {
   static List<NavigationDestination> getBottomNavigationDestinations(
     BuildContext context,
   ) =>
-      destinations
+      getDestinations(context)
           .map(
             (e) => NavigationDestination(
               icon: CustomSvgPicture(

@@ -43,6 +43,7 @@ app.*.map.json
 /android/app/release
 
 # Codegen
+lib/common/localization/generated/
 **.freezed.dart
 **.g.dart
 **.g.kt
