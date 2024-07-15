@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/feature/navigation/view/common/navigation_screen_utils.dart';
 import 'package:vpn/feature/navigation/view/widgets/custom_navigation_rail.dart';
-import 'package:vpn/feature/routers/routers_screen.dart';
-import 'package:vpn/feature/servers/servers_screen/servers_screen.dart';
+import 'package:vpn/feature/routing/routing/view/routing_screen.dart';
+import 'package:vpn/feature/server/servers/servers_screen.dart';
 import 'package:vpn/feature/settings/settings_screen.dart';
 import 'package:vpn/feature/test/test_screen.dart';
 
@@ -15,14 +15,8 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
-  late final ValueNotifier<int> _selectedTabNotifier;
+  final ValueNotifier<int> _selectedTabNotifier = ValueNotifier(0);
   final _navigatorKey = GlobalKey<NavigatorState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedTabNotifier = ValueNotifier(0);
-  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -84,7 +78,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   Widget getScreenByIndex(int selectedIndex) => switch (selectedIndex) {
         0 => const ServersScreen(),
-        1 => const RoutersScreen(),
+        1 => const RoutingScreen(),
         2 => const SettingsScreen(),
         3 => const TestScreen(),
         _ => throw Exception('Invalid index: $selectedIndex'),

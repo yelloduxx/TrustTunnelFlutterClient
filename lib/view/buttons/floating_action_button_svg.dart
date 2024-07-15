@@ -67,7 +67,6 @@ class FloatingActionButtonSvg extends StatelessWidget {
           : FloatingActionButton(onPressed: onPressed, child: svgIcon),
       FloatingActionButtonSvgType.small => FloatingActionButton.small(onPressed: onPressed, child: svgIcon),
       FloatingActionButtonSvgType.large => FloatingActionButton.large(onPressed: onPressed, child: svgIcon),
-      _ => FloatingActionButton(onPressed: onPressed, child: svgIcon)
     };
 
     return HoverThemeProvider(child: button);

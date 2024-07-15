@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
-import 'package:vpn/feature/servers/server_details/server_details_screen.dart';
+import 'package:vpn/common/localization/localization.dart';
+import 'package:vpn/feature/server/server_details/server_details_screen.dart';
 import 'package:vpn/view/scaffold_wrapper.dart';
 
 class ServersScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class ServersScreen extends StatelessWidget {
   Widget build(BuildContext context) => ScaffoldWrapper(
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Servers'),
+            title: Text(context.ln.servers),
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
