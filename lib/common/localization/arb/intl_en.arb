@@ -27,6 +27,22 @@
   "editProfile": "Edit profile",
   "deleteProfile": "Delete profile",
   "addProfile": "Add profile",
+  "enterRulesHint": "Routing rules can be of the following types:\n- Domains of any level\n- IP address\n- IP address with port\n- IP address with a mask",
+  "changeDefaultRoutingMode": "Change default routing",
+  "deleteAllRules": "Delete all rules",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "deleteAllRulesDialogDescription": "All rules from {profileName} will be deleted",
+  "@deleteAllRulesDialogDescription": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
+  "changeDefaultRoutingModeDialogDescription": "All traffic will be routed by default according to this rule",
+  "discardChanges": "Discard changes",
+  "discardChangesDialogDescription": "Are you sure you want to discard all changes?",
   "queryLog": "Query log",
   "excludedRoutes": "Excluded routes",
   "followUsOnGithub": "Follow us on Github",

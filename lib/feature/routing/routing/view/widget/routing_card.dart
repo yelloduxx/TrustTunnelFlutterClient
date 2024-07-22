@@ -6,6 +6,7 @@ import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/data/model/routing_profile.dart';
 import 'package:vpn/feature/routing/routing/bloc/routing_bloc.dart';
+import 'package:vpn/feature/routing/routing_details/view/routing_details_screen.dart';
 import 'package:vpn/view/common/custom_radio_list_tile.dart';
 import 'package:vpn/view/custom_svg_picture.dart';
 
@@ -83,9 +84,11 @@ class RoutingCard extends StatelessWidget {
         ),
       );
 
-  void _onEditProfile(BuildContext context) {
-    // TODO implement edit profile
-  }
+  void _onEditProfile(BuildContext context) => context.push(
+        RoutingDetailsScreen(
+          routingId: routingProfile.id,
+        ),
+      );
 
   void _onDeleteProfile(BuildContext context) {
     // TODO implement delete profile

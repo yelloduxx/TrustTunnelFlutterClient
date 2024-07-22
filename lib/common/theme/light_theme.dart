@@ -97,6 +97,7 @@ class LightTheme {
         cardTheme: _cardTheme,
         expansionTileTheme: _expansionTileTheme,
         buttonTheme: _buttonTheme,
+        tabBarTheme: _tabBarTheme,
       );
 
   late final _customColors = const CustomColors(
@@ -292,8 +293,10 @@ class LightTheme {
   late final _checkboxThemeData = CheckboxThemeData(
     fillColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) return _primary1;
-        if (states.contains(WidgetState.selected) && states.contains(WidgetState.disabled)) return _primary4;
+        if (states.contains(WidgetState.selected) &&
+            !states.contains(WidgetState.disabled)) return _primary1;
+        if (states.contains(WidgetState.selected) &&
+            states.contains(WidgetState.disabled)) return _primary4;
         return null;
       },
     ),
@@ -302,10 +305,12 @@ class LightTheme {
     ),
     side: WidgetStateBorderSide.resolveWith(
       (states) {
-        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
+        if (!states.contains(WidgetState.selected) &&
+            !states.contains(WidgetState.disabled)) {
           return const BorderSide(width: 2, color: _gray1);
         }
-        if (!states.contains(WidgetState.selected) && states.contains(WidgetState.disabled)) {
+        if (!states.contains(WidgetState.selected) &&
+            states.contains(WidgetState.disabled)) {
           return const BorderSide(width: 2, color: _gray4);
         }
         return null;
@@ -313,7 +318,8 @@ class LightTheme {
     ),
     overlayColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+        if (states.contains(WidgetState.hovered) ||
+            states.contains(WidgetState.focused)) return _background2;
         return null;
       },
     ),
@@ -335,14 +341,16 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.disabled)) return _staticTransparent;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _background2;
           if (states.contains(WidgetState.pressed)) return _background3;
           return null;
         },
       ),
       mouseCursor: WidgetStateProperty.resolveWith(
         (states) {
-          if (states.contains(WidgetState.disabled)) return SystemMouseCursors.basic;
+          if (states.contains(WidgetState.disabled))
+            return SystemMouseCursors.basic;
           return null;
         },
       ),
@@ -361,7 +369,8 @@ class LightTheme {
     ),
     overlayColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+        if (states.contains(WidgetState.hovered) ||
+            states.contains(WidgetState.focused)) return _background2;
         if (states.contains(WidgetState.pressed)) return _background3;
         return null;
       },
@@ -387,8 +396,10 @@ class LightTheme {
   late final _switchThemeData = SwitchThemeData(
     trackColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.disabled) && states.contains(WidgetState.selected)) return _primary4;
-        if (states.contains(WidgetState.disabled) && !states.contains(WidgetState.selected)) return _background2;
+        if (states.contains(WidgetState.disabled) &&
+            states.contains(WidgetState.selected)) return _primary4;
+        if (states.contains(WidgetState.disabled) &&
+            !states.contains(WidgetState.selected)) return _background2;
         if (!states.contains(WidgetState.selected)) return _background2;
         return _primary1;
       },
@@ -397,7 +408,8 @@ class LightTheme {
       (states) {
         if (states.contains(WidgetState.selected)) return _staticWhite;
         if (states.contains(WidgetState.disabled)) return _contrast4;
-        if (states.contains(WidgetState.focused) || states.contains(WidgetState.focused)) return _contrast2;
+        if (states.contains(WidgetState.focused) ||
+            states.contains(WidgetState.focused)) return _contrast2;
         if (states.contains(WidgetState.pressed)) return _contrast3;
         return _contrast1;
       },
@@ -412,7 +424,8 @@ class LightTheme {
     trackOutlineColor: WidgetStateProperty.resolveWith(
       (states) {
         if (!states.contains(WidgetState.selected)) {
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _contrast2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _contrast2;
           if (states.contains(WidgetState.disabled)) return _contrast4;
           return _contrast1;
         }
@@ -466,7 +479,8 @@ class LightTheme {
         overlayColor: WidgetStateProperty.resolveWith(
           (states) {
             if (states.contains(WidgetState.pressed)) return _red3;
-            if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _red2;
+            if (states.contains(WidgetState.hovered) ||
+                states.contains(WidgetState.focused)) return _red2;
             return null;
           },
         ),
@@ -483,7 +497,8 @@ class LightTheme {
         overlayColor: WidgetStateProperty.resolveWith(
           (states) {
             if (states.contains(WidgetState.pressed)) return _orange3;
-            if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _orange2;
+            if (states.contains(WidgetState.hovered) ||
+                states.contains(WidgetState.focused)) return _orange2;
             return null;
           },
         ),
@@ -559,7 +574,8 @@ class LightTheme {
         side: const WidgetStatePropertyAll(BorderSide.none),
         textStyle: WidgetStateProperty.resolveWith(
           (states) {
-            final decorationColor = states.contains(WidgetState.disabled) ? _primary4 : _primary1;
+            final decorationColor =
+                states.contains(WidgetState.disabled) ? _primary4 : _primary1;
 
             return _textTheme.bodyMedium!.copyWith(
               decoration: TextDecoration.underline,
@@ -578,7 +594,8 @@ class LightTheme {
     iconButton: _textButtonThemeData,
   );
 
-  late final _elevatedButtonTheme = ElevatedButtonThemeData(style: _filledButtonTheme.style);
+  late final _elevatedButtonTheme =
+      ElevatedButtonThemeData(style: _filledButtonTheme.style);
 
   late final _filledButtonTheme = FilledButtonThemeData(
     style: ButtonStyle(
@@ -597,7 +614,8 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.pressed)) return _primary3;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _primary2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _primary2;
           return null;
         },
       ),
@@ -625,7 +643,8 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.pressed)) return _background3;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _background2;
           return null;
         },
       ),
@@ -644,7 +663,8 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.pressed)) return _background3;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _background2;
           return _staticTransparent;
         },
       ),
@@ -669,12 +689,14 @@ class LightTheme {
       (states) {
         if (states.contains(WidgetState.selected)) {
           if (states.contains(WidgetState.pressed)) return _blend3;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _blend2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _blend2;
           if (states.contains(WidgetState.disabled)) return _blend2;
           return _blend1;
         } else {
           if (states.contains(WidgetState.pressed)) return _background3;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _background2;
           if (states.contains(WidgetState.disabled)) return _background2;
           return _background1;
         }
@@ -810,7 +832,8 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.disabled)) return _staticTransparent;
-          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) ||
+              states.contains(WidgetState.focused)) return _background2;
           if (states.contains(WidgetState.pressed)) return _background3;
           return null;
         },
@@ -925,7 +948,8 @@ class LightTheme {
         return _textTheme.bodySmall!;
       },
     ),
-    counterStyle: WidgetStateTextStyle.resolveWith((states) => _textTheme.bodySmall!),
+    counterStyle:
+        WidgetStateTextStyle.resolveWith((states) => _textTheme.bodySmall!),
     contentPadding: const EdgeInsets.only(top: 16, bottom: 16, left: 16),
     floatingLabelBehavior: FloatingLabelBehavior.always,
     focusColor: _background2,
@@ -1022,5 +1046,16 @@ class LightTheme {
         ),
       ),
     ),
+  );
+
+  late final _tabBarTheme = TabBarTheme(
+    labelColor: _primary1,
+    unselectedLabelColor: _contrast1,
+    indicatorColor: _primary1,
+    labelPadding: const EdgeInsets.symmetric(
+      vertical: 12,
+      horizontal: 16,
+    ),
+    labelStyle: _textTheme.titleSmall,
   );
 }

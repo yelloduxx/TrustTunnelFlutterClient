@@ -1,4 +1,3 @@
-
 enum RoutingMode {
   bypass(value: 1),
   vpn(value: 2),
@@ -11,7 +10,7 @@ enum RoutingMode {
   @override
   String toString() {
     return switch (this) {
-      RoutingMode.bypass => 'BYPASS',
+      RoutingMode.bypass => 'Bypass',
       RoutingMode.vpn => 'VPN',
     };
   }
