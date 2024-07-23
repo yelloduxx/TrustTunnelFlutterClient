@@ -136,7 +136,8 @@ class CustomColors extends ThemeExtension<CustomColors> {
       );
 
   @override
-  ThemeExtension<CustomColors> lerp(covariant ThemeExtension<CustomColors>? other, double t) {
+  ThemeExtension<CustomColors> lerp(
+      covariant ThemeExtension<CustomColors>? other, double t) {
     if (other is! CustomColors) {
       return this;
     }
@@ -172,7 +173,8 @@ class CustomColors extends ThemeExtension<CustomColors> {
       staticBlack2: Color.lerp(staticBlack2, other.staticBlack2, t)!,
       staticBlack3: Color.lerp(staticBlack3, other.staticBlack3, t)!,
       staticWhite: Color.lerp(staticWhite, other.staticWhite, t)!,
-      staticTransparent: Color.lerp(staticTransparent, other.staticTransparent, t)!,
+      staticTransparent:
+          Color.lerp(staticTransparent, other.staticTransparent, t)!,
     );
   }
 }
@@ -217,7 +219,8 @@ class CustomFilledButtonTheme extends ThemeExtension<CustomFilledButtonTheme> {
   }
 }
 
-class CustomElevatedButtonTheme extends ThemeExtension<CustomElevatedButtonTheme> {
+class CustomElevatedButtonTheme
+    extends ThemeExtension<CustomElevatedButtonTheme> {
   final ElevatedButtonThemeData iconButton;
 
   const CustomElevatedButtonTheme({required this.iconButton});
@@ -245,7 +248,8 @@ class CustomElevatedButtonTheme extends ThemeExtension<CustomElevatedButtonTheme
   }
 }
 
-class CustomOutlinedButtonTheme extends ThemeExtension<CustomOutlinedButtonTheme> {
+class CustomOutlinedButtonTheme
+    extends ThemeExtension<CustomOutlinedButtonTheme> {
   final OutlinedButtonThemeData iconButton;
 
   const CustomOutlinedButtonTheme({required this.iconButton});
@@ -318,7 +322,8 @@ class CustomTextButtonTheme extends ThemeExtension<CustomTextButtonTheme> {
       attention: TextButtonThemeData.lerp(attention, other.attention, t)!,
       success: TextButtonThemeData.lerp(success, other.success, t)!,
       iconButton: TextButtonThemeData.lerp(iconButton, other.iconButton, t)!,
-      inlineButton: TextButtonThemeData.lerp(inlineButton, other.inlineButton, t)!,
+      inlineButton:
+          TextButtonThemeData.lerp(inlineButton, other.inlineButton, t)!,
     );
   }
 }
@@ -360,17 +365,21 @@ class CustomDropdownMenuTheme extends ThemeExtension<CustomDropdownMenuTheme> {
 class CustomFilledIconButtonTheme
     extends ThemeExtension<CustomFilledIconButtonTheme> {
   final IconButtonThemeData iconButton;
+  final IconButtonThemeData iconButtonInProgress;
 
   const CustomFilledIconButtonTheme({
     required this.iconButton,
+    required this.iconButtonInProgress,
   });
 
   @override
   ThemeExtension<CustomFilledIconButtonTheme> copyWith({
     IconButtonThemeData? iconButton,
+    IconButtonThemeData? iconButtonInProgress,
   }) =>
       CustomFilledIconButtonTheme(
         iconButton: iconButton ?? this.iconButton,
+        iconButtonInProgress: iconButtonInProgress ?? this.iconButtonInProgress,
       );
 
   @override
@@ -384,6 +393,8 @@ class CustomFilledIconButtonTheme
 
     return CustomFilledIconButtonTheme(
       iconButton: IconButtonThemeData.lerp(iconButton, other.iconButton, t)!,
+      iconButtonInProgress: IconButtonThemeData.lerp(
+          iconButtonInProgress, other.iconButtonInProgress, t)!,
     );
   }
 }

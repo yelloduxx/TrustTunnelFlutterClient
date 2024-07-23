@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/data/model/server.dart';
+import 'package:vpn/data/model/vpn_manager_state.dart';
 import 'package:vpn/feature/server/server_details/view/server_details_screen.dart';
 import 'package:vpn/feature/server/servers/view/widget/servers_card_connection_button.dart';
 
@@ -56,7 +57,7 @@ class ServersCard extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: ServersCardConnectionButton(
                 // TODO use real connection info
-                isActive: true,
+                vpnManagerState: VpnManagerState.disconnected,
                 server: server,
               ),
             ),

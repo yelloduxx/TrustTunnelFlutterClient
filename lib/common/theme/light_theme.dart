@@ -1046,6 +1046,18 @@ class LightTheme {
         ),
       ),
     ),
+    iconButtonInProgress: IconButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith(
+          (states) {
+            if (states.contains(WidgetState.selected)) {
+              return _primary4;
+            }
+            return _gray1;
+          },
+        ),
+      ),
+    ),
   );
 
   late final _tabBarTheme = TabBarTheme(
