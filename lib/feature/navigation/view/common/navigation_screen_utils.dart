@@ -9,15 +9,15 @@ import 'package:vpn/view/custom_svg_picture.dart';
 abstract class NavigationScreenUtils {
   static List<Map<String, String>> getDestinations(BuildContext context) => [
         {
-          'icon': AssetIcons.add,
+          'icon': AssetIcons.dns,
           'label': context.ln.servers,
         },
         {
-          'icon': AssetIcons.error,
+          'icon': AssetIcons.route,
           'label': context.ln.routing,
         },
         {
-          'icon': AssetIcons.cancel,
+          'icon': AssetIcons.settings,
           'label': context.ln.settings,
         },
         if (kDebugMode)
