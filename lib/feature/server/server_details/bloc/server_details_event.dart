@@ -11,10 +11,13 @@ class ServerDetailsEvent with _$ServerDetailsEvent {
     String? username,
     String? password,
     VpnProtocol? protocol,
-    // TODO add routingProfile
-    // RoutingProfile routingProfile,
+    int? routingProfileId,
     List<String>? dnsServers,
   }) = _DataChanged;
 
   const factory ServerDetailsEvent.submit() = _Submit;
+
+  const factory ServerDetailsEvent.delete() = _Delete;
+
+  const factory ServerDetailsEvent.profilesLoaded({required List<RoutingProfile> profiles}) = _ProfilesLoaded;
 }

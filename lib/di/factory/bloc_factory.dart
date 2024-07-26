@@ -27,11 +27,14 @@ class BlocFactoryImpl implements BlocFactory {
         _repositoryFactory = repositoryFactory;
 
   @override
-  RoutingBloc routingBloc() => RoutingBloc();
+  RoutingBloc routingBloc() => RoutingBloc(
+        routingRepository: _repositoryFactory.routingRepository,
+      );
 
   @override
   ServersBloc serversBloc() => ServersBloc(
         serverRepository: _repositoryFactory.serverRepository,
+        vpnService: _serviceFactory.vpnService,
       );
 
   @override
@@ -41,6 +44,7 @@ class BlocFactoryImpl implements BlocFactory {
       ServerDetailsBloc(
         serverId: serverId,
         serverRepository: _repositoryFactory.serverRepository,
+        routingRepository: _repositoryFactory.routingRepository,
         serverDetailsService: _serviceFactory.serverDetailsService,
       );
 
@@ -50,6 +54,8 @@ class BlocFactoryImpl implements BlocFactory {
   }) =>
       RoutingDetailsBloc(
         routingId: routingId,
+        routingRepository: _repositoryFactory.routingRepository,
+        routingDetailsService: _serviceFactory.routingDetailsService,
       );
 
   @override

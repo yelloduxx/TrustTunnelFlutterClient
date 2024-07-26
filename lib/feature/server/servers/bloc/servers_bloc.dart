@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vpn/data/repository/server_repository.dart';
+import 'package:vpn/domain/vpn_service.dart';
 import 'package:vpn_plugin/platform_api.g.dart';
 
 part 'servers_bloc.freezed.dart';
@@ -12,10 +13,13 @@ part 'servers_state.dart';
 
 class ServersBloc extends Bloc<ServersEvent, ServersState> {
   final ServerRepository _serverRepository;
+  final VpnService _vpnService;
 
   ServersBloc({
     required ServerRepository serverRepository,
+    required VpnService vpnService,
   })  : _serverRepository = serverRepository,
+        _vpnService = vpnService,
         super(const ServersState()) {
     on<_Init>(_init);
     on<_ConnectServer>(_connectServer);
@@ -32,7 +36,7 @@ class ServersBloc extends Bloc<ServersEvent, ServersState> {
       [
         _serverRepository.serverStream.whereNotNull(),
         _serverRepository.selectedServerIdStream,
-        _serverRepository.vpnManagerStateStream.whereNotNull(),
+        _vpnService.vpnManagerStateStream.whereNotNull(),
       ],
       (values) => values,
     ).listen(
@@ -55,26 +59,27 @@ class ServersBloc extends Bloc<ServersEvent, ServersState> {
           serverList: event.servers,
           selectedServerId: event.selectedServerId,
           vpnManagerState: event.vpnManagerState,
+          loadingState: ServerLoadingState.idle,
         ),
       );
 
   Future<void> _init(
     _Init event,
     Emitter<ServersState> emit,
-  ) async =>
-      await _serverRepository.loadServers();
+  ) =>
+      _serverRepository.loadServers();
 
   Future<void> _connectServer(
     _ConnectServer event,
     Emitter<ServersState> emit,
   ) =>
-      _serverRepository.connect(serverId: event.serverId);
+      _vpnService.start(serverId: event.serverId);
 
   void _disconnectServer(
     _DisconnectServer event,
     Emitter<ServersState> emit,
   ) =>
-      _serverRepository.disconnect();
+      _vpnService.stop();
 
   @override
   Future<void> close() {

@@ -24,21 +24,28 @@ class ServersScreenView extends StatelessWidget {
           ),
           body: BlocBuilder<ServersBloc, ServersState>(
             buildWhen: (previous, current) => previous.serverList != current.serverList,
-            builder: (context, state) => state.serverList.isEmpty
-                ? const ServersEmptyPlaceholder()
-                : ListView.separated(
-                    itemCount: state.serverList.length,
-                    itemBuilder: (_, index) {
-                      final item = state.serverList[index];
-
-                      return ServersCard(
-                        server: item,
-                      );
-                    },
-                    separatorBuilder: (_, __) => const Divider(),
-                  ),
+            builder: (context, state) => state.loadingState == ServerLoadingState.idle
+                ? state.serverList.isEmpty
+                    ? const ServersEmptyPlaceholder()
+                    : ListView.builder(
+                        itemCount: state.serverList.length,
+                        itemBuilder: (_, index) => Column(
+                          children: [
+                            ServersCard(
+                              server: state.serverList[index],
+                            ),
+                            index == state.serverList.length - 1
+                                ? const SizedBox(
+                                    height: 80,
+                                  )
+                                : const Divider(),
+                          ],
+                        ),
+                      )
+                : const SizedBox.shrink(),
           ),
           floatingActionButton: BlocBuilder<ServersBloc, ServersState>(
+            buildWhen: (previous, current) => previous.serverList.isEmpty != current.serverList.isEmpty,
             builder: (context, state) => state.serverList.isEmpty
                 ? const SizedBox.shrink()
                 : FloatingActionButtonSvg.extended(

@@ -6,9 +6,11 @@ import FlutterMacOS
 import Foundation
 
 import package_info_plus
+import url_launcher_macos
 import vpn_plugin
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FPPPackageInfoPlusPlugin.register(with: registry.registrar(forPlugin: "FPPPackageInfoPlusPlugin"))
+  UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
   VpnPlugin.register(with: registry.registrar(forPlugin: "VpnPlugin"))
 }

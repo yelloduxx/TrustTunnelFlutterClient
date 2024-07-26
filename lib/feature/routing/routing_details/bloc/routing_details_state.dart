@@ -9,17 +9,31 @@ sealed class RoutingDetailsState with _$RoutingDetailsState {
     @Default('') String routingName,
     @Default(RoutingDetailsData()) RoutingDetailsData data,
     @Default(RoutingDetailsData()) RoutingDetailsData initialData,
-    @Default(RoutingMode.values) List<RoutingMode> availableRoutingModes,
-    @Default(RoutingDetailsLoadingStatus.initialLoading)
-    RoutingDetailsLoadingStatus loadingStatus,
+    @Default(RoutingDetailsLoadingStatus.initialLoading) RoutingDetailsLoadingStatus loadingStatus,
+    @Default(RoutingDetailsAction.none()) RoutingDetailsAction action,
   }) = _RoutingDetailsState;
 
   bool get hasChanges => data != initialData;
+
+  bool get isEditing => routingId != null;
 }
 
 enum RoutingDetailsLoadingStatus {
   initialLoading,
-  loading,
-  error,
   idle,
+}
+
+@Freezed(
+  copyWith: false,
+  fromJson: false,
+  toJson: false,
+)
+sealed class RoutingDetailsAction with _$RoutingDetailsAction {
+  const factory RoutingDetailsAction.presentationError(
+    PresentationError error,
+  ) = RoutingDetailsPresentationError;
+
+  const factory RoutingDetailsAction.saved() = RoutingDetailsSaved;
+
+  const factory RoutingDetailsAction.none() = _RoutingDetailsNone;
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
+import 'package:vpn/common/extensions/enum_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/feature/routing/routing_details/bloc/routing_details_bloc.dart';
 import 'package:vpn/view/inputs/custom_text_field.dart';
@@ -13,6 +14,7 @@ class RoutingDetailsForm extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.all(16.0),
       child: BlocBuilder<RoutingDetailsBloc, RoutingDetailsState>(
+        buildWhen: (prev, curr) => prev.action == curr.action,
         builder: (context, state) {
           return context.isMobileBreakpoint
               ? TabBarView(
@@ -25,21 +27,11 @@ class RoutingDetailsForm extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Flexible(
-                      child: _bypassRulesTextField(
-                        context,
-                        state,
-                        showLabel: true,
-                      ),
+                      child: _bypassRulesTextField(context, state, showLabel: true),
                     ),
-                    const SizedBox(
-                      width: 16,
-                    ),
+                    const SizedBox(width: 16),
                     Flexible(
-                      child: _vpnRulesTextField(
-                        context,
-                        state,
-                        showLabel: true,
-                      ),
+                      child: _vpnRulesTextField(context, state, showLabel: true),
                     ),
                   ],
                 );
@@ -52,7 +44,7 @@ class RoutingDetailsForm extends StatelessWidget {
     bool showLabel = false,
   }) {
     return CustomTextField(
-      label: showLabel ? RoutingMode.vpn.toString() : null,
+      label: showLabel ? RoutingMode.vpn.stringValue : null,
       value: state.data.vpnRules.join('\n'),
       hint: context.ln.enterRulesHint,
       minLines: 40,
@@ -71,7 +63,7 @@ class RoutingDetailsForm extends StatelessWidget {
     bool showLabel = false,
   }) {
     return CustomTextField(
-      label: showLabel ? RoutingMode.bypass.toString() : null,
+      label: showLabel ? RoutingMode.bypass.stringValue : null,
       value: state.data.bypassRules.join('\n'),
       hint: context.ln.enterRulesHint,
       minLines: 40,

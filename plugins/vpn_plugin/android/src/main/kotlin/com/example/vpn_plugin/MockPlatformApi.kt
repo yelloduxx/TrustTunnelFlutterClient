@@ -18,10 +18,11 @@ class MockPlatformApi: PlatformApi, EventChannel.StreamHandler, Closeable {
     private var selectedServerId: Long? = null
     private var state: VpnManagerState = VpnManagerState.DISCONNECTED
     private var excludedRoutes = ""
+    private var routingProfiles: MutableList<RoutingProfile> = mutableListOf()
 
 
     init {
-        for (i in 1..3) {
+        for (i in 1..10) {
             servers.add(Server(
                 id = i.toLong(),
                 name = "Server $i",
@@ -31,7 +32,7 @@ class MockPlatformApi: PlatformApi, EventChannel.StreamHandler, Closeable {
                 password = "password$i",
                 vpnProtocol = VpnProtocol.HTTP2,
                 routingProfileId = 0,
-                dnsServers = listOf(),
+                dnsServers = listOf("1.1.1.$i", "123.123.123.$i"),
             ))
         }
         for (i in 1..20) {
@@ -44,6 +45,15 @@ class MockPlatformApi: PlatformApi, EventChannel.StreamHandler, Closeable {
                 sourcePort = "80",
                 destinationPort = "80",
                 domain = "server$i.com",
+            ))
+        }
+        for (i in 0..20) {
+            routingProfiles.add(RoutingProfile(
+                id = i.toLong(),
+                name = "Profile $i",
+                defaultMode = RoutingMode.BYPASS,
+                bypassRules = listOf("bypass rule 1", "bypass rule2 "),
+                vpnRules = listOf("vpn rule 1", "vpn rule2 "),
             ))
         }
     }
@@ -115,24 +125,28 @@ class MockPlatformApi: PlatformApi, EventChannel.StreamHandler, Closeable {
     }
 
     override fun updateServer(request: UpdateServerRequest): Server {
-        val server = Server(
-            id = request.id,
-            name = request.name,
-            ipAddress = request.ipAddress,
-            domain = request.domain,
-            login = request.login,
-            password = request.password,
-            vpnProtocol = request.vpnProtocol,
-            routingProfileId = request.routingProfileId,
-            dnsServers = request.dnsServers,
-        )
         val index = servers.indexOfFirst { it.id == request.id }
-        if (index != -1) {
-            servers[index] = server
+        if (index == -1) {
+            throw FlutterError(
+                    code = "",
+                    message = null,
+            )
         }
 
+        val updatedServer = Server(
+                id = request.id,
+                name = request.name,
+                ipAddress = request.ipAddress,
+                domain = request.domain,
+                login = request.login,
+                password = request.password,
+                vpnProtocol = request.vpnProtocol,
+                routingProfileId = request.routingProfileId,
+                dnsServers = request.dnsServers,
+        )
+        servers[index] = updatedServer
 
-        return server
+        return updatedServer
     }
 
     override fun removeServer(id: Long) {
@@ -148,27 +162,72 @@ class MockPlatformApi: PlatformApi, EventChannel.StreamHandler, Closeable {
     }
 
     override fun getAllRoutingProfiles(): List<RoutingProfile> {
-        TODO("Not yet implemented")
+        return routingProfiles
     }
 
     override fun getRoutingProfileById(id: Long): RoutingProfile {
-        TODO("Not yet implemented")
+        return routingProfiles.find { it.id == id }!!
     }
 
     override fun addRoutingProfile(request: AddRoutingProfileRequest): RoutingProfile {
-        TODO("Not yet implemented")
+        val routingProfile = RoutingProfile(
+            id = routingProfiles.size.toLong() + 1,
+            name = request.name,
+            defaultMode = request.defaultMode,
+            bypassRules = request.bypassRules,
+            vpnRules = request.vpnRules,
+        )
+        routingProfiles.add(routingProfile)
+
+        return routingProfile
     }
 
     override fun updateRoutingProfile(request: UpdateRoutingProfileRequest): RoutingProfile {
-        TODO("Not yet implemented")
+        val index = routingProfiles.indexOfFirst { it.id == request.id }
+        if (index == -1) {
+            throw FlutterError(
+                code = "",
+                message = null,
+            )
+        }
+
+        val existingRoutingProfile = routingProfiles[index]
+        val updatedRoutingProfile = RoutingProfile(
+            id = request.id,
+            name = existingRoutingProfile.name,
+            defaultMode = request.defaultMode,
+            bypassRules = request.bypassRules,
+            vpnRules = request.vpnRules,
+        )
+        routingProfiles[index] = updatedRoutingProfile
+
+        return updatedRoutingProfile
     }
 
-    override fun setRoutingProfileName(name: String) {
-        TODO("Not yet implemented")
+    override fun setRoutingProfileName(id: Long, name: String) : RoutingProfile {
+        val index = routingProfiles.indexOfFirst { it.id == id }
+        if (index == -1) {
+            throw FlutterError(
+                    code = "",
+                    message = null,
+            )
+        }
+
+        val existingRoutingProfile = routingProfiles[index]
+        val updatedRoutingProfile = RoutingProfile(
+                id = id,
+                name = name,
+                defaultMode = existingRoutingProfile.defaultMode,
+                bypassRules = existingRoutingProfile.bypassRules,
+                vpnRules = existingRoutingProfile.vpnRules,
+        )
+        routingProfiles[index] = updatedRoutingProfile
+
+        return updatedRoutingProfile
     }
 
     override fun removeRoutingProfile(id: Long) {
-        TODO("Not yet implemented")
+        routingProfiles = routingProfiles.filter { it.id != id }.toMutableList()
     }
 
     override fun getAllRequests(): List<VpnRequest> {
@@ -198,10 +257,6 @@ class MockPlatformApi: PlatformApi, EventChannel.StreamHandler, Closeable {
         job?.cancel()
         state = VpnManagerState.DISCONNECTED
         onStateChanged()
-    }
-
-    override fun getCurrentState(): VpnManagerState {
-        return state
     }
 
     override fun errorStub(error: PlatformErrorResponse) {

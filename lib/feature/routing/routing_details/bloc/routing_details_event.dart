@@ -10,5 +10,5 @@ class RoutingDetailsEvent with _$RoutingDetailsEvent {
     List<String>? vpnRules,
   }) = _DataChanged;
 
-  const factory RoutingDetailsEvent.addRouting() = _AddRouting;
+  const factory RoutingDetailsEvent.submit() = _Submit;
 }

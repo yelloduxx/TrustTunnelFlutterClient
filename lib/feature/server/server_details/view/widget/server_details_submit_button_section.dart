@@ -5,12 +5,7 @@ import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/feature/server/server_details/bloc/server_details_bloc.dart';
 
 class ServerDetailsSubmitButtonSection extends StatelessWidget {
-  final int? serverId;
-
-  const ServerDetailsSubmitButtonSection({
-    super.key,
-    required this.serverId,
-  });
+  const ServerDetailsSubmitButtonSection({super.key});
 
   @override
   Widget build(BuildContext context) => Column(
@@ -19,10 +14,13 @@ class ServerDetailsSubmitButtonSection extends StatelessWidget {
           const Divider(),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: FilledButton(
-              onPressed: () => _submit(context),
-              child: Text(
-                serverId == null ? context.ln.add : context.ln.save,
+            child: BlocBuilder<ServerDetailsBloc, ServerDetailsState>(
+              buildWhen: (prev, curr) => prev.action == curr.action,
+              builder: (context, state) => FilledButton(
+                onPressed: state.hasChanges ? () => _submit(context) : null,
+                child: Text(
+                  state.isEditing ? context.ln.save : context.ln.add,
+                ),
               ),
             ),
           ),

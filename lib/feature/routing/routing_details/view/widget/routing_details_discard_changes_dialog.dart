@@ -14,7 +14,7 @@ class RoutingDetailsDiscardChangesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomAlertDialog(
-        title: '${context.ln.discardChanges}?',
+        title: context.ln.discardChangesDialogTitle,
         scrollable: true,
         content: Text(context.ln.discardChangesDialogDescription),
         actionsBuilder: (spacing) => [
@@ -24,8 +24,7 @@ class RoutingDetailsDiscardChangesDialog extends StatelessWidget {
           ),
           Theme(
             data: context.theme.copyWith(
-              textButtonTheme:
-                  context.theme.extension<CustomTextButtonTheme>()!.danger,
+              textButtonTheme: context.theme.extension<CustomTextButtonTheme>()!.danger,
             ),
             child: TextButton(
               onPressed: () {

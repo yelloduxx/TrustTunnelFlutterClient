@@ -1,7 +1,7 @@
 import 'package:pigeon/pigeon.dart';
 
 enum VpnProtocol {
-  quiq,
+  quic,
   http2,
 }
 
@@ -155,15 +155,13 @@ class AddRoutingProfileRequest {
 }
 
 class UpdateRoutingProfileRequest {
-  final String id;
-  final String name;
+  final int id;
   final RoutingMode defaultMode;
   final List<String?> bypassRules;
   final List<String?> vpnRules;
 
   const UpdateRoutingProfileRequest({
     required this.id,
-    required this.name,
     required this.defaultMode,
     required this.bypassRules,
     required this.vpnRules,
@@ -227,7 +225,7 @@ abstract class PlatformApi {
 
   RoutingProfile updateRoutingProfile({required UpdateRoutingProfileRequest request});
 
-  void setRoutingProfileName({required String name});
+  RoutingProfile setRoutingProfileName({required int id, required String name});
 
   void removeRoutingProfile({required int id});
 
@@ -241,8 +239,6 @@ abstract class PlatformApi {
   void start();
 
   void stop();
-
-  VpnManagerState getCurrentState();
 
   // Common
   void errorStub(PlatformErrorResponse error);

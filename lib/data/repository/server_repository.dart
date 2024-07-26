@@ -2,11 +2,8 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:vpn_plugin/platform_api.g.dart';
-import 'package:vpn_plugin/vpn_plugin.dart';
 
 abstract class ServerRepository {
-  ValueStream<VpnManagerState?> get vpnManagerStateStream;
-
   ValueStream<List<Server>?> get serverStream;
 
   ValueStream<int?> get selectedServerIdStream;
@@ -19,16 +16,17 @@ abstract class ServerRepository {
 
   Future<Server> getServerById({required int id});
 
-  Future<void> connect({required int serverId});
+  Future<void> setSelectedServerId({required int id});
 
-  Future<void> disconnect();
+  Future<int?> getSelectedServerId();
+
+  Future<void> deleteServer({required int serverId});
 
   Future<void> dispose();
 }
 
 class ServerRepositoryImpl implements ServerRepository {
   final PlatformApi _platformApi;
-  late final StreamSubscription<dynamic> _vpnManagerStateSub;
 
   ServerRepositoryImpl({
     required PlatformApi platformApi,
@@ -36,14 +34,9 @@ class ServerRepositoryImpl implements ServerRepository {
     _init();
   }
 
-  final BehaviorSubject<VpnManagerState?> _vpnManagerStateController = BehaviorSubject.seeded(null);
-
   final BehaviorSubject<List<Server>?> _serverController = BehaviorSubject.seeded(null);
 
   final BehaviorSubject<int?> _selectedServerIdController = BehaviorSubject.seeded(null);
-
-  @override
-  ValueStream<VpnManagerState?> get vpnManagerStateStream => _vpnManagerStateController.stream;
 
   @override
   ValueStream<List<Server>?> get serverStream => _serverController.stream;
@@ -51,20 +44,9 @@ class ServerRepositoryImpl implements ServerRepository {
   @override
   ValueStream<int?> get selectedServerIdStream => _selectedServerIdController.stream;
 
-  void _init() async {
-    _vpnManagerStateSub = VpnPlugin.eventChannel.receiveBroadcastStream().listen((event) {
-      final state = VpnManagerState.values[event as int];
-      _vpnManagerStateController.add(state);
-    });
-
-    _selectedServerIdController.add(await _platformApi.getSelectedServerId());
-  }
-
-  @override
-  Future<void> dispose() async {
-    await _vpnManagerStateSub.cancel();
-    await _vpnManagerStateController.close();
-  }
+  Future<void> _init() async => _selectedServerIdController.add(
+        await _platformApi.getSelectedServerId(),
+      );
 
   @override
   Future<void> loadServers() async {
@@ -98,12 +80,28 @@ class ServerRepositoryImpl implements ServerRepository {
   Future<Server> getServerById({required int id}) => _platformApi.getServerById(id: id);
 
   @override
-  Future<void> connect({required int serverId}) async {
-    await _platformApi.setSelectedServerId(id: serverId);
-    _selectedServerIdController.add(serverId);
-    await _platformApi.start();
+  Future<void> setSelectedServerId({required int id}) async {
+    await _platformApi.setSelectedServerId(id: id);
+    _selectedServerIdController.add(id);
   }
 
   @override
-  Future<void> disconnect() => _platformApi.stop();
+  Future<int?> getSelectedServerId() => _platformApi.getSelectedServerId();
+
+  @override
+  Future<void> deleteServer({required int serverId}) async {
+    await _platformApi.removeServer(id: serverId);
+
+    final List<Server> servers = List.of(_serverController.value!);
+    final int index = servers.indexWhere((element) => element.id == serverId);
+    if (index == -1) throw Exception('Server not found');
+    servers.removeAt(index);
+    _serverController.add(servers);
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _selectedServerIdController.close();
+    await _serverController.close();
+  }
 }

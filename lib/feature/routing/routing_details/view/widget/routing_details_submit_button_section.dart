@@ -5,42 +5,39 @@ import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/feature/routing/routing_details/bloc/routing_details_bloc.dart';
 
 class RoutingDetailsSubmitButtonSection extends StatelessWidget {
-  final int? routingId;
-
-  const RoutingDetailsSubmitButtonSection({
-    super.key,
-    required this.routingId,
-  });
+  const RoutingDetailsSubmitButtonSection({super.key});
 
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(16),
         child: context.isMobileBreakpoint
-            ? _Button(routingId: routingId)
-            : Align(
+            ? const _Button()
+            : const Align(
                 alignment: Alignment.centerRight,
-                child: _Button(routingId: routingId),
+                child: _Button(),
               ),
       );
 }
 
 class _Button extends StatelessWidget {
-  final int? routingId;
-
-  const _Button({required this.routingId});
+  const _Button();
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: () => _addRouting(context),
-      child: Text(
-        routingId == null ? context.ln.add : context.ln.save,
-      ),
+    return BlocBuilder<RoutingDetailsBloc, RoutingDetailsState>(
+      buildWhen: (previous, current) => previous.action == current.action,
+      builder: (context, state) {
+        return FilledButton(
+          onPressed: state.hasChanges ? () => _addRouting(context) : null,
+          child: Text(
+            state.isEditing ? context.ln.save : context.ln.add,
+          ),
+        );
+      },
     );
   }
 
-  void _addRouting(BuildContext context) =>
-      context.read<RoutingDetailsBloc>().add(
-            const RoutingDetailsEvent.addRouting(),
-          );
+  void _addRouting(BuildContext context) => context.read<RoutingDetailsBloc>().add(
+        const RoutingDetailsEvent.submit(),
+      );
 }

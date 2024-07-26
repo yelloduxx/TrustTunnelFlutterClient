@@ -4,11 +4,11 @@ import 'package:vpn/common/extensions/theme_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/view/custom_alert_dialog.dart';
 
-class RoutingDetailsDeleteRulesDialog extends StatelessWidget {
+class RoutingDeleteProfileDialog extends StatelessWidget {
   final String profileName;
   final VoidCallback onDeletePressed;
 
-  const RoutingDetailsDeleteRulesDialog({
+  const RoutingDeleteProfileDialog({
     super.key,
     required this.profileName,
     required this.onDeletePressed,
@@ -16,9 +16,9 @@ class RoutingDetailsDeleteRulesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomAlertDialog(
-        title: context.ln.deleteAllRulesDialogTitle,
+        title: context.ln.deleteProfileDialogTitle,
         scrollable: true,
-        content: Text(context.ln.deleteAllRulesDialogDescription(profileName)),
+        content: Text(context.ln.deleteProfileDescription(profileName)),
         actionsBuilder: (spacing) => [
           TextButton(
             onPressed: () => context.pop(),

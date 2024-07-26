@@ -5,34 +5,26 @@ import 'package:vpn/common/extensions/common_extensions.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/feature/routing/routing/bloc/routing_bloc.dart';
+import 'package:vpn/feature/routing/routing/common/routing_profile_utils.dart';
+import 'package:vpn/feature/routing/routing/view/widget/routing_delete_profile_dialog.dart';
+import 'package:vpn/feature/routing/routing/view/widget/routing_edit_name_dialog.dart';
 import 'package:vpn/feature/routing/routing_details/view/routing_details_screen.dart';
-import 'package:vpn/view/common/custom_radio_list_tile.dart';
+import 'package:vpn/view/common/custom_list_tile_separated.dart';
 import 'package:vpn/view/custom_svg_picture.dart';
 import 'package:vpn_plugin/platform_api.g.dart';
 
 class RoutingCard extends StatelessWidget {
   final RoutingProfile routingProfile;
-  final RoutingState routingState;
 
   const RoutingCard({
     super.key,
     required this.routingProfile,
-    required this.routingState,
   });
 
-  bool get isDefaultProfile => routingProfile == routingState.defaultRoutingProfile;
-  bool get isOnlyProfile => routingState.allRoutingProfiles.length == 1;
-
   @override
-  Widget build(BuildContext context) => CustomRadioListTile<RoutingProfile?>.titleWidget(
-        showRadioButton: !isOnlyProfile,
-        enableTap: !isOnlyProfile,
-        titleWidget: Text(
-          isDefaultProfile ? context.ln.defaultProfile : routingProfile.name,
-        ).bodyLarge(context),
-        type: routingProfile,
-        currentValue: routingState.selectedRoutingProfile,
-        onChanged: (_) => _onSelectItem(context),
+  Widget build(BuildContext context) => CustomListTileSeparated(
+        title: routingProfile.name,
+        onTileTap: () => _pushDetailsScreen(context),
         trailing: PopupMenuButton(
           icon: const CustomSvgPicture(
             icon: AssetIcons.moreVert,
@@ -40,7 +32,7 @@ class RoutingCard extends StatelessWidget {
           ),
           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
             PopupMenuItem<String>(
-              onTap: () => _onEditProfile(context),
+              onTap: () => _onEditName(context),
               child: Row(
                 children: [
                   const CustomSvgPicture(
@@ -52,7 +44,7 @@ class RoutingCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (!isDefaultProfile)
+            if (!RoutingProfileUtils.isDefaultRoutingProfile(profile: routingProfile))
               PopupMenuItem<String>(
                 onTap: () => _onDeleteProfile(context),
                 child: Row(
@@ -76,19 +68,44 @@ class RoutingCard extends StatelessWidget {
         ),
       );
 
-  void _onSelectItem(BuildContext context) => context.read<RoutingBloc>().add(
-        RoutingEvent.selectProfile(
-          routingProfile: routingProfile,
+  void _onEditName(BuildContext context) {
+    final bloc = context.read<RoutingBloc>();
+    showDialog(
+      context: context,
+      builder: (_) => RoutingEditNameDialog(
+        onSavePressed: (String value) => _editNameSubmit(bloc, value),
+        currentRoutingName: routingProfile.name,
+      ),
+    );
+  }
+
+  void _onDeleteProfile(BuildContext context) {
+    final bloc = context.read<RoutingBloc>();
+    showDialog(
+      context: context,
+      builder: (_) => RoutingDeleteProfileDialog(
+        onDeletePressed: () => _deleteProfileSubmit(bloc),
+        profileName: routingProfile.name,
+      ),
+    );
+  }
+
+  void _editNameSubmit(RoutingBloc bloc, String value) => bloc.add(
+        RoutingEvent.editName(
+          id: routingProfile.id,
+          newName: value,
         ),
       );
 
-  void _onEditProfile(BuildContext context) => context.push(
+  void _deleteProfileSubmit(RoutingBloc bloc) => bloc.add(
+        RoutingEvent.deleteProfile(
+          id: routingProfile.id,
+        ),
+      );
+
+  void _pushDetailsScreen(BuildContext context) => context.push(
         RoutingDetailsScreen(
           routingId: routingProfile.id,
         ),
       );
-
-  void _onDeleteProfile(BuildContext context) {
-    // TODO implement delete profile
-  }
 }

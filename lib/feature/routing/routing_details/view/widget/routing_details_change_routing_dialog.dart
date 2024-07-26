@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
+import 'package:vpn/common/extensions/enum_extensions.dart';
 import 'package:vpn/common/extensions/theme_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
 import 'package:vpn/view/custom_alert_dialog.dart';
@@ -35,7 +36,7 @@ class _RoutingDetailsChangeRoutingDialogState extends State<RoutingDetailsChange
             CustomDropdownMenu<RoutingMode>.expanded(
               value: _selectedRoutingMode,
               values: RoutingMode.values,
-              toText: (value) => value.toString(),
+              toText: (value) => value.stringValue,
               labelText: context.ln.defaultProfile,
               onChanged: _onRoutingChanged,
             ),

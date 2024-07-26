@@ -20,13 +20,16 @@ class RoutingScreenView extends StatelessWidget {
             title: context.ln.routing,
           ),
           body: BlocBuilder<RoutingBloc, RoutingState>(
-            builder: (context, state) => ListView.separated(
-              itemBuilder: (context, index) => RoutingCard(
-                routingProfile: state.allRoutingProfiles[index],
-                routingState: state,
+            builder: (context, state) => ListView.builder(
+              itemBuilder: (context, index) => Column(
+                children: [
+                  RoutingCard(
+                    routingProfile: state.routingList[index],
+                  ),
+                  index == state.routingList.length - 1 ? const SizedBox(height: 80) : const Divider(),
+                ],
               ),
-              separatorBuilder: (_, __) => const Divider(),
-              itemCount: state.allRoutingProfiles.length,
+              itemCount: state.routingList.length,
             ),
           ),
           floatingActionButton: FloatingActionButtonSvg.extended(

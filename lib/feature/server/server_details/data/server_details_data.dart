@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vpn/feature/routing/routing/common/routing_profile_utils.dart';
 import 'package:vpn_plugin/platform_api.g.dart';
 
 part 'server_details_data.freezed.dart';
@@ -14,7 +15,7 @@ class ServerDetailsData with _$ServerDetailsData {
     @Default('') String username,
     @Default('') String password,
     @Default(VpnProtocol.http2) VpnProtocol protocol,
-    RoutingProfile? routingProfile,
+    @Default(RoutingProfileUtils.defaultRoutingProfileId) int routingProfileId,
     @Default(<String>[]) List<String> dnsServers,
   }) = _ServerDetailsData;
 }

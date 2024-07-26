@@ -33,10 +33,12 @@
   "pleaseFillField": "Please fill out this field",
   "editProfile": "Edit profile",
   "deleteProfile": "Delete profile",
+  "deleteProfileDialogTitle": "Delete profile?",
   "addProfile": "Add profile",
   "enterRulesHint": "Routing rules can be of the following types:\n- Domains of any level\n- IP address\n- IP address with port\n- IP address with a mask",
   "changeDefaultRoutingMode": "Change default routing",
   "deleteAllRules": "Delete all rules",
+  "deleteAllRulesDialogTitle": "Delete all rules?",
   "cancel": "Cancel",
   "delete": "Delete",
   "deleteAllRulesDialogDescription": "All rules from {profileName} will be deleted",
@@ -47,13 +49,32 @@
       }
     }
   },
+  "deleteProfileDescription": "{profileName} will be deleted",
+  "@deleteProfileDescription": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
   "changeDefaultRoutingModeDialogDescription": "All traffic will be routed by default according to this rule",
   "discardChanges": "Discard changes",
+  "discardChangesDialogTitle": "Discard changes?",
   "discardChangesDialogDescription": "Are you sure you want to discard all changes?",
   "about": "About",
   "vpnOss": "VPN OSS",
   "queryLog": "Query log",
   "excludedRoutes": "Excluded routes",
   "followUsOnGithub": "Follow us on Github",
-  "typeSomething": "Type something"
+  "typeSomething": "Type something",
+  "deleteServer": "Delete server",
+  "deleteServerDialogTitle": "Delete server?",
+  "deleteServerDescription": "{serverName} will be deleted",
+  "@deleteServerDescription": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  }
 }

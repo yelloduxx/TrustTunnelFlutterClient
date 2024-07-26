@@ -2,6 +2,7 @@ import 'package:vpn/common/error/model/enum/presentation_field_error_code.dart';
 import 'package:vpn/common/error/model/enum/presentation_field_name.dart';
 import 'package:vpn/common/error/model/presentation_field.dart';
 import 'package:vpn/data/repository/server_repository.dart';
+import 'package:vpn/domain/vpn_service.dart';
 import 'package:vpn/feature/server/server_details/data/server_details_data.dart';
 import 'package:vpn_plugin/platform_api.g.dart';
 
@@ -15,15 +16,20 @@ abstract class ServerDetailsService {
     required ServerDetailsData data,
   });
 
+  Future<void> deleteServer({required int serverId});
+
   ServerDetailsData toServerDetailsData({required Server server});
 }
 
 class ServerDetailsServiceImpl implements ServerDetailsService {
   final ServerRepository _serverRepository;
+  final VpnService _vpnService;
 
   ServerDetailsServiceImpl({
     required ServerRepository serverRepository,
-  }) : _serverRepository = serverRepository;
+    required VpnService vpnService,
+  })  : _serverRepository = serverRepository,
+        _vpnService = vpnService;
 
   @override
   List<PresentationField> validateData({required ServerDetailsData data}) {
@@ -59,9 +65,7 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
         password: data.password,
         vpnProtocol: data.protocol,
         dnsServers: data.dnsServers,
-        // TODO uncomment when routingProfile will be added to ServerDetailsData
-        //routingProfileId: data.routingProfile!.id,
-        routingProfileId: 0,
+        routingProfileId: data.routingProfileId,
       );
 
   @override
@@ -78,10 +82,17 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
         password: data.password,
         vpnProtocol: data.protocol,
         dnsServers: data.dnsServers,
-        // TODO uncomment when routingProfile will be added to ServerDetailsData
-        //routingProfileId: data.routingProfile!.id,
-        routingProfileId: 0,
+        routingProfileId: data.routingProfileId,
       );
+
+  @override
+  Future<void> deleteServer({required int serverId}) async {
+    if (serverId == await _serverRepository.getSelectedServerId()) {
+      await _vpnService.stop();
+    }
+
+    await _serverRepository.deleteServer(serverId: serverId);
+  }
 
   @override
   ServerDetailsData toServerDetailsData({required Server server}) => ServerDetailsData(
@@ -91,8 +102,7 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
         username: server.login,
         password: server.password,
         protocol: server.vpnProtocol,
-        // TODO add routingProfile from serverRepository by id
-        routingProfile: null,
+        routingProfileId: server.routingProfileId,
         dnsServers: server.dnsServers.cast<String>(),
       );
 
