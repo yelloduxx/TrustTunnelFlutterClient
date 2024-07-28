@@ -50,15 +50,18 @@ class _NavigationScreenState extends State<NavigationScreen> {
             : null,
       );
 
-  Widget _getContent() => Navigator(
-        key: _navigatorKey,
-        onGenerateInitialRoutes: (_, __) => [
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const ServersScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-        ],
+  Widget _getContent() => NavigatorPopHandler(
+        onPop: () => _navigatorKey.currentState!.pop(),
+        child: Navigator(
+          key: _navigatorKey,
+          onGenerateInitialRoutes: (_, __) => [
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => const ServersScreen(),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+          ],
+        ),
       );
 
   void _onDestinationSelected(int selectedIndex) {
