@@ -1,11 +1,8 @@
 enum NetworkProtocol {
-  tcp,
-  ;
+  tcp;
 
   @override
-  String toString() {
-    return switch (this) {
+  String toString() => switch (this) {
       NetworkProtocol.tcp => 'TCP',
     };
-  }
 }

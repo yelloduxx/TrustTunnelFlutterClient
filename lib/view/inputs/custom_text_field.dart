@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vpn/common/assets/asset_icons.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
-import 'package:vpn/view/buttons/icon_button_svg.dart';
+import 'package:vpn/common/extensions/theme_extensions.dart';
+import 'package:vpn/view/buttons/custom_icon_button.dart';
+import 'package:vpn/view/custom_icon.dart';
 
 class CustomTextField extends StatefulWidget {
   final String? value;
@@ -24,7 +25,7 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
-
+  final SpellCheckService? spellCheckService;
   const CustomTextField({
     super.key,
     this.value,
@@ -44,11 +45,12 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.validator,
-  })  : suffixIcon = null,
-        assert(
-          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
-          "minLines can't be greater than maxLines",
-        );
+    this.spellCheckService,
+  }) : suffixIcon = null,
+       assert(
+         (maxLines == null) || (minLines == null) || (maxLines >= minLines),
+         "minLines can't be greater than maxLines",
+       );
 
   const CustomTextField.customSuffixIcon({
     super.key,
@@ -69,12 +71,13 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.onChanged,
     this.validator,
-  })  : showClearButton = false,
-        assert(suffixIcon != null),
-        assert(
-          (maxLines == null) || (minLines == null) || (maxLines >= minLines),
-          "minLines can't be greater than maxLines",
-        );
+    this.spellCheckService,
+  }) : showClearButton = false,
+       assert(suffixIcon != null),
+       assert(
+         (maxLines == null) || (minLines == null) || (maxLines >= minLines),
+         "minLines can't be greater than maxLines",
+       );
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -104,41 +107,53 @@ class _CustomTextFieldState extends State<CustomTextField> {
   }
 
   @override
-  Widget build(BuildContext context) => FocusScope(
-        node: _focusNode,
-        skipTraversal: !widget.enabled,
-        child: ListenableBuilder(
-          listenable: _focusNode,
-          builder: (context, child) => TextFormField(
-            controller: _controller,
-            enabled: widget.enabled,
-            readOnly: widget.readOnly,
-            cursorWidth: 1,
-            cursorHeight: context.textTheme.bodyLarge?.fontSize,
-            textAlignVertical: TextAlignVertical.center,
-            inputFormatters: widget.inputFormatters,
-            onChanged: widget.onChanged,
-            minLines: widget.minLines,
-            maxLines: widget.maxLines,
-            maxLength: _focusNode.hasFocus ? widget.maxLength : null,
-            keyboardType: widget.keyboardType,
-            autofocus: widget.autofocus,
-            validator: widget.validator,
-            decoration: InputDecoration(
-              hintText: widget.hint,
-              helperText: widget.helper,
-              labelText: widget.label,
-              errorText: widget.error,
-              errorMaxLines: 3,
-              suffixIcon: Padding(
-                padding: const EdgeInsets.all(4),
-                child: widget.suffixIcon ??
-                    Visibility(
-                      visible: showSuffix(_focusNode.hasFocus),
-                      replacement: const SizedBox(height: 40),
-                      child: _focusNode.hasFocus
-                          ? _controller.text.isNotEmpty
-                              ? IconButtonSvg(
+  Widget build(BuildContext context) {
+    final spellCheckConfig = widget.spellCheckService != null
+        ? SpellCheckConfiguration(
+            spellCheckService: widget.spellCheckService!,
+            misspelledTextStyle: context.theme.extension<CustomMissSpelledTextTheme>()?.apply(
+              context.textTheme.bodyLarge ?? DefaultTextStyle.of(context).style,
+            ),
+          )
+        : null;
+    return FocusScope(
+      node: _focusNode,
+      skipTraversal: !widget.enabled,
+      child: ListenableBuilder(
+        listenable: _focusNode,
+        builder: (context, child) => TextFormField(
+          controller: _controller,
+          enabled: widget.enabled,
+          readOnly: widget.readOnly,
+          cursorWidth: 1,
+          cursorHeight: context.textTheme.bodyLarge?.fontSize,
+          textAlignVertical: TextAlignVertical.center,
+          inputFormatters: widget.inputFormatters,
+          autovalidateMode: AutovalidateMode.always,
+          onChanged: widget.onChanged,
+          minLines: widget.minLines,
+          maxLines: widget.maxLines,
+          maxLength: _focusNode.hasFocus ? widget.maxLength : null,
+          keyboardType: widget.keyboardType,
+          autofocus: widget.autofocus,
+          validator: widget.validator,
+          spellCheckConfiguration: spellCheckConfig,
+          decoration: InputDecoration(
+            hintText: widget.hint,
+            helperText: widget.helper,
+            labelText: widget.label,
+            errorText: widget.error,
+            errorMaxLines: 3,
+            suffixIcon: Padding(
+              padding: const EdgeInsets.all(4),
+              child:
+                  widget.suffixIcon ??
+                  Visibility(
+                    visible: showSuffix(_focusNode.hasFocus),
+                    replacement: const SizedBox(height: 40),
+                    child: _focusNode.hasFocus
+                        ? _controller.text.isNotEmpty
+                              ? CustomIconButton(
                                   color: widget.error == null
                                       ? context.theme.inputDecorationTheme.suffixIconColor
                                       : context.colors.red1,
@@ -151,25 +166,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
                                   icon: AssetIcons.cancel,
                                 )
                               : const SizedBox.shrink()
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SvgPicture.asset(
-                                AssetIcons.error,
-                                height: 24,
-                                width: 24,
-                                fit: BoxFit.scaleDown,
-                                colorFilter: ColorFilter.mode(
-                                  context.colors.red1,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CustomIcon.medium(
+                              icon: AssetIcons.error,
+                              color: context.colors.red1,
                             ),
-                    ),
-              ),
+                          ),
+                  ),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 
   bool showSuffix(bool hasFocus) =>
       (hasFocus && widget.showClearButton && _controller.text.isNotEmpty) || widget.error != null;

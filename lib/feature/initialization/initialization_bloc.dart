@@ -11,14 +11,19 @@ class InitializationBloc extends Bloc<InitializationEvent, InitializationState> 
   final InitializationHelper initializationHelper;
 
   InitializationBloc({required this.initializationHelper}) : super(const InitializationState()) {
-    on<_InitEvent>(_init);
+    on<InitializationEvent>(
+      (event, emit) => switch (event) {
+        _InitEvent() => _init(event, emit),
+      },
+    );
   }
 
   Future<void> _init(
     _InitEvent event,
     Emitter<InitializationState> emit,
-  ) async =>
-      emit(state.copyWith(
-        initializationResult: await initializationHelper.init(),
-      ));
+  ) async => emit(
+    state.copyWith(
+      initializationResult: await initializationHelper.init(),
+    ),
+  );
 }

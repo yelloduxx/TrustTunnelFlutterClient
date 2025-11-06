@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:vpn_plugin/platform_api.g.dart';
+import 'package:vpn/data/datasources/settings_datasource.dart';
+import 'package:vpn/data/model/vpn_request.dart';
 
 abstract class SettingsRepository {
   Future<List<VpnRequest>> getAllRequests();
@@ -11,22 +12,22 @@ abstract class SettingsRepository {
 }
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  final PlatformApi _platformApi;
+  final SettingsDatasource _settingsDatasource;
 
   SettingsRepositoryImpl({
-    required PlatformApi platformApi,
-  }) : _platformApi = platformApi;
+    required SettingsDatasource settingsDatasource,
+  }) : _settingsDatasource = settingsDatasource;
 
   @override
   Future<List<VpnRequest>> getAllRequests() async {
-    final List<VpnRequest?> requests = await _platformApi.getAllRequests();
+    final requests = await _settingsDatasource.getAllRequests();
 
-    return requests.cast<VpnRequest>();
+    return requests;
   }
 
   @override
-  Future<String> getExcludedRoutes() => _platformApi.getExcludedRoutes();
+  Future<String> getExcludedRoutes() => _settingsDatasource.getExcludedRoutes();
 
   @override
-  Future<void> setExcludedRoutes(String routes) => _platformApi.setExcludedRoutes(routes);
+  Future<void> setExcludedRoutes(String routes) => _settingsDatasource.setExcludedRoutes(routes);
 }

@@ -17,10 +17,7 @@ class InitializationHelperIo extends InitializationHelper {
       dependencyFactory: dependenciesFactory,
     );
 
-    final serviceFactory = ServiceFactoryImpl(
-      dependencyFactory: dependenciesFactory,
-      repositoryFactory: repositoryFactory,
-    );
+    final serviceFactory = ServiceFactoryImpl();
 
     final blocFactory = BlocFactoryImpl(
       repositoryFactory: repositoryFactory,

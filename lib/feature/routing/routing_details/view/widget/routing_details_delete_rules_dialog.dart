@@ -16,10 +16,11 @@ class RoutingDetailsDeleteRulesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomAlertDialog(
-        title: context.ln.deleteAllRulesDialogTitle,
-        scrollable: true,
-        content: Text(context.ln.deleteAllRulesDialogDescription(profileName)),
-        actionsBuilder: (spacing) => [
+    title: context.ln.deleteAllRulesDialogTitle,
+    scrollable: true,
+    content: Text(context.ln.deleteAllRulesDialogDescription(profileName)),
+    actionsBuilder:
+        (spacing) => [
           TextButton(
             onPressed: () => context.pop(),
             child: Text(context.ln.cancel),
@@ -37,5 +38,5 @@ class RoutingDetailsDeleteRulesDialog extends StatelessWidget {
             ),
           ),
         ],
-      );
+  );
 }

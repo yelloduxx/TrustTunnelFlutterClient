@@ -9,10 +9,11 @@ class ServersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider<ServersBloc>(
-        create: (context) => context.blocFactory.serversBloc()
-          ..add(
-            const ServersEvent.init(),
-          ),
-        child: const ServersScreenView(),
-      );
+    create:
+        (context) =>
+            context.blocFactory.serversBloc()..add(
+              const ServersEvent.fetch(),
+            ),
+    child: const ServersScreenView(),
+  );
 }

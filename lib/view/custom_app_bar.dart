@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
+import 'package:vpn/view/buttons/custom_icon_button.dart';
+import 'package:vpn/view/custom_icon.dart';
 
 const _toolbarHeight = 64.0;
 
+enum AppBarLeadingIconType {
+  back,
+  close,
+  drawer,
+}
+
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool showBackButton;
-  final bool showDrawerButton;
   final VoidCallback? onBackPressed;
   final List<Widget>? actions;
   final bool showDivider;
@@ -15,13 +21,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Alignment bottomAlign;
   final EdgeInsetsGeometry bottomPadding;
   final bool? centerTitle;
+  final AppBarLeadingIconType? leadingIconType;
 
   const CustomAppBar({
     super.key,
     required this.title,
-    this.showBackButton = false,
-    this.showDrawerButton = false,
     this.showDivider = false,
+    this.leadingIconType,
     this.onBackPressed,
     this.actions,
     this.bottom,
@@ -33,12 +39,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showBackButton = leadingIconType != null;
+    final backButton = showBackButton ? _getBackButtonByType(context, leadingIconType!) : null;
     final body = AppBar(
       centerTitle: centerTitle ?? !showBackButton,
-      surfaceTintColor:
-          context.isMobileBreakpoint ? context.colors.gray1 : null,
+      surfaceTintColor: context.isMobileBreakpoint ? context.colors.gray1 : null,
       title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         child: Text(title),
       ),
       backgroundColor: context.colors.background1,
@@ -49,9 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 height: bottomHeight,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: centerTitle ?? true
-                      ? CrossAxisAlignment.center
-                      : CrossAxisAlignment.start,
+                  crossAxisAlignment: centerTitle ?? true ? CrossAxisAlignment.center : CrossAxisAlignment.start,
                   children: [
                     Align(
                       alignment: bottomAlign,
@@ -67,10 +72,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       leading: showBackButton
-          ? IconButton(
+          ? CustomIconButton.custom(
               onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
-              icon: context.theme.actionIconTheme!.backButtonIconBuilder!
-                  .call(context),
+              iconWidget: backButton ?? CustomIcon.medium(icon: Icons.close),
             )
           : null,
       actions: actions,
@@ -92,10 +96,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize {
     final double dividerHeight = showDivider ? 1 : 0;
-    final toolbarHeight = bottom == null
-        ? _toolbarHeight
-        : _toolbarHeight + bottomHeight + dividerHeight;
+    final toolbarHeight = bottom == null ? _toolbarHeight : _toolbarHeight + bottomHeight + dividerHeight;
 
     return Size.fromHeight(toolbarHeight);
+  }
+
+  Widget? _getBackButtonByType(BuildContext context, AppBarLeadingIconType leadingIconType) {
+    final actionTheme = context.theme.actionIconTheme;
+    switch (leadingIconType) {
+      case AppBarLeadingIconType.back:
+        return actionTheme?.backButtonIconBuilder?.call(context);
+      case AppBarLeadingIconType.close:
+        return actionTheme?.closeButtonIconBuilder?.call(context);
+      case AppBarLeadingIconType.drawer:
+        return actionTheme?.drawerButtonIconBuilder?.call(context);
+    }
   }
 }

@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vpn/common/assets/asset_icons.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
-import 'package:vpn/feature/server/server_details/view/server_details_screen.dart';
+import 'package:vpn/feature/server/server_details/view/server_details_popup.dart';
 import 'package:vpn/feature/server/servers/bloc/servers_bloc.dart';
 import 'package:vpn/feature/server/servers/view/widget/servers_card.dart';
 import 'package:vpn/feature/server/servers/view/widget/servers_empty_placeholder.dart';
-import 'package:vpn/view/buttons/floating_action_button_svg.dart';
+import 'package:vpn/view/buttons/custom_floating_action_button.dart';
 import 'package:vpn/view/custom_app_bar.dart';
 import 'package:vpn/view/scaffold_wrapper.dart';
 
@@ -18,14 +18,16 @@ class ServersScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldWrapper(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            title: context.ln.servers,
-          ),
-          body: BlocBuilder<ServersBloc, ServersState>(
-            buildWhen: (previous, current) => previous.serverList != current.serverList,
-            builder: (context, state) => state.loadingState == ServerLoadingState.idle
-                ? state.serverList.isEmpty
+    child: ScaffoldMessenger(
+      key: ValueKey('SERVERMESSENGER'),
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: context.ln.servers,
+        ),
+        body: BlocBuilder<ServersBloc, ServersState>(
+          buildWhen: (previous, current) => previous.serverList != current.serverList,
+          builder: (context, state) => state.loadingState == ServerLoadingState.idle
+              ? state.serverList.isEmpty
                     ? const ServersEmptyPlaceholder()
                     : ListView.builder(
                         itemCount: state.serverList.length,
@@ -42,22 +44,29 @@ class ServersScreenView extends StatelessWidget {
                           ],
                         ),
                       )
-                : const SizedBox.shrink(),
-          ),
-          floatingActionButton: BlocBuilder<ServersBloc, ServersState>(
-            buildWhen: (previous, current) => previous.serverList.isEmpty != current.serverList.isEmpty,
-            builder: (context, state) => state.serverList.isEmpty
-                ? const SizedBox.shrink()
-                : FloatingActionButtonSvg.extended(
-                    icon: AssetIcons.add,
-                    onPressed: () => _pushServerDetailsScreen(context),
-                    label: context.ln.addServer,
-                  ),
-          ),
+              : const SizedBox.shrink(),
         ),
-      );
+        floatingActionButton: BlocBuilder<ServersBloc, ServersState>(
+          buildWhen: (previous, current) => previous.serverList.isEmpty != current.serverList.isEmpty,
+          builder: (context, state) => state.serverList.isEmpty
+              ? const SizedBox.shrink()
+              : CustomFloatingActionButton.extended(
+                  icon: AssetIcons.add,
+                  onPressed: () => _pushServerDetailsScreen(context),
+                  label: context.ln.addServer,
+                ),
+        ),
+      ),
+    ),
+  );
 
-  void _pushServerDetailsScreen(BuildContext context) => context.push(
-        const ServerDetailsScreen(),
+  void _pushServerDetailsScreen(BuildContext context) => context
+      .push(
+        const ServerDetailsPopUp(),
+      )
+      .then(
+        (_) => context.read<ServersBloc>().add(
+          const ServersEvent.fetch(),
+        ),
       );
 }

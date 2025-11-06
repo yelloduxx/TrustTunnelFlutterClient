@@ -3,7 +3,7 @@
 enum Breakpoint {
   M,
   S,
-  XS;
+  XS,
 }
 
 extension BreakpointExtension on Breakpoint {

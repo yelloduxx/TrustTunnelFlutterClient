@@ -9,10 +9,11 @@ class RoutingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider<RoutingBloc>(
-        create: (context) => context.blocFactory.routingBloc()
-          ..add(
-            const RoutingEvent.init(),
-          ),
-        child: const RoutingScreenView(),
-      );
+    lazy: false,
+    create: (context) => context.blocFactory.routingBloc()
+      ..add(
+        const RoutingEvent.fetch(),
+      ),
+    child: const RoutingScreenView(),
+  );
 }

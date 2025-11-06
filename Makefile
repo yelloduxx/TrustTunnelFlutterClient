@@ -14,3 +14,7 @@ init:
 vec:
 	@echo "* Generating vectors from svg *"
 	@vector_graphics_compiler --input-dir=assets/svg --out-dir=assets/vectors
+
+ln:
+	@echo "* Generating localizations *"
+	@dart run intl_utils:generate

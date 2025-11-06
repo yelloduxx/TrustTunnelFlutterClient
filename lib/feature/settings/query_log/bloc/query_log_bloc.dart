@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vpn/data/model/vpn_request.dart';
 import 'package:vpn/data/repository/settings_repository.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
 
 part 'query_log_bloc.freezed.dart';
 part 'query_log_event.dart';
@@ -12,18 +12,21 @@ class QueryLogBloc extends Bloc<QueryLogEvent, QueryLogState> {
 
   QueryLogBloc({
     required SettingsRepository settingsRepository,
-  })  : _settingsRepository = settingsRepository,
-        super(const QueryLogState()) {
-    on<_Init>(_init);
+  }) : _settingsRepository = settingsRepository,
+       super(const QueryLogState()) {
+    on<QueryLogEvent>(
+      (event, emit) => switch (event) {
+        _Init() => _init(event, emit),
+      },
+    );
   }
 
   void _init(
     _Init event,
     Emitter<QueryLogState> emit,
-  ) async =>
-      emit(
-        state.copyWith(
-          logs: await _settingsRepository.getAllRequests(),
-        ),
-      );
+  ) async => emit(
+    state.copyWith(
+      logs: await _settingsRepository.getAllRequests(),
+    ),
+  );
 }

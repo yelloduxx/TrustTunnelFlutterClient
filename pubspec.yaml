@@ -6,40 +6,47 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  flutter: ^3.35.4
+  sdk: '>=3.8.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.19.0
+  intl: ^0.20.2
   flutter_localizations:
     sdk: flutter
   intl_utils: ^2.8.5
-  cupertino_icons: ^1.0.6
-  flutter_svg: 2.0.3
-  flutter_bloc: ^8.0.1
-  rxdart: ^0.27.7
+  flutter_bloc: ^9.1.1
+  rxdart: ^0.28.0
+  package_info_plus: ^8.3.1
+  url_launcher: ^6.3.0
+  drift: ^2.28.2
+  path_provider: ^2.1.5
   vpn_plugin:
     path: plugins/vpn_plugin
-  vector_graphics: ^1.1.11+1
-  package_info_plus: ^4.2.0
-  url_launcher: ^6.3.0
+  sqlite3_flutter_libs: ^0.5.39
+  html: 0.15.6
+  bloc_concurrency: ^0.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
-  build_runner: ^2.4.6
-  freezed: ^2.1.0+1
+  drift_dev: ^2.28.3
+  flutter_lints: ^6.0.0
+  build_runner: ^2.7.1
+  freezed: ^3.2.0
   json_serializable: ^6.3.1
+
 
 flutter:
   generate: true
   uses-material-design: true
   assets:
-    - assets/icons/
-    - assets/vectors/
+    - assets/images/
   fonts:
+    - family: IconFont
+      fonts:
+        - asset: assets/fonts/IconFont.ttf
     - family: Roboto
       fonts:
         - asset: assets/fonts/roboto/Roboto-Thin.ttf

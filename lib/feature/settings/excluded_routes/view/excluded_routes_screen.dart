@@ -8,10 +8,8 @@ class ExcludedRoutesScreen extends StatelessWidget {
   const ExcludedRoutesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      BlocProvider<ExcludedRoutesBloc>(
-        create: (context) => context.blocFactory.excludedRoutesBloc()
-          ..add(const ExcludedRoutesEvent.init()),
-        child: const ExcludedRoutesScreenView(),
-      );
+  Widget build(BuildContext context) => BlocProvider<ExcludedRoutesBloc>(
+    create: (context) => context.blocFactory.excludedRoutesBloc()..add(const ExcludedRoutesEvent.init()),
+    child: const ExcludedRoutesScreenView(),
+  );
 }

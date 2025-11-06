@@ -8,16 +8,18 @@
   "add": "Add",
   "editServer": "Edit server",
   "serverName": "Server name",
-  "serverDetailsVpnServerIpAddressLabel": "IP address of the running VPN server",
-  "serverDetailsIpAddressDomainLabel": "Domain for IP address",
   "username": "Username",
   "enterUsername": "Enter username",
   "password": "Password",
   "enterPassword": "Enter password",
   "protocol": "Protocol",
   "routingProfile": "Routing profile",
-  "enterDnsServerHint": "Several types are supported: plain, doh, doh, quick, h3. You can enter several DNS servers at once, one for each line",
-  "enterIpAddressFormatHint": "Use format 1.1.1.1",
+  "enterDnsServerLabel": "DNS server addresses, one per line",
+  "enterDnsServerHint": "IP address, tls://, https://, quic://, or h3://",
+  "enterIpAddressLabel": "IP address of the running VPN server",
+  "enterIpAddressHint": "IPv4 or IPv6",
+  "enterDomainLabel": "Domain name from server certificate",
+  "enterDomainHint": "Domain or IP address",
   "dnsServers": "DNS servers",
   "defaultProfile": "Default profile",
   "serversEmptyTitle": "Create your first server",
@@ -26,9 +28,9 @@
   "save": "Save",
   "unknownError": "Unknown Error",
   "nameAlreadyExistError": "This name is already used",
-  "ipAddressWrongFieldError": "Use the format 1.1.1.1",
-  "domainWrongFieldError": "Use the format example.com",
-  "dnsServersWrongFieldError": "Use the format plain, dot, doh, quic, h3",
+  "ipAddressWrongFieldError": "Use the format x.x.x.x or x:x:x:x:x:x:x:x",
+  "domainWrongFieldError": "Use a domain name or IP address",
+  "dnsServersWrongFieldError": "Use IP addresses, tls://, https://, quic://, or h3://",
   "urlWrongFieldError": "Please check the URL: it looks incorrect",
   "pleaseFillField": "Please fill out this field",
   "editProfile": "Edit profile",
@@ -76,5 +78,39 @@
         "type": "String"
       }
     }
-  }
+  },
+  "serverDeletedSnackbar": "Server <b>{serverName}</b> deleted",
+  "@serverDeletedSnackbar": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "profileDeletedSnackbar": "Profile <b>{profileName}</b> deleted",
+  "@profileDeletedSnackbar": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
+  "changesSavedSnackbar": "Changes saved",
+  "serverCreatedSnackbar": "Server <b>{serverName}</b> created",
+  "@serverCreatedSnackbar": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
+  "profileCreatedSnackbar": "Profile <b>{profileName}</b> created",
+  "@profileCreatedSnackbar": {
+    "placeholders": {
+      "profileName": {
+        "type": "String"
+      }
+    }
+  },
+  "allRulesDeleted": "All rules deleted"
 }

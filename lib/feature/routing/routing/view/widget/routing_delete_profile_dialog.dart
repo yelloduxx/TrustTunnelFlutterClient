@@ -16,10 +16,11 @@ class RoutingDeleteProfileDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomAlertDialog(
-        title: context.ln.deleteProfileDialogTitle,
-        scrollable: true,
-        content: Text(context.ln.deleteProfileDescription(profileName)),
-        actionsBuilder: (spacing) => [
+    title: context.ln.deleteProfileDialogTitle,
+    scrollable: true,
+    content: Text(context.ln.deleteProfileDescription(profileName)),
+    actionsBuilder:
+        (spacing) => [
           TextButton(
             onPressed: () => context.pop(),
             child: Text(context.ln.cancel),
@@ -37,5 +38,5 @@ class RoutingDeleteProfileDialog extends StatelessWidget {
             ),
           ),
         ],
-      );
+  );
 }

@@ -1,19 +1,33 @@
 import 'package:pigeon/pigeon.dart';
 
-enum VpnProtocol {
-  quic,
-  http2,
+@ConfigurePigeon(
+  PigeonOptions(
+    dartOut: 'lib/platform_api.g.dart',
+    dartOptions: DartOptions(),
+    cppOptions: CppOptions(namespace: 'vpn_plugin'),
+    cppHeaderOut: 'windows/runner/platform_api.g.h',
+    cppSourceOut: 'windows/runner/platform_api.g.cpp',
+    kotlinOut: 'android/src/main/kotlin/com/adguard/trusttunnel/vpn_plugin/PlatformApi.g.kt',
+    kotlinOptions: KotlinOptions(
+      package: 'com.adguard.trusttunnel.vpn_plugin',
+    ),
+    swiftOptions: SwiftOptions(),
+  ),
+)
+@HostApi()
+abstract class IVpnManager {
+  @TaskQueue(type: TaskQueueType.serialBackgroundThread)
+  void start({required String config});
+
+  @TaskQueue(type: TaskQueueType.serialBackgroundThread)
+  void stop();
+
+  VpnManagerState getCurrentState();
 }
 
 enum RoutingMode {
   bypass,
   vpn,
-}
-
-enum VpnManagerState {
-  disconnected,
-  connecting,
-  connected,
 }
 
 enum PlatformErrorCode {
@@ -30,142 +44,6 @@ enum PlatformFieldName {
   domain,
   serverName,
   dnsServers,
-}
-
-class Server {
-  final int id;
-  final String name;
-  final String ipAddress;
-  final String domain;
-  final String login;
-  final String password;
-  final VpnProtocol vpnProtocol;
-  final int routingProfileId;
-  final List<String?> dnsServers;
-
-  const Server({
-    required this.id,
-    required this.name,
-    required this.ipAddress,
-    required this.domain,
-    required this.login,
-    required this.password,
-    required this.vpnProtocol,
-    required this.routingProfileId,
-    required this.dnsServers,
-  });
-}
-
-class RoutingProfile {
-  final int id;
-  final String name;
-  final RoutingMode defaultMode;
-  final List<String?> bypassRules;
-  final List<String?> vpnRules;
-
-  const RoutingProfile({
-    required this.id,
-    required this.name,
-    required this.defaultMode,
-    required this.bypassRules,
-    required this.vpnRules,
-  });
-}
-
-class VpnRequest {
-  final String time;
-  final VpnProtocol vpnProtocol;
-  final RoutingMode decision;
-  final String sourceIpAddress;
-  final String destinationIpAddress;
-  final String? sourcePort;
-  final String? destinationPort;
-  final String? domain;
-
-  const VpnRequest({
-    required this.time,
-    required this.vpnProtocol,
-    required this.decision,
-    required this.sourceIpAddress,
-    required this.destinationIpAddress,
-    this.sourcePort,
-    this.destinationPort,
-    this.domain,
-  });
-}
-
-class AddServerRequest {
-  final String name;
-  final String ipAddress;
-  final String domain;
-  final String login;
-  final String password;
-  final VpnProtocol vpnProtocol;
-  final int routingProfileId;
-  final List<String?> dnsServers;
-
-  const AddServerRequest({
-    required this.name,
-    required this.ipAddress,
-    required this.domain,
-    required this.login,
-    required this.password,
-    required this.vpnProtocol,
-    required this.routingProfileId,
-    required this.dnsServers,
-  });
-}
-
-class UpdateServerRequest {
-  final int id;
-  final String name;
-  final String ipAddress;
-  final String domain;
-  final String login;
-  final String password;
-  final VpnProtocol vpnProtocol;
-  final int routingProfileId;
-  final List<String?> dnsServers;
-
-  const UpdateServerRequest({
-    required this.id,
-    required this.name,
-    required this.ipAddress,
-    required this.domain,
-    required this.login,
-    required this.password,
-    required this.vpnProtocol,
-    required this.routingProfileId,
-    required this.dnsServers,
-  });
-}
-
-class AddRoutingProfileRequest {
-  final String name;
-  final RoutingMode defaultMode;
-  final List<String?> bypassRules;
-  final List<String?> vpnRules;
-
-  const AddRoutingProfileRequest({
-    required this.name,
-    required this.defaultMode,
-    required this.bypassRules,
-    required this.vpnRules,
-  });
-}
-
-class UpdateRoutingProfileRequest {
-  final int id;
-  final RoutingMode defaultMode;
-  final List<String?> bypassRules;
-  final List<String?> vpnRules;
-
-  const UpdateRoutingProfileRequest({
-    required this.id,
-    required this.defaultMode,
-    required this.bypassRules,
-    required this.vpnRules,
-  });
 }
 
 class PlatformErrorResponse {
@@ -188,58 +66,164 @@ class PlatformFieldError {
   });
 }
 
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/platform_api.g.dart',
-  dartOptions: DartOptions(),
-  cppOptions: CppOptions(namespace: 'vpn_plugin'),
-  cppHeaderOut: 'windows/runner/platform_api.g.h',
-  cppSourceOut: 'windows/runner/platform_api.g.cpp',
-  kotlinOut: 'android/src/main/kotlin/com/example/vpn_plugin/PlatformApi.g.kt',
-  kotlinOptions: KotlinOptions(
-    package: 'com.example.vpn_plugin',
-  ),
-  swiftOptions: SwiftOptions(),
-))
+class RoutingProfile {
+  final int id; // deprecated
+  final String name;
+  final RoutingMode defaultMode;
+  final List<String> bypassRules;
+  final List<String> vpnRules;
+
+  const RoutingProfile({
+    required this.id,
+    required this.name,
+    required this.defaultMode,
+    required this.bypassRules,
+    required this.vpnRules,
+  });
+}
+
+class Server {
+  final int id; // deprecated
+  final String ipAddress;
+  final String domain;
+  final String login;
+  final String password;
+  final List<String> dnsServers;
+  final VpnProtocol vpnProtocol;
+  final int routingProfileId;
+  final String tlsClientRandomPrefix;
+  final bool hasIpv6;
+  final String certificatePem;
+
+  const Server({
+    required this.id,
+    required this.ipAddress,
+    required this.domain,
+    required this.login,
+    required this.password,
+    required this.vpnProtocol,
+    required this.routingProfileId,
+    required this.dnsServers,
+    required this.tlsClientRandomPrefix,
+    required this.hasIpv6,
+    required this.certificatePem,
+  });
+}
+
+enum VpnManagerState {
+  disconnected,
+  connecting,
+  connected,
+  waitingForRecovery,
+  recovering,
+  waitingForNetwork,
+}
+
+enum VpnProtocol {
+  quic,
+  http2;
+
+  const VpnProtocol();
+}
+
+/////////////////// DEPRECATED ZONE //////////////////////
 @HostApi()
-abstract class PlatformApi {
-  // Storage Manager
-  List<Server> getAllServers();
+abstract class IStorageManager {
+  void setExcludedRoutes(String routes);
 
-  Server getServerById({required int id});
+  void setRoutingProfiles(List<RoutingProfile> profiles);
 
-  Server addServer({required AddServerRequest request});
+  void setSelectedServerId(int id);
 
-  Server updateServer({required UpdateServerRequest request});
-
-  void removeServer({required int id});
-
-  int? getSelectedServerId();
-
-  void setSelectedServerId({required int id});
-
-  List<RoutingProfile> getAllRoutingProfiles();
-
-  RoutingProfile getRoutingProfileById({required int id});
-
-  RoutingProfile addRoutingProfile({required AddRoutingProfileRequest request});
-
-  RoutingProfile updateRoutingProfile({required UpdateRoutingProfileRequest request});
-
-  RoutingProfile setRoutingProfileName({required int id, required String name});
-
-  void removeRoutingProfile({required int id});
+  void setServers(List<Server> servers);
 
   List<VpnRequest> getAllRequests();
 
-  void setExcludedRoutes(String routes);
-
   String getExcludedRoutes();
 
-  // VPN manager
-  void start();
+  List<RoutingProfile> getRoutingProfiles();
 
-  void stop();
+  int? getSelectedServerId();
 
-  // Common
-  void errorStub(PlatformErrorResponse error);
+  List<Server> getAllServers();
+}
+
+@HostApi()
+abstract class ServersManager {
+  AddNewServerResult addNewServer({
+    required String name,
+    required String ipAddress,
+    required String domain,
+    required String username,
+    required String password,
+    required VpnProtocol protocolName,
+    required int routingProfileId,
+    required String dnsServers,
+  });
+
+  List<Server> getAllServers();
+
+  AddNewServerResult setNewServer({
+    required int id,
+    required String name,
+    required String ipAddress,
+    required String domain,
+    required String username,
+    required String password,
+    required VpnProtocol protocolName,
+    required int routingProfileId,
+    required String dnsServers,
+  });
+
+  void setSelectedServerId(int id);
+
+  void removeServer(int id);
+}
+
+@HostApi()
+abstract class RoutingProfilesManager {
+  void addNewProfile();
+
+  List<RoutingProfile> getAllProfiles();
+
+  void setDefaultRoutingMode({required int id, required RoutingMode mode});
+
+  void setProfileName({required int id, required String name});
+
+  void setRules({required int id, required RoutingMode mode, required String rules});
+
+  void removeAllRules(int id);
+}
+
+enum AddNewServerResult {
+  ok,
+  ipAddressIncorrect,
+  domainIncorrect,
+  usernameIncorrect,
+  passwordIncorrect,
+  dnsServersIncorrect,
+}
+
+class VpnRequest {
+  // TODO: Make it DateTime with parsing options
+  // Konstantin Gorynin <k.gorynin@adguard.com>, 22 August 2025
+  final String zonedDateTime;
+  final String protocolName;
+  final RoutingMode decision;
+  final String sourceIpAddress;
+  final String destinationIpAddress;
+  final String? sourcePort;
+  final String? destinationPort;
+  final String? domain;
+
+  const VpnRequest({
+    required this.zonedDateTime,
+    required this.protocolName,
+    required this.decision,
+    required this.sourceIpAddress,
+    required this.destinationIpAddress,
+    this.sourcePort,
+    this.destinationPort,
+    this.domain,
+  });
 }

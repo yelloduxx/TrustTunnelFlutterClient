@@ -9,32 +9,29 @@ class ExcludedRoutesForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocBuilder<ExcludedRoutesBloc, ExcludedRoutesState>(
-          buildWhen: (previous, current) => previous.action == current.action && previous.data != current.data,
-          builder: (context, state) {
-            return CustomTextField(
-              value: state.data,
-              hint: context.ln.typeSomething,
-              minLines: 40,
-              maxLines: 40,
-              showClearButton: false,
-              onChanged: (excludedRoutes) => _onDataChanged(
-                context,
-                excludedRoutes: excludedRoutes,
-              ),
-            );
-          },
+    padding: const EdgeInsets.all(16),
+    child: BlocBuilder<ExcludedRoutesBloc, ExcludedRoutesState>(
+      buildWhen: (previous, current) => previous.action == current.action,
+      builder: (context, state) => CustomTextField(
+        value: state.excludedRoutes,
+        hint: context.ln.typeSomething,
+        minLines: 40,
+        maxLines: 40,
+        showClearButton: false,
+        onChanged: (excludedRoutes) => _onDataChanged(
+          context,
+          excludedRoutes: excludedRoutes,
         ),
-      );
+      ),
+    ),
+  );
 
   void _onDataChanged(
     BuildContext context, {
     required String excludedRoutes,
-  }) =>
-      context.read<ExcludedRoutesBloc>().add(
-            ExcludedRoutesEvent.dataChanged(
-              excludedRoutes: excludedRoutes,
-            ),
-          );
+  }) => context.read<ExcludedRoutesBloc>().add(
+    ExcludedRoutesEvent.dataChanged(
+      excludedRoutes: excludedRoutes,
+    ),
+  );
 }

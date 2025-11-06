@@ -14,8 +14,7 @@ class RotatingWidget extends StatefulWidget {
   State<RotatingWidget> createState() => _RotatingWidgetState();
 }
 
-class _RotatingWidgetState extends State<RotatingWidget>
-    with SingleTickerProviderStateMixin {
+class _RotatingWidgetState extends State<RotatingWidget> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -29,9 +28,9 @@ class _RotatingWidgetState extends State<RotatingWidget>
 
   @override
   Widget build(BuildContext context) => RotationTransition(
-        turns: _controller,
-        child: widget.child,
-      );
+    turns: _controller,
+    child: widget.child,
+  );
 
   @override
   void dispose() {

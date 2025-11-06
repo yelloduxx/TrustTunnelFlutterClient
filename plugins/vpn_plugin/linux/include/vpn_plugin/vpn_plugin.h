@@ -16,10 +16,9 @@ typedef struct {
   GObjectClass parent_class;
 } VpnPluginClass;
 
-FLUTTER_PLUGIN_EXPORT GType vpn_plugin_get_type();
+FLUTTER_PLUGIN_EXPORT GType vpn_plugin_get_type(void);
 
-FLUTTER_PLUGIN_EXPORT void vpn_plugin_register_with_registrar(
-    FlPluginRegistrar* registrar);
+FLUTTER_PLUGIN_EXPORT void vpn_plugin_register_with_registrar(FlPluginRegistrar* registrar);
 
 G_END_DECLS
 

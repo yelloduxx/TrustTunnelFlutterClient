@@ -11,17 +11,19 @@ class QueryLogScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldWrapper(
-        child: Scaffold(
-          appBar: CustomAppBar(title: context.ln.queryLog),
-          body: BlocBuilder<QueryLogBloc, QueryLogState>(
-            builder: (context, state) => ListView.separated(
-              itemBuilder: (context, index) => QueryLogCard(
-                log: state.logs[index],
-              ),
+    child: Scaffold(
+      appBar: CustomAppBar(title: context.ln.queryLog),
+      body: BlocBuilder<QueryLogBloc, QueryLogState>(
+        builder:
+            (context, state) => ListView.separated(
+              itemBuilder:
+                  (context, index) => QueryLogCard(
+                    log: state.logs[index],
+                  ),
               separatorBuilder: (_, __) => const Divider(),
               itemCount: state.logs.length,
             ),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 }

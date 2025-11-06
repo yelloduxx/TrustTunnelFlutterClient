@@ -9,11 +9,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        theme: context.dependencyFactory.lightThemeData,
-        home: const NavigationScreen(),
-        onGenerateTitle: (context) => context.ln.appTitle,
-        locale: Localization.defaultLocale,
-        localizationsDelegates: Localization.localizationDelegates,
-        supportedLocales: Localization.supportedLocales,
-      );
+    theme: context.dependencyFactory.lightThemeData,
+    home: const NavigationScreen(),
+    onGenerateTitle: (context) => context.ln.appTitle,
+    locale: Localization.defaultLocale,
+    localizationsDelegates: Localization.localizationDelegates,
+    supportedLocales: Localization.supportedLocales,
+  );
 }

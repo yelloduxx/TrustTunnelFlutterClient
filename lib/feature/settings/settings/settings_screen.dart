@@ -14,47 +14,47 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaffoldWrapper(
-        child: Scaffold(
-          appBar: CustomAppBar(
-            title: context.ln.settings,
+    child: Scaffold(
+      appBar: CustomAppBar(
+        title: context.ln.settings,
+      ),
+      body: ListView(
+        children: [
+          CustomArrowListTile(
+            title: context.ln.queryLog,
+            onTap: () => _pushQueryLogScreen(context),
           ),
-          body: ListView(
-            children: [
-              CustomArrowListTile(
-                title: context.ln.queryLog,
-                onTap: () => _pushQueryLogScreen(context),
-              ),
-              const Divider(),
-              CustomArrowListTile(
-                title: context.ln.excludedRoutes,
-                onTap: () => _pushExcludedRoutesScreen(context),
-              ),
-              const Divider(),
-              CustomArrowListTile(
-                title: context.ln.followUsOnGithub,
-                onTap: _openGithubOrganization,
-              ),
-              const Divider(),
-              CustomArrowListTile(
-                title: context.ln.about,
-                onTap: () => _pushAboutScreen(context),
-              ),
-            ],
+          const Divider(),
+          CustomArrowListTile(
+            title: context.ln.excludedRoutes,
+            onTap: () => _pushExcludedRoutesScreen(context),
           ),
-        ),
-      );
+          const Divider(),
+          CustomArrowListTile(
+            title: context.ln.followUsOnGithub,
+            onTap: _openGithubOrganization,
+          ),
+          const Divider(),
+          CustomArrowListTile(
+            title: context.ln.about,
+            onTap: () => _pushAboutScreen(context),
+          ),
+        ],
+      ),
+    ),
+  );
 
   void _pushQueryLogScreen(BuildContext context) => context.push(
-        const QueryLogScreen(),
-      );
+    const QueryLogScreen(),
+  );
 
   void _pushExcludedRoutesScreen(BuildContext context) => context.push(
-        const ExcludedRoutesScreen(),
-      );
+    const ExcludedRoutesScreen(),
+  );
 
   void _openGithubOrganization() => UrlUtils.openWebPage(UrlUtils.githubAdguardTeam);
 
   void _pushAboutScreen(BuildContext context) => context.push(
-        const AboutScreen(),
-      );
+    const AboutScreen(),
+  );
 }

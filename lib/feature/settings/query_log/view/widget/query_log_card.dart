@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/extensions/enum_extensions.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
+import 'package:vpn/data/model/vpn_request.dart';
 
 class QueryLogCard extends StatelessWidget {
   final VpnRequest log;
@@ -13,33 +13,33 @@ class QueryLogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IntrinsicHeight(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _titleLine(),
-                style: context.textTheme.bodySmall,
-              ),
-              const SizedBox(height: 3),
-              Text(
-                _ipAddressLine(),
-                style: context.textTheme.bodySmall,
-              ),
-              if (log.domain != null) ...[
-                const SizedBox(height: 3),
-                Text(
-                  _domainLine()!,
-                  style: context.textTheme.bodySmall,
-                ),
-              ],
-            ],
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _titleLine(),
+            style: context.textTheme.bodySmall,
           ),
-        ),
-      );
+          const SizedBox(height: 3),
+          Text(
+            _ipAddressLine(),
+            style: context.textTheme.bodySmall,
+          ),
+          if (log.domain != null) ...[
+            const SizedBox(height: 3),
+            Text(
+              _domainLine()!,
+              style: context.textTheme.bodySmall,
+            ),
+          ],
+        ],
+      ),
+    ),
+  );
 
-  String _titleLine() => '${log.time}    ${log.vpnProtocol.stringValue} -> ${log.decision.stringValue}';
+  String _titleLine() => '${log.zonedDateTime}    ${log.protocolName} -> ${log.decision.stringValue}';
 
   String _ipAddressLine() {
     String source = log.sourceIpAddress;

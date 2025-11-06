@@ -1,107 +1,104 @@
 import 'dart:async';
-
-import 'package:rxdart/rxdart.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
+import 'package:vpn/data/datasources/routing_datasource.dart';
+import 'package:vpn/data/datasources/server_datasource.dart';
+import 'package:vpn/data/model/raw/add_server_request.dart';
+import 'package:vpn/data/model/server.dart';
 
 abstract class ServerRepository {
-  ValueStream<List<Server>?> get serverStream;
+  Future<Server> addNewServer({required AddServerRequest request});
 
-  ValueStream<int?> get selectedServerIdStream;
+  Future<List<Server>> getAllServers();
 
-  Future<void> loadServers();
-
-  Future<void> addServer({required AddServerRequest request});
-
-  Future<void> updateServer({required UpdateServerRequest request});
-
-  Future<Server> getServerById({required int id});
+  Future<Server?> getServerById({required int id});
 
   Future<void> setSelectedServerId({required int id});
 
-  Future<int?> getSelectedServerId();
+  Future<void> setNewServer({required int id, required AddServerRequest request});
 
-  Future<void> deleteServer({required int serverId});
-
-  Future<void> dispose();
+  Future<void> removeServer({required int serverId});
 }
 
 class ServerRepositoryImpl implements ServerRepository {
-  final PlatformApi _platformApi;
+  final ServerDatasource _serverDatasource;
+  final RoutingDatasource _routingDatasource;
 
   ServerRepositoryImpl({
-    required PlatformApi platformApi,
-  }) : _platformApi = platformApi {
-    _init();
-  }
-
-  final BehaviorSubject<List<Server>?> _serverController = BehaviorSubject.seeded(null);
-
-  final BehaviorSubject<int?> _selectedServerIdController = BehaviorSubject.seeded(null);
+    required ServerDatasource serverDatasource,
+    required RoutingDatasource routingDatasource,
+  }) : _serverDatasource = serverDatasource,
+       _routingDatasource = routingDatasource;
 
   @override
-  ValueStream<List<Server>?> get serverStream => _serverController.stream;
+  Future<Server> addNewServer({required AddServerRequest request}) async {
+    final server = await _serverDatasource.addNewServer(
+      request: request,
+    );
 
-  @override
-  ValueStream<int?> get selectedServerIdStream => _selectedServerIdController.stream;
+    final profile = await _routingDatasource.getProfileById(
+      id: request.routingProfileId,
+    );
 
-  Future<void> _init() async => _selectedServerIdController.add(
-        await _platformApi.getSelectedServerId(),
-      );
-
-  @override
-  Future<void> loadServers() async {
-    final List<Server?> servers = await _platformApi.getAllServers();
-
-    _serverController.add(servers.cast<Server>());
-  }
-
-  @override
-  Future<void> addServer({required AddServerRequest request}) async {
-    final Server server = await _platformApi.addServer(request: request);
-
-    _serverController.add(
-      List.of(_serverController.value ?? [])..add(server),
+    return Server(
+      id: server.id,
+      name: server.name,
+      ipAddress: server.ipAddress,
+      domain: server.domain,
+      username: server.username,
+      password: server.password,
+      vpnProtocol: server.vpnProtocol,
+      dnsServers: server.dnsServers,
+      routingProfile: profile,
     );
   }
 
   @override
-  Future<void> updateServer({required UpdateServerRequest request}) async {
-    final Server server = await _platformApi.updateServer(request: request);
-
-    final List<Server> servers = List.of(_serverController.value!);
-    final int index = servers.indexWhere((element) => element.id == server.id);
-    if (index == -1) throw Exception('Server not found');
-    servers[index] = server;
-
-    _serverController.add(servers);
+  Future<List<Server>> getAllServers() async {
+    final profiles = await _routingDatasource.getAllProfiles();
+    final servers = await _serverDatasource.getAllServers();
+    final profilesMap = Map.fromEntries(profiles.map((e) => MapEntry(e.id, e)));
+    return servers
+        .map(
+          (e) => Server(
+            id: e.id,
+            name: e.name,
+            ipAddress: e.ipAddress,
+            domain: e.domain,
+            username: e.username,
+            password: e.password,
+            vpnProtocol: e.vpnProtocol,
+            dnsServers: e.dnsServers,
+            routingProfile: profilesMap[e.routingProfileId]!,
+            selected: e.selected,
+          ),
+        )
+        .toList();
   }
 
   @override
-  Future<Server> getServerById({required int id}) => _platformApi.getServerById(id: id);
+  Future<void> setNewServer({required int id, required AddServerRequest request}) =>
+      _serverDatasource.setNewServer(id: id, request: request);
 
   @override
-  Future<void> setSelectedServerId({required int id}) async {
-    await _platformApi.setSelectedServerId(id: id);
-    _selectedServerIdController.add(id);
-  }
+  Future<void> setSelectedServerId({required int id}) => _serverDatasource.setSelectedServerId(id: id);
 
   @override
-  Future<int?> getSelectedServerId() => _platformApi.getSelectedServerId();
+  Future<void> removeServer({required int serverId}) => _serverDatasource.removeServer(serverId: serverId);
 
   @override
-  Future<void> deleteServer({required int serverId}) async {
-    await _platformApi.removeServer(id: serverId);
-
-    final List<Server> servers = List.of(_serverController.value!);
-    final int index = servers.indexWhere((element) => element.id == serverId);
-    if (index == -1) throw Exception('Server not found');
-    servers.removeAt(index);
-    _serverController.add(servers);
-  }
-
-  @override
-  Future<void> dispose() async {
-    await _selectedServerIdController.close();
-    await _serverController.close();
+  Future<Server?> getServerById({required int id}) async {
+    final server = await _serverDatasource.getServerById(id: id);
+    final profile = await _routingDatasource.getProfileById(id: server.routingProfileId);
+    return Server(
+      id: server.id,
+      name: server.name,
+      ipAddress: server.ipAddress,
+      domain: server.domain,
+      username: server.username,
+      password: server.password,
+      vpnProtocol: server.vpnProtocol,
+      dnsServers: server.dnsServers,
+      routingProfile: profile,
+      selected: server.selected,
+    );
   }
 }

@@ -1,54 +1,32 @@
+import 'package:vpn/data/model/routing_profile.dart';
 import 'package:vpn/feature/routing/routing_details/data/routing_details_data.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
+import 'dart:math' as math;
 
 abstract class RoutingDetailsService {
-  AddRoutingProfileRequest toAddRoutingProfileRequest({
-    required String profileName,
-    required RoutingDetailsData data,
-  });
-
-  UpdateRoutingProfileRequest toUpdateRoutingProfileRequest({
-    required int id,
-    required RoutingDetailsData data,
-  });
-
-  String getNewProfileName();
-
   RoutingDetailsData toRoutingDetailsData({required RoutingProfile routingProfile});
+
+  String getNewProfileName(Set<String> occupiedNames);
 }
 
 class RoutingDetailsServiceImpl implements RoutingDetailsService {
   @override
-  AddRoutingProfileRequest toAddRoutingProfileRequest({
-    required String profileName,
-    required RoutingDetailsData data,
-  }) =>
-      AddRoutingProfileRequest(
-        name: profileName,
-        defaultMode: data.defaultMode,
-        bypassRules: data.bypassRules,
-        vpnRules: data.vpnRules,
-      );
-
-  @override
-  UpdateRoutingProfileRequest toUpdateRoutingProfileRequest({
-    required int id,
-    required RoutingDetailsData data,
-  }) =>
-      UpdateRoutingProfileRequest(
-        id: id,
-        defaultMode: data.defaultMode,
-        bypassRules: data.bypassRules,
-        vpnRules: data.vpnRules,
-      );
-
-  @override
   RoutingDetailsData toRoutingDetailsData({required RoutingProfile routingProfile}) => RoutingDetailsData(
-        defaultMode: routingProfile.defaultMode,
-        bypassRules: routingProfile.bypassRules.cast<String>(),
-        vpnRules: routingProfile.vpnRules.cast<String>(),
-      );
+    defaultMode: routingProfile.defaultMode,
+    bypassRules: routingProfile.bypassRules,
+    vpnRules: routingProfile.vpnRules,
+  );
 
   @override
-  String getNewProfileName() => 'New Profile';
+  String getNewProfileName(Set<String> occupiedNames) {
+    final profileNames = occupiedNames.where((name) => name.startsWith('Profile')).map((name) {
+      final profileNumber = name.split('Profile ').elementAtOrNull(1);
+      if (profileNumber == null) return null;
+      return int.tryParse(profileNumber);
+    });
+
+    final generatedNames = profileNames.whereType<int>();
+    if (generatedNames.isEmpty && !occupiedNames.contains('Profile')) return 'Profile';
+    final maxProfileNumber = generatedNames.fold(0, math.max) + 1;
+    return 'Profile $maxProfileNumber';
+  }
 }

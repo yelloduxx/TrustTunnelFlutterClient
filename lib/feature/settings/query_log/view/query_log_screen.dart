@@ -9,10 +9,11 @@ class QueryLogScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider<QueryLogBloc>(
-        create: (context) => context.blocFactory.queryLogBloc()
-          ..add(
-            const QueryLogEvent.init(),
-          ),
-        child: const QueryLogScreenView(),
-      );
+    create:
+        (context) =>
+            context.blocFactory.queryLogBloc()..add(
+              const QueryLogEvent.init(),
+            ),
+    child: const QueryLogScreenView(),
+  );
 }

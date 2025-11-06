@@ -15,22 +15,22 @@ class ProgressWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Stack(
-        fit: StackFit.passthrough,
-        children: [
-          child,
-          if (isLoading)
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: ColoredBox(
-                  color: color ?? context.colors.background1,
-                  child: LinearProgressIndicator(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
+    fit: StackFit.passthrough,
+    children: [
+      child,
+      if (isLoading)
+        Align(
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: ColoredBox(
+              color: color ?? context.colors.background1,
+              child: LinearProgressIndicator(
+                borderRadius: BorderRadius.circular(4),
               ),
             ),
-        ],
-      );
+          ),
+        ),
+    ],
+  );
 }

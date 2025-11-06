@@ -3,9 +3,9 @@ import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/common/extensions/enum_extensions.dart';
 import 'package:vpn/common/extensions/theme_extensions.dart';
 import 'package:vpn/common/localization/localization.dart';
+import 'package:vpn/data/model/routing_mode.dart';
 import 'package:vpn/view/custom_alert_dialog.dart';
 import 'package:vpn/view/menu/custom_dropdown_menu.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
 
 class RoutingDetailsChangeRoutingDialog extends StatefulWidget {
   final ValueChanged<RoutingMode> onSavePressed;
@@ -26,44 +26,48 @@ class _RoutingDetailsChangeRoutingDialogState extends State<RoutingDetailsChange
 
   @override
   Widget build(BuildContext context) => CustomAlertDialog(
-        title: context.ln.changeDefaultRoutingMode,
-        scrollable: true,
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(context.ln.changeDefaultRoutingModeDialogDescription),
-            const SizedBox(height: 40),
-            CustomDropdownMenu<RoutingMode>.expanded(
-              value: _selectedRoutingMode,
-              values: RoutingMode.values,
-              toText: (value) => value.stringValue,
-              labelText: context.ln.defaultProfile,
-              onChanged: _onRoutingChanged,
-            ),
-          ],
+    title: context.ln.changeDefaultRoutingMode,
+    scrollable: true,
+    content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(context.ln.changeDefaultRoutingModeDialogDescription),
+        const SizedBox(height: 40),
+        CustomDropdownMenu<RoutingMode>.expanded(
+          value: _selectedRoutingMode,
+          values: RoutingMode.values,
+          toText: (value) => value.stringValue,
+          labelText: context.ln.defaultProfile,
+          onChanged: _onRoutingChanged,
         ),
-        actionsBuilder: (spacing) => [
-          TextButton(
-            onPressed: () => context.pop(),
-            child: Text(context.ln.cancel),
-          ),
-          Theme(
-            data: context.theme.copyWith(
-              textButtonTheme: context.theme.extension<CustomTextButtonTheme>()!.success,
-            ),
-            child: TextButton(
-              onPressed: () {
-                context.pop();
-                widget.onSavePressed(_selectedRoutingMode);
-              },
-              child: Text(context.ln.save),
-            ),
-          ),
-        ],
-      );
+      ],
+    ),
+    actionsBuilder: (spacing) => [
+      TextButton(
+        onPressed: () => context.pop(),
+        child: Text(context.ln.cancel),
+      ),
+      Theme(
+        data: context.theme.copyWith(
+          textButtonTheme: context.theme.extension<CustomTextButtonTheme>()!.success,
+        ),
+        child: TextButton(
+          onPressed: _selectedRoutingMode == widget.currentRoutingMode
+              ? null
+              : () {
+                  context.pop();
+                  widget.onSavePressed(_selectedRoutingMode);
+                },
+          child: Text(context.ln.save),
+        ),
+      ),
+    ],
+  );
 
   void _onRoutingChanged(RoutingMode? mode) {
     if (mode == null || mode == _selectedRoutingMode) return;
-    _selectedRoutingMode = mode;
+    setState(() {
+      _selectedRoutingMode = mode;
+    });
   }
 }

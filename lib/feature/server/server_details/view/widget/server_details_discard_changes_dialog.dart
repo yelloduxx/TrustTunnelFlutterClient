@@ -14,10 +14,11 @@ class ServerDetailsDiscardChangesDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CustomAlertDialog(
-        title: context.ln.discardChangesDialogTitle,
-        scrollable: true,
-        content: Text(context.ln.discardChangesDialogDescription),
-        actionsBuilder: (spacing) => [
+    title: context.ln.discardChangesDialogTitle,
+    scrollable: true,
+    content: Text(context.ln.discardChangesDialogDescription),
+    actionsBuilder:
+        (spacing) => [
           TextButton(
             onPressed: () => context.pop(),
             child: Text(context.ln.cancel),
@@ -35,5 +36,5 @@ class ServerDetailsDiscardChangesDialog extends StatelessWidget {
             ),
           ),
         ],
-      );
+  );
 }

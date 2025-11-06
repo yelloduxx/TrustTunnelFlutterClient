@@ -1,19 +1,10 @@
 part of 'routing_bloc.dart';
 
 @freezed
-class RoutingEvent with _$RoutingEvent {
-  const factory RoutingEvent.init() = _Init;
+sealed class RoutingEvent with _$RoutingEvent {
+  const factory RoutingEvent.fetch() = _Fetch;
 
-  const factory RoutingEvent.dataChanged({
-    required List<RoutingProfile> profiles,
-  }) = _DataChanged;
+  const factory RoutingEvent.editName({required int id, required String newName}) = _EditName;
 
-  const factory RoutingEvent.editName({
-    required int id,
-    required String newName,
-  }) = _EditName;
-
-  const factory RoutingEvent.deleteProfile({
-    required int id,
-  }) = _DeleteProfile;
+  const factory RoutingEvent.deleteProfile({required int id}) = _DeleteProfile;
 }

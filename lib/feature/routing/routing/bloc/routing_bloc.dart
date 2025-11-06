@@ -1,10 +1,10 @@
 import 'dart:async';
-
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:vpn/common/error/model/presentation_base_error.dart';
+import 'package:vpn/data/model/routing_profile.dart';
 import 'package:vpn/data/repository/routing_repository.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
 
 part 'routing_bloc.freezed.dart';
 part 'routing_event.dart';
@@ -14,43 +14,47 @@ class RoutingBloc extends Bloc<RoutingEvent, RoutingState> {
   final RoutingRepository _routingRepository;
 
   RoutingBloc({required RoutingRepository routingRepository})
-      : _routingRepository = routingRepository,
-        super(const RoutingState()) {
-    on<_Init>(_init);
-    on<_DataChanged>(_dataChanged);
-    on<_EditName>(_editName);
-    on<_DeleteProfile>(_deleteProfile);
-
-    _initSubs();
+    : _routingRepository = routingRepository,
+      super(const RoutingState()) {
+    on<RoutingEvent>(
+      (event, emit) => switch (event) {
+        _Fetch() => _fetch(event, emit),
+        _EditName() => _editName(event, emit),
+        _DeleteProfile() => _deleteProfile(event, emit),
+      },
+    );
   }
 
-  late final StreamSubscription<List<dynamic>> _routingSub;
-
-  void _initSubs() => _routingSub = _routingRepository.routingProfileStream.whereNotNull().listen((value) {
-        add(RoutingEvent.dataChanged(profiles: List.of(value)));
-      });
-
-  Future<void> _init(_Init event, Emitter<RoutingState> emit) => _routingRepository.loadRoutingProfiles();
-
-  @override
-  Future<void> close() {
-    _routingSub.cancel();
-    return super.close();
+  Future<void> _fetch(_Fetch event, Emitter<RoutingState> emit) async {
+    final result = await _routingRepository.getAllProfiles();
+    emit(state.copyWith(routingList: result));
   }
 
-  void _dataChanged(_DataChanged event, Emitter<RoutingState> emit) => emit(
-        state.copyWith(
-          routingList: event.profiles,
-        ),
-      );
+  Future<void> _editName(_EditName event, Emitter<RoutingState> emit) async {
+    final routingProfile = state.routingList.firstWhereOrNull((element) => element.id == event.id);
+    if (routingProfile == null) {
+      throw PresentationNotFoundError();
+    }
 
-  Future<void> _editName(_EditName event, Emitter<RoutingState> emit) => _routingRepository.updateRoutingProfileName(
-        id: event.id,
-        name: event.newName,
-      );
+    await _routingRepository.setProfileName(
+      id: event.id,
+      name: event.newName,
+    );
 
-  Future<void> _deleteProfile(_DeleteProfile event, Emitter<RoutingState> emit) =>
-      _routingRepository.deleteRoutingProfileById(
-        id: event.id,
-      );
+    final updatedRoutingList = state.routingList.map(
+      (element) => element.id == event.id ? element.copyWith(name: event.newName) : element,
+    );
+
+    emit(
+      state.copyWith(
+        routingList: updatedRoutingList.toList(),
+      ),
+    );
+  }
+
+  Future<void> _deleteProfile(_DeleteProfile event, Emitter<RoutingState> emit) async {
+    await _routingRepository.deleteProfile(id: event.id);
+    final updatedRoutingList = state.routingList.where((element) => element.id != event.id).toList();
+    emit(state.copyWith(routingList: updatedRoutingList));
+  }
 }

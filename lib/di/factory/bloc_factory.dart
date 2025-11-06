@@ -23,48 +23,46 @@ class BlocFactoryImpl implements BlocFactory {
   BlocFactoryImpl({
     required RepositoryFactory repositoryFactory,
     required ServiceFactory serviceFactory,
-  })  : _serviceFactory = serviceFactory,
-        _repositoryFactory = repositoryFactory;
+  }) : _serviceFactory = serviceFactory,
+       _repositoryFactory = repositoryFactory;
 
   @override
   RoutingBloc routingBloc() => RoutingBloc(
-        routingRepository: _repositoryFactory.routingRepository,
-      );
+    routingRepository: _repositoryFactory.routingRepository,
+  );
 
   @override
   ServersBloc serversBloc() => ServersBloc(
-        serverRepository: _repositoryFactory.serverRepository,
-        vpnService: _serviceFactory.vpnService,
-      );
+    serverRepository: _repositoryFactory.serverRepository,
+  );
 
   @override
   ServerDetailsBloc serverDetailsBloc({
     int? serverId,
-  }) =>
-      ServerDetailsBloc(
-        serverId: serverId,
-        serverRepository: _repositoryFactory.serverRepository,
-        routingRepository: _repositoryFactory.routingRepository,
-        serverDetailsService: _serviceFactory.serverDetailsService,
-      );
+  }) => ServerDetailsBloc(
+    serverId: serverId,
+    vpnRepository: _repositoryFactory.vpnRepository,
+    serverRepository: _repositoryFactory.serverRepository,
+    routingRepository: _repositoryFactory.routingRepository,
+    serverDetailsService: _serviceFactory.serverDetailsService,
+  );
 
   @override
   RoutingDetailsBloc routingDetailsBloc({
     int? routingId,
-  }) =>
-      RoutingDetailsBloc(
-        routingId: routingId,
-        routingRepository: _repositoryFactory.routingRepository,
-        routingDetailsService: _serviceFactory.routingDetailsService,
-      );
+  }) => RoutingDetailsBloc(
+    routingId: routingId,
+    routingRepository: _repositoryFactory.routingRepository,
+    routingDetailsService: _serviceFactory.routingDetailsService,
+  );
 
   @override
   ExcludedRoutesBloc excludedRoutesBloc() => ExcludedRoutesBloc(
-        settingsRepository: _repositoryFactory.settingsRepository,
-      );
+    settingsRepository: _repositoryFactory.settingsRepository,
+  );
 
   @override
   QueryLogBloc queryLogBloc() => QueryLogBloc(
-        settingsRepository: _repositoryFactory.settingsRepository,
-      );
+    settingsRepository: _repositoryFactory.settingsRepository,
+  );
 }

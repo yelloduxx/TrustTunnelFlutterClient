@@ -43,23 +43,25 @@ class CustomDropdownMenu<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: padding,
-        child: Theme(
-          data: context.theme.copyWith(
-            dropdownMenuTheme: enabled
+    padding: padding,
+    child: Theme(
+      data: context.theme.copyWith(
+        dropdownMenuTheme:
+            enabled
                 ? context.theme.extension<CustomDropdownMenuTheme>()!.enabled
                 : context.theme.extension<CustomDropdownMenuTheme>()!.disabled,
-          ),
-          child: DropdownMenu<T>(
-            initialSelection: value,
-            label: Text(labelText),
-            enabled: enabled,
-            expandedInsets: expanded ? EdgeInsets.zero : null,
-            onSelected: onChanged,
-            errorText: errorText,
-            hintText: labelText,
-            requestFocusOnTap: false,
-            dropdownMenuEntries: values
+      ),
+      child: DropdownMenu<T>(
+        initialSelection: value,
+        label: Text(labelText),
+        enabled: enabled,
+        expandedInsets: expanded ? EdgeInsets.zero : null,
+        onSelected: onChanged,
+        errorText: errorText,
+        hintText: labelText,
+        requestFocusOnTap: false,
+        dropdownMenuEntries:
+            values
                 .map(
                   (e) => DropdownMenuEntry<T>(
                     value: e,
@@ -68,7 +70,7 @@ class CustomDropdownMenu<T> extends StatelessWidget {
                   ),
                 )
                 .toList(),
-          ),
-        ),
-      );
+      ),
+    ),
+  );
 }

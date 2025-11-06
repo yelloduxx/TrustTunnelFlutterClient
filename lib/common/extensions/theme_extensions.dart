@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class CustomColors extends ThemeExtension<CustomColors> {
@@ -100,44 +102,42 @@ class CustomColors extends ThemeExtension<CustomColors> {
     Color? staticBlack3,
     Color? staticWhite,
     Color? staticTransparent,
-  }) =>
-      CustomColors(
-        primary1: primary1 ?? this.primary1,
-        primary2: primary2 ?? this.primary2,
-        primary3: primary3 ?? this.primary3,
-        primary4: primary4 ?? this.primary4,
-        blend1: blend1 ?? this.blend1,
-        blend2: blend2 ?? this.blend2,
-        blend3: blend3 ?? this.blend3,
-        orange1: orange1 ?? this.orange1,
-        orange2: orange2 ?? this.orange2,
-        orange3: orange3 ?? this.orange3,
-        orange4: orange4 ?? this.orange4,
-        red1: red1 ?? this.red1,
-        red2: red2 ?? this.red2,
-        red3: red3 ?? this.red3,
-        red4: red4 ?? this.red4,
-        background1: background1 ?? this.background1,
-        background2: background2 ?? this.background2,
-        background3: background3 ?? this.background3,
-        gray1: gray1 ?? this.gray1,
-        gray2: gray2 ?? this.gray2,
-        gray3: gray3 ?? this.gray3,
-        gray4: gray4 ?? this.gray4,
-        contrast1: contrast1 ?? this.contrast1,
-        contrast2: contrast2 ?? this.contrast2,
-        contrast3: contrast3 ?? this.contrast3,
-        contrast4: contrast4 ?? this.contrast4,
-        staticBlack1: staticBlack1 ?? this.staticBlack1,
-        staticBlack2: staticBlack2 ?? this.staticBlack2,
-        staticBlack3: staticBlack3 ?? this.staticBlack3,
-        staticWhite: staticWhite ?? this.staticWhite,
-        staticTransparent: staticTransparent ?? this.staticTransparent,
-      );
+  }) => CustomColors(
+    primary1: primary1 ?? this.primary1,
+    primary2: primary2 ?? this.primary2,
+    primary3: primary3 ?? this.primary3,
+    primary4: primary4 ?? this.primary4,
+    blend1: blend1 ?? this.blend1,
+    blend2: blend2 ?? this.blend2,
+    blend3: blend3 ?? this.blend3,
+    orange1: orange1 ?? this.orange1,
+    orange2: orange2 ?? this.orange2,
+    orange3: orange3 ?? this.orange3,
+    orange4: orange4 ?? this.orange4,
+    red1: red1 ?? this.red1,
+    red2: red2 ?? this.red2,
+    red3: red3 ?? this.red3,
+    red4: red4 ?? this.red4,
+    background1: background1 ?? this.background1,
+    background2: background2 ?? this.background2,
+    background3: background3 ?? this.background3,
+    gray1: gray1 ?? this.gray1,
+    gray2: gray2 ?? this.gray2,
+    gray3: gray3 ?? this.gray3,
+    gray4: gray4 ?? this.gray4,
+    contrast1: contrast1 ?? this.contrast1,
+    contrast2: contrast2 ?? this.contrast2,
+    contrast3: contrast3 ?? this.contrast3,
+    contrast4: contrast4 ?? this.contrast4,
+    staticBlack1: staticBlack1 ?? this.staticBlack1,
+    staticBlack2: staticBlack2 ?? this.staticBlack2,
+    staticBlack3: staticBlack3 ?? this.staticBlack3,
+    staticWhite: staticWhite ?? this.staticWhite,
+    staticTransparent: staticTransparent ?? this.staticTransparent,
+  );
 
   @override
-  ThemeExtension<CustomColors> lerp(
-      covariant ThemeExtension<CustomColors>? other, double t) {
+  ThemeExtension<CustomColors> lerp(covariant ThemeExtension<CustomColors>? other, double t) {
     if (other is! CustomColors) {
       return this;
     }
@@ -173,8 +173,7 @@ class CustomColors extends ThemeExtension<CustomColors> {
       staticBlack2: Color.lerp(staticBlack2, other.staticBlack2, t)!,
       staticBlack3: Color.lerp(staticBlack3, other.staticBlack3, t)!,
       staticWhite: Color.lerp(staticWhite, other.staticWhite, t)!,
-      staticTransparent:
-          Color.lerp(staticTransparent, other.staticTransparent, t)!,
+      staticTransparent: Color.lerp(staticTransparent, other.staticTransparent, t)!,
     );
   }
 }
@@ -195,12 +194,11 @@ class CustomFilledButtonTheme extends ThemeExtension<CustomFilledButtonTheme> {
     FilledButtonThemeData? danger,
     FilledButtonThemeData? attention,
     FilledButtonThemeData? iconButton,
-  }) =>
-      CustomFilledButtonTheme(
-        danger: danger ?? this.danger,
-        attention: attention ?? this.attention,
-        iconButton: attention ?? this.iconButton,
-      );
+  }) => CustomFilledButtonTheme(
+    danger: danger ?? this.danger,
+    attention: attention ?? this.attention,
+    iconButton: attention ?? this.iconButton,
+  );
 
   @override
   ThemeExtension<CustomFilledButtonTheme> lerp(
@@ -219,8 +217,7 @@ class CustomFilledButtonTheme extends ThemeExtension<CustomFilledButtonTheme> {
   }
 }
 
-class CustomElevatedButtonTheme
-    extends ThemeExtension<CustomElevatedButtonTheme> {
+class CustomElevatedButtonTheme extends ThemeExtension<CustomElevatedButtonTheme> {
   final ElevatedButtonThemeData iconButton;
 
   const CustomElevatedButtonTheme({required this.iconButton});
@@ -228,10 +225,9 @@ class CustomElevatedButtonTheme
   @override
   ThemeExtension<CustomElevatedButtonTheme> copyWith({
     ElevatedButtonThemeData? iconButton,
-  }) =>
-      CustomElevatedButtonTheme(
-        iconButton: iconButton ?? this.iconButton,
-      );
+  }) => CustomElevatedButtonTheme(
+    iconButton: iconButton ?? this.iconButton,
+  );
 
   @override
   ThemeExtension<CustomElevatedButtonTheme> lerp(
@@ -248,8 +244,7 @@ class CustomElevatedButtonTheme
   }
 }
 
-class CustomOutlinedButtonTheme
-    extends ThemeExtension<CustomOutlinedButtonTheme> {
+class CustomOutlinedButtonTheme extends ThemeExtension<CustomOutlinedButtonTheme> {
   final OutlinedButtonThemeData iconButton;
 
   const CustomOutlinedButtonTheme({required this.iconButton});
@@ -257,10 +252,9 @@ class CustomOutlinedButtonTheme
   @override
   ThemeExtension<CustomOutlinedButtonTheme> copyWith({
     OutlinedButtonThemeData? iconButton,
-  }) =>
-      CustomOutlinedButtonTheme(
-        iconButton: iconButton ?? this.iconButton,
-      );
+  }) => CustomOutlinedButtonTheme(
+    iconButton: iconButton ?? this.iconButton,
+  );
 
   @override
   ThemeExtension<CustomOutlinedButtonTheme> lerp(
@@ -299,14 +293,13 @@ class CustomTextButtonTheme extends ThemeExtension<CustomTextButtonTheme> {
     TextButtonThemeData? success,
     TextButtonThemeData? iconButton,
     TextButtonThemeData? inlineButton,
-  }) =>
-      CustomTextButtonTheme(
-        danger: danger ?? this.danger,
-        attention: attention ?? this.attention,
-        success: success ?? this.success,
-        iconButton: iconButton ?? this.iconButton,
-        inlineButton: inlineButton ?? this.inlineButton,
-      );
+  }) => CustomTextButtonTheme(
+    danger: danger ?? this.danger,
+    attention: attention ?? this.attention,
+    success: success ?? this.success,
+    iconButton: iconButton ?? this.iconButton,
+    inlineButton: inlineButton ?? this.inlineButton,
+  );
 
   @override
   ThemeExtension<CustomTextButtonTheme> lerp(
@@ -322,8 +315,7 @@ class CustomTextButtonTheme extends ThemeExtension<CustomTextButtonTheme> {
       attention: TextButtonThemeData.lerp(attention, other.attention, t)!,
       success: TextButtonThemeData.lerp(success, other.success, t)!,
       iconButton: TextButtonThemeData.lerp(iconButton, other.iconButton, t)!,
-      inlineButton:
-          TextButtonThemeData.lerp(inlineButton, other.inlineButton, t)!,
+      inlineButton: TextButtonThemeData.lerp(inlineButton, other.inlineButton, t)!,
     );
   }
 }
@@ -341,11 +333,10 @@ class CustomDropdownMenuTheme extends ThemeExtension<CustomDropdownMenuTheme> {
   ThemeExtension<CustomDropdownMenuTheme> copyWith({
     DropdownMenuThemeData? enabled,
     DropdownMenuThemeData? disabled,
-  }) =>
-      CustomDropdownMenuTheme(
-        enabled: enabled ?? this.enabled,
-        disabled: disabled ?? this.disabled,
-      );
+  }) => CustomDropdownMenuTheme(
+    enabled: enabled ?? this.enabled,
+    disabled: disabled ?? this.disabled,
+  );
 
   @override
   ThemeExtension<CustomDropdownMenuTheme> lerp(
@@ -362,8 +353,7 @@ class CustomDropdownMenuTheme extends ThemeExtension<CustomDropdownMenuTheme> {
   }
 }
 
-class CustomFilledIconButtonTheme
-    extends ThemeExtension<CustomFilledIconButtonTheme> {
+class CustomFilledIconButtonTheme extends ThemeExtension<CustomFilledIconButtonTheme> {
   final IconButtonThemeData iconButton;
   final IconButtonThemeData iconButtonInProgress;
 
@@ -376,11 +366,10 @@ class CustomFilledIconButtonTheme
   ThemeExtension<CustomFilledIconButtonTheme> copyWith({
     IconButtonThemeData? iconButton,
     IconButtonThemeData? iconButtonInProgress,
-  }) =>
-      CustomFilledIconButtonTheme(
-        iconButton: iconButton ?? this.iconButton,
-        iconButtonInProgress: iconButtonInProgress ?? this.iconButtonInProgress,
-      );
+  }) => CustomFilledIconButtonTheme(
+    iconButton: iconButton ?? this.iconButton,
+    iconButtonInProgress: iconButtonInProgress ?? this.iconButtonInProgress,
+  );
 
   @override
   ThemeExtension<CustomFilledIconButtonTheme> lerp(
@@ -393,8 +382,69 @@ class CustomFilledIconButtonTheme
 
     return CustomFilledIconButtonTheme(
       iconButton: IconButtonThemeData.lerp(iconButton, other.iconButton, t)!,
-      iconButtonInProgress: IconButtonThemeData.lerp(
-          iconButtonInProgress, other.iconButtonInProgress, t)!,
+      iconButtonInProgress: IconButtonThemeData.lerp(iconButtonInProgress, other.iconButtonInProgress, t)!,
+    );
+  }
+}
+
+class CustomMissSpelledTextTheme extends ThemeExtension<CustomMissSpelledTextTheme> {
+  final TextStyle missSpelledStyle;
+
+  const CustomMissSpelledTextTheme({
+    required this.missSpelledStyle,
+  });
+
+  TextStyle apply(TextStyle style) => style.merge(missSpelledStyle);
+
+  @override
+  ThemeExtension<CustomMissSpelledTextTheme> copyWith({TextStyle? missSpelledStyle}) => CustomMissSpelledTextTheme(
+    missSpelledStyle: missSpelledStyle ?? this.missSpelledStyle,
+  );
+
+  @override
+  ThemeExtension<CustomMissSpelledTextTheme> lerp(
+    covariant ThemeExtension<CustomMissSpelledTextTheme>? other,
+    double t,
+  ) {
+    if (other is! CustomMissSpelledTextTheme) {
+      return this;
+    }
+
+    return CustomMissSpelledTextTheme(
+      missSpelledStyle: TextStyle.lerp(missSpelledStyle, other.missSpelledStyle, t)!,
+    );
+  }
+}
+
+class CustomDialogTheme extends ThemeExtension<CustomDialogTheme> {
+  final double widthS;
+  final double widthL;
+
+  const CustomDialogTheme({
+    required this.widthS,
+    required this.widthL,
+  });
+
+  @override
+  ThemeExtension<CustomDialogTheme> copyWith({
+    double? widthS,
+    double? widthL,
+  }) => CustomDialogTheme(
+    widthS: widthS ?? this.widthS,
+    widthL: widthL ?? this.widthL,
+  );
+
+  @override
+  ThemeExtension<CustomDialogTheme> lerp(
+    covariant ThemeExtension<CustomDialogTheme>? other,
+    double t,
+  ) {
+    if (other is! CustomDialogTheme) {
+      return this;
+    }
+    return CustomDialogTheme(
+      widthS: lerpDouble(widthS, other.widthS, t)!,
+      widthL: lerpDouble(widthL, other.widthL, t)!,
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:vpn/data/repository/routing_repository.dart';
 import 'package:vpn/data/repository/server_repository.dart';
 import 'package:vpn/data/repository/settings_repository.dart';
+import 'package:vpn/data/repository/vpn_repository.dart';
 import 'package:vpn/di/factory/dependency_factory.dart';
 
 abstract class RepositoryFactory {
@@ -9,6 +10,8 @@ abstract class RepositoryFactory {
   SettingsRepository get settingsRepository;
 
   RoutingRepository get routingRepository;
+
+  VpnRepository get vpnRepository;
 }
 
 class RepositoryFactoryImpl implements RepositoryFactory {
@@ -24,18 +27,26 @@ class RepositoryFactoryImpl implements RepositoryFactory {
 
   RoutingRepository? _routingRepository;
 
+  VpnRepository? _vpnRepository;
+
   @override
   ServerRepository get serverRepository => _serverRepository ??= ServerRepositoryImpl(
-        platformApi: _dependencyFactory.platformApi,
-      );
+    serverDatasource: _dependencyFactory.serverDatasource,
+    routingDatasource: _dependencyFactory.routingDatasource,
+  );
 
   @override
   SettingsRepository get settingsRepository => _settingsRepository ??= SettingsRepositoryImpl(
-        platformApi: _dependencyFactory.platformApi,
-      );
+    settingsDatasource: _dependencyFactory.settingsDatasource,
+  );
 
   @override
-  RoutingRepository get routingRepository => _routingRepository ??= RoutingManagerImpl(
-        platformApi: _dependencyFactory.platformApi,
-      );
+  RoutingRepository get routingRepository => _routingRepository ??= RoutingRepositoryImpl(
+    routingDatasource: _dependencyFactory.routingDatasource,
+  );
+
+  @override
+  VpnRepository get vpnRepository => _vpnRepository ??= VpnRepositoryImpl(
+    vpnDatasource: _dependencyFactory.vpnDatasource,
+  );
 }

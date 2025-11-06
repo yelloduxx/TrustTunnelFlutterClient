@@ -11,16 +11,16 @@ class ScaffoldWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-        color: context.colors.background2,
-        child: Padding(
-          padding: EdgeInsets.all(context.isMobileBreakpoint ? 0 : 16),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(context.isMobileBreakpoint ? 0 : 16),
-            child: ColoredBox(
-              color: context.colors.background1,
-              child: child,
-            ),
-          ),
+    color: context.colors.background2,
+    child: Padding(
+      padding: EdgeInsets.all(context.isMobileBreakpoint ? 0 : 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(context.isMobileBreakpoint ? 0 : 16),
+        child: ColoredBox(
+          color: context.colors.background1,
+          child: child,
         ),
-      );
+      ),
+    ),
+  );
 }

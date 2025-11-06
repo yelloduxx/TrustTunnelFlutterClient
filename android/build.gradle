@@ -2,6 +2,14 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.github.com/AdguardTeam/VpnLibs")
+            credentials {
+                username = ""
+                password = project.getProperty("gpr.key")
+            }
+            authentication { basic(BasicAuthentication) }
+        }
     }
 }
 

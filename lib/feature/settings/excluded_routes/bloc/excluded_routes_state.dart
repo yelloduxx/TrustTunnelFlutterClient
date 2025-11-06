@@ -1,21 +1,24 @@
 part of 'excluded_routes_bloc.dart';
 
 @freezed
-sealed class ExcludedRoutesState with _$ExcludedRoutesState {
+abstract class ExcludedRoutesState with _$ExcludedRoutesState {
   const ExcludedRoutesState._();
 
   const factory ExcludedRoutesState({
-    @Default('') String data,
-    @Default('') String initialData,
+    @Default('') String excludedRoutes,
+    @Default('') String initialExcludedRoutes,
     @Default(ExcludedRoutesAction.none) ExcludedRoutesAction action,
     @Default(ExcludedRoutesLoadingStatus.initialLoading) ExcludedRoutesLoadingStatus loadingStatus,
   }) = _ExcludedRoutesState;
 
-  bool get wasChanged => data != initialData;
+  bool get isLoading => loadingStatus != ExcludedRoutesLoadingStatus.idle;
+
+  bool get hasChanges => excludedRoutes != initialExcludedRoutes;
 }
 
 enum ExcludedRoutesLoadingStatus {
   initialLoading,
+  loading,
   idle,
 }
 

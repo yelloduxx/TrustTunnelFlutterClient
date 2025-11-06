@@ -1,8 +1,8 @@
 part of 'server_details_bloc.dart';
 
 @freezed
-class ServerDetailsEvent with _$ServerDetailsEvent {
-  const factory ServerDetailsEvent.init() = _Init;
+sealed class ServerDetailsEvent with _$ServerDetailsEvent {
+  const factory ServerDetailsEvent.fetch() = _Fetch;
 
   const factory ServerDetailsEvent.dataChanged({
     String? serverName,
@@ -18,6 +18,4 @@ class ServerDetailsEvent with _$ServerDetailsEvent {
   const factory ServerDetailsEvent.submit() = _Submit;
 
   const factory ServerDetailsEvent.delete() = _Delete;
-
-  const factory ServerDetailsEvent.profilesLoaded({required List<RoutingProfile> profiles}) = _ProfilesLoaded;
 }

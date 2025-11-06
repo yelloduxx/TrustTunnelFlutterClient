@@ -15,35 +15,38 @@ class ExcludedRoutesScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocListener<ExcludedRoutesBloc, ExcludedRoutesState>(
-        listenWhen: (previous, current) => current.action != ExcludedRoutesAction.none,
-        listener: (context, state) {
-          switch (state.action) {
-            case ExcludedRoutesAction.saved:
-              context.pop();
-            default:
-              break;
-          }
-        },
-        child: ScaffoldWrapper(
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title: context.ln.excludedRoutes,
-            ),
-            body: BlocBuilder<ExcludedRoutesBloc, ExcludedRoutesState>(
-              buildWhen: (previous, current) =>
-                  previous.action == current.action && previous.loadingStatus != current.loadingStatus,
-              builder: (context, state) => state.loadingStatus == ExcludedRoutesLoadingStatus.idle
-                  ? const Column(
-                      children: [
-                        Expanded(
-                          child: ExcludedRoutesForm(),
-                        ),
-                        ExcludedRoutesButtonSection(),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ),
+    listenWhen: (previous, current) => current.action != ExcludedRoutesAction.none,
+    listener: (context, state) {
+      switch (state.action) {
+        case ExcludedRoutesAction.saved:
+          context.pop();
+        default:
+          break;
+      }
+    },
+    child: ScaffoldWrapper(
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title: context.ln.excludedRoutes,
         ),
-      );
+        body: BlocBuilder<ExcludedRoutesBloc, ExcludedRoutesState>(
+          buildWhen:
+              (previous, current) =>
+                  previous.action == current.action && previous.loadingStatus != current.loadingStatus,
+          builder:
+              (context, state) =>
+                  state.loadingStatus == ExcludedRoutesLoadingStatus.idle
+                      ? const Column(
+                        children: [
+                          Expanded(
+                            child: ExcludedRoutesForm(),
+                          ),
+                          ExcludedRoutesButtonSection(),
+                        ],
+                      )
+                      : const SizedBox.shrink(),
+        ),
+      ),
+    ),
+  );
 }

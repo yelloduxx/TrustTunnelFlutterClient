@@ -36,15 +36,11 @@ class DependencyScope extends StatefulWidget {
 class _DependencyScopeState extends State<DependencyScope> {
   @override
   Widget build(BuildContext context) => _InheritedDependencyScope(
-        state: this,
-        child: widget.child,
-      );
+    state: this,
+    child: widget.child,
+  );
 
-  @override
-  void dispose() {
-    widget.dependenciesFactory.close();
-    super.dispose();
-  }
+
 }
 
 class _InheritedDependencyScope extends InheritedWidget {

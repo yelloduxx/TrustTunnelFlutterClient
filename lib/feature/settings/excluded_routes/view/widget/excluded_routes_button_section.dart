@@ -11,30 +11,22 @@ class ExcludedRoutesButtonSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: context.isMobileBreakpoint
-            ? CrossAxisAlignment.stretch
-            : CrossAxisAlignment.end,
-        children: [
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: BlocBuilder<ExcludedRoutesBloc,
-                ExcludedRoutesState>(
-              builder: (context, state) {
-                return FilledButton(
-                  onPressed: state.wasChanged
-                      ? () => _saveExcludedRoutes(context)
-                      : null,
-                  child: Text(context.ln.save),
-                );
-              },
-            ),
+    crossAxisAlignment: context.isMobileBreakpoint ? CrossAxisAlignment.stretch : CrossAxisAlignment.end,
+    children: [
+      const Divider(),
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: BlocBuilder<ExcludedRoutesBloc, ExcludedRoutesState>(
+          builder: (context, state) => FilledButton(
+            onPressed: state.hasChanges ? () => _saveExcludedRoutes(context) : null,
+            child: Text(context.ln.save),
           ),
-        ],
-      );
+        ),
+      ),
+    ],
+  );
 
-  void _saveExcludedRoutes(BuildContext context) =>
-      context.read<ExcludedRoutesBloc>().add(
-            const ExcludedRoutesEvent.saveExcludedRoutes(),
-          );
+  void _saveExcludedRoutes(BuildContext context) => context.read<ExcludedRoutesBloc>().add(
+    const ExcludedRoutesEvent.saveExcludedRoutes(),
+  );
 }

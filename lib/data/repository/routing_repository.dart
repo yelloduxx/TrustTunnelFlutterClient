@@ -1,96 +1,68 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
+import 'package:vpn/data/datasources/routing_datasource.dart';
+import 'package:vpn/data/model/raw/add_routing_profile_request.dart';
+import 'package:vpn/data/model/routing_mode.dart';
+import 'package:vpn/data/model/routing_profile.dart';
 
 abstract class RoutingRepository {
-  ValueStream<List<RoutingProfile>?> get routingProfileStream;
+  Future<RoutingProfile> addNewProfile(AddRoutingProfileRequest request);
 
-  Future<void> loadRoutingProfiles();
+  Future<List<RoutingProfile>> getAllProfiles();
 
-  Future<void> addRoutingProfile({required AddRoutingProfileRequest request});
+  Future<void> setDefaultRoutingMode({required int id, required RoutingMode mode});
 
-  Future<void> updateRoutingProfile({required UpdateRoutingProfileRequest request});
+  Future<void> setProfileName({required int id, required String name});
 
-  Future<void> updateRoutingProfileName({required int id, required String name});
+  Future<void> setRules({required int id, required RoutingMode mode, required String rules});
 
-  Future<RoutingProfile> getRoutingProfileById({required int id});
+  Future<void> removeAllRules({required int id});
 
-  Future<void> deleteRoutingProfileById({required int id});
+  Future<RoutingProfile?> getProfileById({required int id});
 
-  Future<void> dispose();
+  Future<void> deleteProfile({required int id});
 }
 
-class RoutingManagerImpl implements RoutingRepository {
-  final PlatformApi _platformApi;
+class RoutingRepositoryImpl implements RoutingRepository {
+  final RoutingDatasource _routingDatasource;
 
-  RoutingManagerImpl({
-    required PlatformApi platformApi,
-  }) : _platformApi = platformApi;
-
-  final BehaviorSubject<List<RoutingProfile>?> _routingProfileController = BehaviorSubject.seeded(null);
+  RoutingRepositoryImpl({
+    required RoutingDatasource routingDatasource,
+  }) : _routingDatasource = routingDatasource;
 
   @override
-  ValueStream<List<RoutingProfile>?> get routingProfileStream => _routingProfileController.stream;
-
-  @override
-  Future<void> loadRoutingProfiles() async {
-    final List<RoutingProfile?> routingProfiles = await _platformApi.getAllRoutingProfiles();
-
-    _routingProfileController.add(routingProfiles.cast<RoutingProfile>());
+  Future<List<RoutingProfile>> getAllProfiles() async {
+    final profiles = await _routingDatasource.getAllProfiles();
+    return profiles;
   }
 
   @override
-  Future<void> addRoutingProfile({required AddRoutingProfileRequest request}) async {
-    final routingProfile = await _platformApi.addRoutingProfile(request: request);
-
-    _routingProfileController.add(List.of(_routingProfileController.value ?? [])..add(routingProfile));
+  Future<RoutingProfile> addNewProfile(AddRoutingProfileRequest request) async {
+    final profile = await _routingDatasource.addNewProfile(request);
+    return profile;
   }
 
   @override
-  Future<RoutingProfile> getRoutingProfileById({required int id}) => _platformApi.getRoutingProfileById(id: id);
+  Future<void> setDefaultRoutingMode({required int id, required RoutingMode mode}) =>
+      _routingDatasource.setDefaultRoutingMode(id: id, mode: mode);
 
   @override
-  Future<void> updateRoutingProfile({
-    required UpdateRoutingProfileRequest request,
-  }) async {
-    final RoutingProfile routingProfile = await _platformApi.updateRoutingProfile(request: request);
+  Future<void> setProfileName({required int id, required String name}) =>
+      _routingDatasource.setProfileName(id: id, name: name);
 
-    final List<RoutingProfile> routingProfiles = List.of(_routingProfileController.value!);
-    final int index = routingProfiles.indexWhere((element) => element.id == routingProfile.id);
-    if (index == -1) throw Exception('RoutingProfile not found');
-    routingProfiles[index] = routingProfile;
-
-    _routingProfileController.add(routingProfiles);
+  @override
+  Future<void> setRules({required int id, required RoutingMode mode, required String rules}) async {
+    await _routingDatasource.setRules(id: id, mode: mode, rules: rules);
   }
 
   @override
-  Future<void> updateRoutingProfileName({required int id, required String name}) async {
-    final RoutingProfile routingProfile = await _platformApi.setRoutingProfileName(id: id, name: name);
-
-    final List<RoutingProfile> routingProfiles = List.of(_routingProfileController.value!);
-    final int index = routingProfiles.indexWhere((element) => element.id == routingProfile.id);
-    if (index == -1) throw Exception('RoutingProfile not found');
-    routingProfiles[index] = routingProfile;
-
-    _routingProfileController.add(routingProfiles);
+  Future<void> removeAllRules({required int id}) async {
+    await _routingDatasource.removeAllRules(id: id);
   }
 
   @override
-  Future<void> deleteRoutingProfileById({required int id}) async {
-    final List<RoutingProfile> routingProfiles = List.of(_routingProfileController.value!);
-    final int index = routingProfiles.indexWhere(
-      (element) => element.id == id,
-    );
-    if (index == -1) throw Exception('RoutingProfile not found');
-
-    await _platformApi.removeRoutingProfile(id: id);
-    routingProfiles.removeAt(index);
-    _routingProfileController.add(routingProfiles);
-  }
+  Future<RoutingProfile?> getProfileById({required int id}) => _routingDatasource.getProfileById(id: id);
 
   @override
-  Future<void> dispose() async {
-    _routingProfileController.close();
-  }
+  Future<void> deleteProfile({required int id}) => _routingDatasource.deleteProfile(id: id);
 }

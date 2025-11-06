@@ -1,7 +1,7 @@
 part of 'server_details_bloc.dart';
 
 @freezed
-sealed class ServerDetailsState with _$ServerDetailsState {
+abstract class ServerDetailsState with _$ServerDetailsState {
   const ServerDetailsState._();
 
   const factory ServerDetailsState({
@@ -18,29 +18,28 @@ sealed class ServerDetailsState with _$ServerDetailsState {
 
   bool get hasChanges => data != initialData;
 
-  RoutingProfile get selectedRoutingProfile => availableRoutingProfiles.firstWhere(
-        (profile) => profile.id == data.routingProfileId,
-      );
+  bool get isLoading => loadingStatus != ServerDetailsLoadingStatus.idle;
+
+  RoutingProfile get selectedRoutingProfile =>
+      availableRoutingProfiles.firstWhereOrNull((profile) => profile.id == data.routingProfileId) ??
+      availableRoutingProfiles.first;
 }
 
 enum ServerDetailsLoadingStatus {
   initialLoading,
+  loading,
   idle,
 }
 
-@Freezed(
-  copyWith: false,
-  fromJson: false,
-  toJson: false,
-)
+@Freezed(copyWith: false, fromJson: false, toJson: false)
 sealed class ServerDetailsAction with _$ServerDetailsAction {
-  const factory ServerDetailsAction.presentationError(
-    PresentationError error,
-  ) = ServerDetailsPresentationError;
+  const factory ServerDetailsAction.presentationError(PresentationError error) = ServerDetailsPresentationError;
 
   const factory ServerDetailsAction.saved() = ServerDetailsSaved;
 
-  const factory ServerDetailsAction.deleted() = ServerDetailsDeleted;
+  const factory ServerDetailsAction.created(String name) = ServerDetailsCreated;
+
+  const factory ServerDetailsAction.deleted(String name) = ServerDetailsDeleted;
 
   const factory ServerDetailsAction.none() = _ServerDetailsNone;
 }

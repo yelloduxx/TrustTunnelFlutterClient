@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vpn/common/assets/asset_icons.dart';
 import 'package:vpn/common/assets/font_families.dart';
 import 'package:vpn/common/extensions/theme_extensions.dart';
+import 'package:vpn/view/custom_icon.dart';
 
 class LightTheme {
   static const _primary1 = Color(0xFF67B279);
@@ -38,67 +38,68 @@ class LightTheme {
   static const _staticTransparent = Colors.transparent;
 
   ThemeData get data => ThemeData(
-        // GENERAL CONFIGURATION
-        useMaterial3: true,
-        extensions: [
-          _customColors,
-          _customFilledButtonTheme,
-          _customElevatedButtonTheme,
-          _customOutlinedButtonTheme,
-          _customTextButtonTheme,
-          _customDropdownMenuTheme,
-          _customFilledIconButtonTheme,
-        ],
+    // GENERAL CONFIGURATION
+    useMaterial3: true,
+    extensions: [
+      _customColors,
+      _customFilledButtonTheme,
+      _customElevatedButtonTheme,
+      _customOutlinedButtonTheme,
+      _customTextButtonTheme,
+      _customDropdownMenuTheme,
+      _customFilledIconButtonTheme,
+      _customMissSpelledTextTheme,
+    ],
 
-        // COLOR
-        scaffoldBackgroundColor: _staticTransparent,
-        brightness: Brightness.light,
-        primaryColor: _primary1,
-        colorScheme: _colorScheme,
-        hoverColor: _staticTransparent,
-        focusColor: _staticTransparent,
+    // COLOR
+    scaffoldBackgroundColor: _background1,
+    brightness: Brightness.light,
+    primaryColor: _primary1,
+    colorScheme: _colorScheme,
+    hoverColor: _staticTransparent,
+    focusColor: _staticTransparent,
 
-        // TYPOGRAPHY & ICONOGRAPHY
-        textTheme: _textTheme,
-        fontFamily: FontFamilies.roboto,
-        iconTheme: _iconThemeData,
-        textSelectionTheme: _textSelectionTheme,
+    // TYPOGRAPHY & ICONOGRAPHY
+    textTheme: _textTheme,
+    fontFamily: FontFamilies.roboto,
+    iconTheme: _iconThemeData,
+    textSelectionTheme: _textSelectionTheme,
 
-        // COMPONENT THEMES
-        checkboxTheme: _checkboxThemeData,
-        iconButtonTheme: _iconButtonThemeData,
-        radioTheme: _radioThemeData,
-        floatingActionButtonTheme: _floatingActionButtonThemeData,
-        switchTheme: _switchThemeData,
-        snackBarTheme: _snackBarThemeData,
-        bottomSheetTheme: _bottomSheetTheme,
-        badgeTheme: _badgeThemeData,
-        elevatedButtonTheme: _elevatedButtonTheme,
-        filledButtonTheme: _filledButtonTheme,
-        outlinedButtonTheme: _outlinedButtonThemeData,
-        textButtonTheme: _textButtonThemeData,
-        chipTheme: _chipThemeData,
-        timePickerTheme: _timePickerThemeData,
-        dialogTheme: _dialogTheme,
-        menuButtonTheme: _menuButtonThemeData,
-        menuBarTheme: _menuBarThemeData,
-        dropdownMenuTheme: _dropdownMenuThemeData,
-        menuTheme: _menuThemeData,
-        popupMenuTheme: _popupMenuThemeData,
-        datePickerTheme: _datePickerThemeData,
-        navigationBarTheme: _navigationBarThemeData,
-        appBarTheme: _appBarTheme,
-        progressIndicatorTheme: _progressIndicatorThemeData,
-        inputDecorationTheme: _inputDecorationTheme,
-        dividerTheme: _dividerThemeData,
-        navigationRailTheme: _navigationRailThemeData,
-        actionIconTheme: _actionIconThemeData,
-        listTileTheme: _listTileThemeData,
-        cardTheme: _cardTheme,
-        expansionTileTheme: _expansionTileTheme,
-        buttonTheme: _buttonTheme,
-        tabBarTheme: _tabBarTheme,
-      );
+    // COMPONENT THEMES
+    checkboxTheme: _checkboxThemeData,
+    iconButtonTheme: _iconButtonThemeData,
+    radioTheme: _radioThemeData,
+    floatingActionButtonTheme: _floatingActionButtonThemeData,
+    switchTheme: _switchThemeData,
+    snackBarTheme: _snackBarThemeData,
+    bottomSheetTheme: _bottomSheetTheme,
+    badgeTheme: _badgeThemeData,
+    elevatedButtonTheme: _elevatedButtonTheme,
+    filledButtonTheme: _filledButtonTheme,
+    outlinedButtonTheme: _outlinedButtonThemeData,
+    textButtonTheme: _textButtonThemeData,
+    chipTheme: _chipThemeData,
+    timePickerTheme: _timePickerThemeData,
+    dialogTheme: _dialogTheme,
+    menuButtonTheme: _menuButtonThemeData,
+    menuBarTheme: _menuBarThemeData,
+    dropdownMenuTheme: _dropdownMenuThemeData,
+    menuTheme: _menuThemeData,
+    popupMenuTheme: _popupMenuThemeData,
+    datePickerTheme: _datePickerThemeData,
+    navigationBarTheme: _navigationBarThemeData,
+    appBarTheme: _appBarTheme,
+    progressIndicatorTheme: _progressIndicatorThemeData,
+    inputDecorationTheme: _inputDecorationTheme,
+    dividerTheme: _dividerThemeData,
+    navigationRailTheme: _navigationRailThemeData,
+    actionIconTheme: _actionIconThemeData,
+    listTileTheme: _listTileThemeData,
+    cardTheme: _cardTheme,
+    expansionTileTheme: _expansionTileTheme,
+    buttonTheme: _buttonTheme,
+    tabBarTheme: _tabBarTheme,
+  );
 
   late final _customColors = const CustomColors(
     primary1: _primary1,
@@ -293,10 +294,8 @@ class LightTheme {
   late final _checkboxThemeData = CheckboxThemeData(
     fillColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.selected) &&
-            !states.contains(WidgetState.disabled)) return _primary1;
-        if (states.contains(WidgetState.selected) &&
-            states.contains(WidgetState.disabled)) return _primary4;
+        if (states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) return _primary1;
+        if (states.contains(WidgetState.selected) && states.contains(WidgetState.disabled)) return _primary4;
         return null;
       },
     ),
@@ -305,12 +304,10 @@ class LightTheme {
     ),
     side: WidgetStateBorderSide.resolveWith(
       (states) {
-        if (!states.contains(WidgetState.selected) &&
-            !states.contains(WidgetState.disabled)) {
+        if (!states.contains(WidgetState.selected) && !states.contains(WidgetState.disabled)) {
           return const BorderSide(width: 2, color: _gray1);
         }
-        if (!states.contains(WidgetState.selected) &&
-            states.contains(WidgetState.disabled)) {
+        if (!states.contains(WidgetState.selected) && states.contains(WidgetState.disabled)) {
           return const BorderSide(width: 2, color: _gray4);
         }
         return null;
@@ -318,8 +315,7 @@ class LightTheme {
     ),
     overlayColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) return _background2;
+        if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
         return null;
       },
     ),
@@ -341,16 +337,14 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.disabled)) return _staticTransparent;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
           if (states.contains(WidgetState.pressed)) return _background3;
           return null;
         },
       ),
       mouseCursor: WidgetStateProperty.resolveWith(
         (states) {
-          if (states.contains(WidgetState.disabled))
-            return SystemMouseCursors.basic;
+          if (states.contains(WidgetState.disabled)) return SystemMouseCursors.basic;
           return null;
         },
       ),
@@ -369,8 +363,7 @@ class LightTheme {
     ),
     overlayColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.hovered) ||
-            states.contains(WidgetState.focused)) return _background2;
+        if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
         if (states.contains(WidgetState.pressed)) return _background3;
         return null;
       },
@@ -396,10 +389,8 @@ class LightTheme {
   late final _switchThemeData = SwitchThemeData(
     trackColor: WidgetStateProperty.resolveWith(
       (states) {
-        if (states.contains(WidgetState.disabled) &&
-            states.contains(WidgetState.selected)) return _primary4;
-        if (states.contains(WidgetState.disabled) &&
-            !states.contains(WidgetState.selected)) return _background2;
+        if (states.contains(WidgetState.disabled) && states.contains(WidgetState.selected)) return _primary4;
+        if (states.contains(WidgetState.disabled) && !states.contains(WidgetState.selected)) return _background2;
         if (!states.contains(WidgetState.selected)) return _background2;
         return _primary1;
       },
@@ -408,8 +399,7 @@ class LightTheme {
       (states) {
         if (states.contains(WidgetState.selected)) return _staticWhite;
         if (states.contains(WidgetState.disabled)) return _contrast4;
-        if (states.contains(WidgetState.focused) ||
-            states.contains(WidgetState.focused)) return _contrast2;
+        if (states.contains(WidgetState.focused) || states.contains(WidgetState.focused)) return _contrast2;
         if (states.contains(WidgetState.pressed)) return _contrast3;
         return _contrast1;
       },
@@ -424,8 +414,7 @@ class LightTheme {
     trackOutlineColor: WidgetStateProperty.resolveWith(
       (states) {
         if (!states.contains(WidgetState.selected)) {
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _contrast2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _contrast2;
           if (states.contains(WidgetState.disabled)) return _contrast4;
           return _contrast1;
         }
@@ -479,8 +468,7 @@ class LightTheme {
         overlayColor: WidgetStateProperty.resolveWith(
           (states) {
             if (states.contains(WidgetState.pressed)) return _red3;
-            if (states.contains(WidgetState.hovered) ||
-                states.contains(WidgetState.focused)) return _red2;
+            if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _red2;
             return null;
           },
         ),
@@ -497,8 +485,7 @@ class LightTheme {
         overlayColor: WidgetStateProperty.resolveWith(
           (states) {
             if (states.contains(WidgetState.pressed)) return _orange3;
-            if (states.contains(WidgetState.hovered) ||
-                states.contains(WidgetState.focused)) return _orange2;
+            if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _orange2;
             return null;
           },
         ),
@@ -574,8 +561,7 @@ class LightTheme {
         side: const WidgetStatePropertyAll(BorderSide.none),
         textStyle: WidgetStateProperty.resolveWith(
           (states) {
-            final decorationColor =
-                states.contains(WidgetState.disabled) ? _primary4 : _primary1;
+            final decorationColor = states.contains(WidgetState.disabled) ? _primary4 : _primary1;
 
             return _textTheme.bodyMedium!.copyWith(
               decoration: TextDecoration.underline,
@@ -594,8 +580,7 @@ class LightTheme {
     iconButton: _textButtonThemeData,
   );
 
-  late final _elevatedButtonTheme =
-      ElevatedButtonThemeData(style: _filledButtonTheme.style);
+  late final _elevatedButtonTheme = ElevatedButtonThemeData(style: _filledButtonTheme.style);
 
   late final _filledButtonTheme = FilledButtonThemeData(
     style: ButtonStyle(
@@ -614,8 +599,7 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.pressed)) return _primary3;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _primary2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _primary2;
           return null;
         },
       ),
@@ -643,8 +627,7 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.pressed)) return _background3;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
           return null;
         },
       ),
@@ -663,8 +646,7 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.pressed)) return _background3;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
           return _staticTransparent;
         },
       ),
@@ -689,14 +671,12 @@ class LightTheme {
       (states) {
         if (states.contains(WidgetState.selected)) {
           if (states.contains(WidgetState.pressed)) return _blend3;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _blend2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _blend2;
           if (states.contains(WidgetState.disabled)) return _blend2;
           return _blend1;
         } else {
           if (states.contains(WidgetState.pressed)) return _background3;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
           if (states.contains(WidgetState.disabled)) return _background2;
           return _background1;
         }
@@ -714,6 +694,7 @@ class LightTheme {
     surfaceTintColor: _staticTransparent,
     shadowColor: _staticTransparent,
     elevation: 0.11,
+    scrolledUnderElevation: 0,
     titleTextStyle: _textTheme.titleLarge,
     centerTitle: true,
   );
@@ -815,12 +796,17 @@ class LightTheme {
     inputDecorationTheme: _inputDecorationTheme,
   );
 
-  late final _dialogTheme = DialogTheme(
+  late final _dialogTheme = DialogThemeData(
     backgroundColor: _background1,
     surfaceTintColor: _staticTransparent,
     titleTextStyle: _textTheme.headlineSmall,
     contentTextStyle: _textTheme.bodyMedium,
     iconColor: _contrast1,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(
+        Radius.circular(28.0),
+      ),
+    ),
   );
 
   late final _menuButtonThemeData = MenuButtonThemeData(
@@ -832,8 +818,7 @@ class LightTheme {
       overlayColor: WidgetStateProperty.resolveWith(
         (states) {
           if (states.contains(WidgetState.disabled)) return _staticTransparent;
-          if (states.contains(WidgetState.hovered) ||
-              states.contains(WidgetState.focused)) return _background2;
+          if (states.contains(WidgetState.hovered) || states.contains(WidgetState.focused)) return _background2;
           if (states.contains(WidgetState.pressed)) return _background3;
           return null;
         },
@@ -948,8 +933,7 @@ class LightTheme {
         return _textTheme.bodySmall!;
       },
     ),
-    counterStyle:
-        WidgetStateTextStyle.resolveWith((states) => _textTheme.bodySmall!),
+    counterStyle: WidgetStateTextStyle.resolveWith((states) => _textTheme.bodySmall!),
     contentPadding: const EdgeInsets.only(top: 16, bottom: 16, left: 16),
     floatingLabelBehavior: FloatingLabelBehavior.always,
     focusColor: _background2,
@@ -979,11 +963,13 @@ class LightTheme {
   );
 
   late final _actionIconThemeData = ActionIconThemeData(
-    backButtonIconBuilder: (context) => SvgPicture.asset(
-      AssetIcons.arrowBack,
-      width: 24,
-      height: 24,
-      colorFilter: const ColorFilter.mode(_contrast1, BlendMode.srcIn),
+    closeButtonIconBuilder: (context) => CustomIcon.medium(
+      icon: AssetIcons.close,
+      color: _contrast1,
+    ),
+    backButtonIconBuilder: (context) => CustomIcon.medium(
+      icon: AssetIcons.arrowBack,
+      color: _contrast1,
     ),
   );
 
@@ -993,7 +979,7 @@ class LightTheme {
     subtitleTextStyle: _textTheme.bodyMedium?.copyWith(color: _gray1),
   );
 
-  final _cardTheme = CardTheme(
+  final _cardTheme = CardThemeData(
     color: _background2,
     elevation: 0,
     margin: EdgeInsets.zero,
@@ -1060,7 +1046,16 @@ class LightTheme {
     ),
   );
 
-  late final _tabBarTheme = TabBarTheme(
+  final _customMissSpelledTextTheme = const CustomMissSpelledTextTheme(
+    missSpelledStyle: TextStyle(
+      decorationColor: _red1,
+      decoration: TextDecoration.underline,
+      decorationStyle: TextDecorationStyle.wavy,
+      decorationThickness: 2,
+    ),
+  );
+
+  late final _tabBarTheme = TabBarThemeData(
     labelColor: _primary1,
     unselectedLabelColor: _contrast1,
     indicatorColor: _primary1,

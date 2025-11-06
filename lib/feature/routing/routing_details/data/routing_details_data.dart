@@ -1,12 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
+import 'package:vpn/data/model/routing_mode.dart';
 
 part 'routing_details_data.freezed.dart';
 
 @freezed
-class RoutingDetailsData with _$RoutingDetailsData {
-  const RoutingDetailsData._();
-
+abstract class RoutingDetailsData with _$RoutingDetailsData {
   const factory RoutingDetailsData({
     @Default(RoutingMode.vpn) RoutingMode defaultMode,
     @Default(<String>[]) List<String> bypassRules,

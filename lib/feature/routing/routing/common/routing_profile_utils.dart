@@ -1,4 +1,5 @@
-import 'package:vpn_plugin/platform_api.g.dart';
+
+import 'package:vpn/data/model/routing_profile.dart';
 
 abstract class RoutingProfileUtils {
   static const defaultRoutingProfileId = 0;

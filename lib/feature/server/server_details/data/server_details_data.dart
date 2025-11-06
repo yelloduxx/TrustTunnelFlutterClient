@@ -1,13 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vpn/data/model/vpn_protocol.dart';
 import 'package:vpn/feature/routing/routing/common/routing_profile_utils.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
 
 part 'server_details_data.freezed.dart';
 
 @freezed
-class ServerDetailsData with _$ServerDetailsData {
-  const ServerDetailsData._();
-
+abstract class ServerDetailsData with _$ServerDetailsData {
   const factory ServerDetailsData({
     @Default('') String serverName,
     @Default('') String ipAddress,

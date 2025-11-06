@@ -23,51 +23,49 @@ class CustomListTileSeparated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IntrinsicHeight(
-        child: Row(
-          children: [
-            Flexible(
-              fit: FlexFit.tight,
-              child: InkWell(
-                onTap: onTileTap,
-                child: Ink(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          title,
-                          style: titleStyle ?? context.textTheme.bodyLarge,
-                        ),
-                        if (subtitle != null) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            subtitle!,
-                            style:
-                                subtitleStyle ?? context.textTheme.bodyMedium,
-                          ),
-                        ]
-                      ],
+    child: Row(
+      children: [
+        Flexible(
+          fit: FlexFit.tight,
+          child: InkWell(
+            onTap: onTileTap,
+            child: Ink(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: titleStyle ?? context.textTheme.bodyLarge,
                     ),
-                  ),
+                    if (subtitle != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle!,
+                        style: subtitleStyle ?? context.textTheme.bodyMedium,
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ),
-            if (showVerticalDivider)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: VerticalDivider(
-                  color: context.theme.dividerTheme.color,
-                ),
-              ),
-            if (trailing != null)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: trailing!,
-              ),
-          ],
+          ),
         ),
-      );
+        if (showVerticalDivider)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: VerticalDivider(
+              color: context.theme.dividerTheme.color,
+            ),
+          ),
+        if (trailing != null)
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: trailing!,
+          ),
+      ],
+    ),
+  );
 }

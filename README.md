@@ -10,3 +10,7 @@ make init
 
 flutter pub get
 make gen
+
+### Android specific instructions
+
+Place your Github token for accessing Github Packages into `gpr.key` property of ~/.gradle/gradle.properties

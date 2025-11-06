@@ -19,50 +19,52 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: context.colors.background2,
-        body: context.isMobileBreakpoint
-            ? _getContent()
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ValueListenableBuilder(
-                    valueListenable: _selectedTabNotifier,
-                    builder: (context, index, _) => CustomNavigationRail(
-                      selectedIndex: index,
-                      onDestinationSelected: _onDestinationSelected,
-                      destinations: NavigationScreenUtils.getNavigationRailDestinations(context),
-                    ),
-                  ),
-                  Expanded(
-                    child: _getContent(),
-                  ),
-                ],
-              ),
-        bottomNavigationBar: context.isMobileBreakpoint
-            ? ValueListenableBuilder(
+    backgroundColor: context.colors.background2,
+    body: context.isMobileBreakpoint
+        ? _getContent()
+        : Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ValueListenableBuilder(
                 valueListenable: _selectedTabNotifier,
-                builder: (context, index, _) => NavigationBar(
+                builder: (context, index, _) => CustomNavigationRail(
                   selectedIndex: index,
                   onDestinationSelected: _onDestinationSelected,
-                  destinations: NavigationScreenUtils.getBottomNavigationDestinations(context),
+                  destinations: NavigationScreenUtils.getNavigationRailDestinations(context),
                 ),
-              )
-            : null,
-      );
+              ),
+              Expanded(
+                child: _getContent(),
+              ),
+            ],
+          ),
+    bottomNavigationBar: context.isMobileBreakpoint
+        ? ValueListenableBuilder(
+            valueListenable: _selectedTabNotifier,
+            builder: (context, index, _) => SafeArea(
+              child: NavigationBar(
+                selectedIndex: index,
+                onDestinationSelected: _onDestinationSelected,
+                destinations: NavigationScreenUtils.getBottomNavigationDestinations(context),
+              ),
+            ),
+          )
+        : null,
+  );
 
   Widget _getContent() => NavigatorPopHandler(
-        onPop: () => _navigatorKey.currentState!.pop(),
-        child: Navigator(
-          key: _navigatorKey,
-          onGenerateInitialRoutes: (_, __) => [
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => const ServersScreen(),
-              transitionDuration: Duration.zero,
-              reverseTransitionDuration: Duration.zero,
-            ),
-          ],
+    onPop: () => _navigatorKey.currentState!.pop(),
+    child: Navigator(
+      key: _navigatorKey,
+      onGenerateInitialRoutes: (_, __) => [
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const ServersScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
         ),
-      );
+      ],
+    ),
+  );
 
   void _onDestinationSelected(int selectedIndex) {
     if (_selectedTabNotifier.value != selectedIndex) {
@@ -79,9 +81,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
   }
 
   Widget getScreenByIndex(int selectedIndex) => switch (selectedIndex) {
-        0 => const ServersScreen(),
-        1 => const RoutingScreen(),
-        2 => const SettingsScreen(),
-        _ => throw Exception('Invalid index: $selectedIndex'),
-      };
+    0 => const ServersScreen(),
+    1 => const RoutingScreen(),
+    2 => const SettingsScreen(),
+    _ => throw Exception('Invalid index: $selectedIndex'),
+  };
 }

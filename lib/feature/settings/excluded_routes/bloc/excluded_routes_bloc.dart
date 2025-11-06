@@ -13,40 +13,57 @@ class ExcludedRoutesBloc extends Bloc<ExcludedRoutesEvent, ExcludedRoutesState> 
 
   ExcludedRoutesBloc({
     required SettingsRepository settingsRepository,
-  })  : _settingsRepository = settingsRepository,
-        super(const ExcludedRoutesState()) {
-    on<_Init>(_init);
-    on<_DataChanged>(_dataChanged);
-    on<_SaveExcludedRoutes>(_saveExcludedRoutes);
+  }) : _settingsRepository = settingsRepository,
+       super(const ExcludedRoutesState()) {
+    on<ExcludedRoutesEvent>(
+      (event, emit) async => await switch (event) {
+        _Init() => _init(event, emit),
+        _SaveExcludedRoutes() => _saveExcludedRoutes(event, emit),
+        _DataChanged() => _dataChanged(event, emit),
+      },
+    );
   }
 
   Future<void> _init(
     _Init event,
     Emitter<ExcludedRoutesState> emit,
   ) async {
-    final String excludedRoutes = await _settingsRepository.getExcludedRoutes();
-    emit(
-      state.copyWith(
-        initialData: excludedRoutes,
-        data: excludedRoutes,
-        loadingStatus: ExcludedRoutesLoadingStatus.idle,
-      ),
-    );
+    emit(state.copyWith(loadingStatus: ExcludedRoutesLoadingStatus.initialLoading));
+    try {
+      final initialExcludedRoutes = await _settingsRepository.getExcludedRoutes();
+      emit(
+        state.copyWith(
+          excludedRoutes: initialExcludedRoutes,
+          initialExcludedRoutes: initialExcludedRoutes,
+          loadingStatus: ExcludedRoutesLoadingStatus.idle,
+        ),
+      );
+    } catch (e) {
+      // TODO: [CRITICAL] Implement error handling here. There is no erros in figma.
+      // Konstantin Gorynin <k.gorynin@adguard.com>, 26 August 2025
+      rethrow;
+    } finally {
+      emit(state.copyWith(loadingStatus: ExcludedRoutesLoadingStatus.idle));
+    }
   }
 
-  void _dataChanged(
-    _DataChanged event,
-    Emitter<ExcludedRoutesState> emit,
-  ) =>
-      emit(state.copyWith(data: event.excludedRoutes));
-
-  void _saveExcludedRoutes(
+  Future<void> _saveExcludedRoutes(
     _SaveExcludedRoutes event,
     Emitter<ExcludedRoutesState> emit,
   ) async {
-    await _settingsRepository.setExcludedRoutes(state.data);
-
+    await _settingsRepository.setExcludedRoutes(state.excludedRoutes);
     emit(state.copyWith(action: ExcludedRoutesAction.saved));
     emit(state.copyWith(action: ExcludedRoutesAction.none));
+  }
+
+  Future<void> _dataChanged(
+    _DataChanged event,
+    Emitter<ExcludedRoutesState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        excludedRoutes: event.excludedRoutes,
+      ),
+    );
   }
 }

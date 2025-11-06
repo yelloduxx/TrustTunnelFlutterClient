@@ -7,9 +7,7 @@ import 'package:vpn/di/factory/service_factory.dart';
 part 'initialization_result.freezed.dart';
 
 @freezed
-class InitializationResult with _$InitializationResult {
-  const InitializationResult._();
-
+abstract class InitializationResult with _$InitializationResult {
   const factory InitializationResult({
     required DependencyFactory dependenciesFactory,
     required BlocFactory blocFactory,

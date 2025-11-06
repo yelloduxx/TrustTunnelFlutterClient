@@ -17,17 +17,17 @@ final class Localization {
   static List<Locale> get supportedLocales => _delegate.supportedLocales;
 
   static List<Locale> get applicationLocales => List.of([
-        defaultLocale,
-        ...supportedLocales,
-      ]);
+    defaultLocale,
+    ...supportedLocales,
+  ]);
 
   /// List of localization delegates.
   static List<LocalizationsDelegate<void>> get localizationDelegates => [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        _delegate,
-      ];
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    _delegate,
+  ];
 
   /// Context-free translations.
   static AppLocalizations get ln => AppLocalizations.current;

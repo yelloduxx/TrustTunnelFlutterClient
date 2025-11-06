@@ -6,14 +6,14 @@ import 'package:vpn/feature/routing/routing_details/view/widget/routing_details_
 
 class RoutingDetailsScreen extends StatelessWidget {
   final int? routingId;
-
   const RoutingDetailsScreen({super.key, this.routingId});
 
   @override
   Widget build(BuildContext context) => BlocProvider<RoutingDetailsBloc>(
-        create: (context) => context.blocFactory.routingDetailsBloc(
+    create:
+        (context) => context.blocFactory.routingDetailsBloc(
           routingId: routingId,
         )..add(const RoutingDetailsEvent.init()),
-        child: const RoutingDetailsScreenView(),
-      );
+    child: const RoutingDetailsScreenView(),
+  );
 }

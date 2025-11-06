@@ -1,17 +1,21 @@
 import 'dart:async';
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:vpn/common/error/error_utils.dart';
+import 'package:vpn/common/error/model/presentation_base_error.dart';
 import 'package:vpn/common/error/model/presentation_error.dart';
 import 'package:vpn/common/error/model/presentation_field.dart';
 import 'package:vpn/common/error/model/presentation_field_error.dart';
+import 'package:vpn/data/model/routing_profile.dart';
+import 'package:vpn/data/model/vpn_protocol.dart';
 import 'package:vpn/data/repository/routing_repository.dart';
 import 'package:vpn/data/repository/server_repository.dart';
+import 'package:vpn/data/repository/vpn_repository.dart';
 import 'package:vpn/feature/server/server_details/data/server_details_data.dart';
 import 'package:vpn/feature/server/server_details/domain/server_details_service.dart';
-import 'package:vpn_plugin/platform_api.g.dart';
 
 part 'server_details_bloc.freezed.dart';
 part 'server_details_event.dart';
@@ -21,149 +25,177 @@ class ServerDetailsBloc extends Bloc<ServerDetailsEvent, ServerDetailsState> {
   final ServerRepository _serverRepository;
   final RoutingRepository _routingRepository;
   final ServerDetailsService _serverDetailsService;
+  final VpnRepository _vpnRepository;
+  late final ServerDetailsData _initialData;
 
   ServerDetailsBloc({
     int? serverId,
     required RoutingRepository routingRepository,
     required ServerRepository serverRepository,
     required ServerDetailsService serverDetailsService,
-  })  : _serverRepository = serverRepository,
-        _serverDetailsService = serverDetailsService,
-        _routingRepository = routingRepository,
-        super(ServerDetailsState(
-          serverId: serverId,
-        )) {
-    on<_Init>(_init);
-    on<_DataChanged>(_dataChanged);
-    on<_Submit>(_submit);
-    on<_Delete>(_delete);
-    on<_ProfilesLoaded>(_profileLoaded);
+    required VpnRepository vpnRepository,
+  }) : _serverRepository = serverRepository,
+       _serverDetailsService = serverDetailsService,
+       _routingRepository = routingRepository,
+       _vpnRepository = vpnRepository,
+       super(
+         ServerDetailsState(
+           serverId: serverId,
+         ),
+       ) {
+    on<ServerDetailsEvent>(
+      (event, emit) => switch (event) {
+        _Fetch() => _fetch(event, emit),
+        _Submit() => _submit(event, emit),
+        _Delete() => _delete(event, emit),
+        _DataChanged() => _dataChanged(event, emit),
+      },
+    );
   }
 
-  StreamSubscription<List<dynamic>>? _routingSub;
-
-  void _initSubs() => _routingSub = _routingRepository.routingProfileStream.whereNotNull().listen((value) {
-        add(ServerDetailsEvent.profilesLoaded(profiles: List.of(value)));
-      });
-
-  Future<void> _init(
-    _Init event,
+  Future<void> _fetch(
+    _Fetch event,
     Emitter<ServerDetailsState> emit,
   ) async {
-    final List<RoutingProfile>? profiles = _routingRepository.routingProfileStream.value;
+    try {
+      final profiles = await _routingRepository.getAllProfiles();
+      emit(state.copyWith(availableRoutingProfiles: profiles, ));
 
-    if (profiles == null) {
-      _initSubs();
-      await _routingRepository.loadRoutingProfiles();
-    } else {
-      emit(state.copyWith(availableRoutingProfiles: profiles));
-    }
+      if (state.serverId == null) {
+        emit(
+          state.copyWith(
+            loadingStatus: ServerDetailsLoadingStatus.idle,
+          ),
+        );
+        return;
+      }
 
-    if (state.serverId == null) {
+      final server = await _serverRepository.getServerById(id: state.serverId!);
+      if (server == null) {
+        throw PresentationNotFoundError();
+      }
+      _initialData = _serverDetailsService.toServerDetailsData(server: server);
+
       emit(
         state.copyWith(
+          initialData: _initialData.copyWith(),
+          data: _initialData.copyWith(),
+        ),
+      );
+    } catch (e) {
+      _onException(emit, e);
+      rethrow;
+    } finally {
+      emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.idle));
+    }
+  }
+
+  Future<void> _dataChanged(
+    _DataChanged event,
+    Emitter<ServerDetailsState> emit,
+  ) async => emit(
+    state.copyWith(
+      data: state.data.copyWith(
+        serverName: event.serverName ?? state.data.serverName,
+        ipAddress: event.ipAddress ?? state.data.ipAddress,
+        domain: event.domain ?? state.data.domain,
+        username: event.username ?? state.data.username,
+        password: event.password ?? state.data.password,
+        protocol: event.protocol ?? state.data.protocol,
+        routingProfileId: event.routingProfileId ?? state.data.routingProfileId,
+        dnsServers: event.dnsServers ?? state.data.dnsServers,
+      ),
+    ),
+  );
+
+  Future<void> _submit(
+    _Submit event,
+    Emitter<ServerDetailsState> emit,
+  ) async {
+    emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.loading));
+
+    final List<PresentationField> filedErrors = _serverDetailsService.validateData(data: state.data);
+
+    if (filedErrors.isNotEmpty) {
+      emit(
+        state.copyWith(
+          fieldErrors: filedErrors,
           loadingStatus: ServerDetailsLoadingStatus.idle,
         ),
       );
       return;
     }
 
-    final Server server = await _serverRepository.getServerById(id: state.serverId!);
-    final ServerDetailsData initialData = _serverDetailsService.toServerDetailsData(server: server);
-
-    emit(
-      state.copyWith(
-        data: initialData,
-        initialData: initialData,
-        loadingStatus: ServerDetailsLoadingStatus.idle,
-      ),
-    );
-  }
-
-  void _dataChanged(
-    _DataChanged event,
-    Emitter<ServerDetailsState> emit,
-  ) {
-    final serverName = event.serverName ?? state.data.serverName;
-    final ipAddress = event.ipAddress ?? state.data.ipAddress;
-    final domain = event.domain ?? state.data.domain;
-    final username = event.username ?? state.data.username;
-    final password = event.password ?? state.data.password;
-    final protocol = event.protocol ?? state.data.protocol;
-    final routingProfileId = event.routingProfileId ?? state.data.routingProfileId;
-    final dnsServers = event.dnsServers ?? state.data.dnsServers;
-
-    emit(
-      state.copyWith(
-        data: state.data.copyWith(
-          serverName: serverName,
-          ipAddress: ipAddress,
-          domain: domain,
-          username: username,
-          password: password,
-          protocol: protocol,
-          routingProfileId: routingProfileId,
-          dnsServers: dnsServers,
-        ),
-      ),
-    );
-  }
-
-  Future<void> _submit(
-    _Submit event,
-    Emitter<ServerDetailsState> emit,
-  ) async {
-    final List<PresentationField> filedErrors = _serverDetailsService.validateData(data: state.data);
-
-    if (filedErrors.isNotEmpty) {
-      emit(state.copyWith(fieldErrors: filedErrors));
-      return;
-    }
-
     try {
       if (state.isEditing) {
-        await _serverRepository.updateServer(
-          request: _serverDetailsService.toUpdateServerRequest(
-            id: state.serverId!,
-            data: state.data,
+        await _serverRepository.setNewServer(
+          id: state.serverId!,
+          request: (
+            dnsServers: state.data.dnsServers,
+            name: state.data.serverName,
+            ipAddress: state.data.ipAddress,
+            domain: state.data.domain,
+            username: state.data.username,
+            password: state.data.password,
+            vpnProtocol: state.data.protocol,
+            routingProfileId: state.data.routingProfileId,
           ),
         );
+        emit(state.copyWith(action: const ServerDetailsAction.saved()));
       } else {
-        await _serverRepository.addServer(
-          request: _serverDetailsService.toAddServerRequest(
-            data: state.data,
+        await _serverRepository.addNewServer(
+          request: (
+            dnsServers: state.data.dnsServers,
+            name: state.data.serverName,
+            ipAddress: state.data.ipAddress,
+            domain: state.data.domain,
+            username: state.data.username,
+            password: state.data.password,
+            vpnProtocol: state.data.protocol,
+            routingProfileId: state.data.routingProfileId,
+          ),
+        );
+        emit(
+          state.copyWith(
+            action: ServerDetailsAction.created(state.data.serverName),
           ),
         );
       }
 
-      emit(state.copyWith(action: const ServerDetailsAction.saved()));
       emit(state.copyWith(action: const ServerDetailsAction.none()));
     } catch (e) {
-      final PresentationError error = ErrorUtils.toPresentationError(exception: e);
-
-      if (error is PresentationFieldError) {
-        emit(state.copyWith(fieldErrors: error.fields));
-      }
-
-      emit(state.copyWith(action: ServerDetailsAction.presentationError(error)));
-      emit(state.copyWith(action: const ServerDetailsAction.none()));
+      _onException(emit, e);
+      rethrow;
+    } finally {
+      emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.idle));
     }
   }
 
   Future<void> _delete(_Delete event, Emitter<ServerDetailsState> emit) async {
-    await _serverDetailsService.deleteServer(serverId: state.serverId!);
-
-    emit(state.copyWith(action: const ServerDetailsAction.deleted()));
-    emit(state.copyWith(action: const ServerDetailsAction.none()));
+    try {
+      emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.loading));
+      await _vpnRepository.stop();
+      await _serverRepository.removeServer(serverId: state.serverId!);
+      emit(state.copyWith(action: ServerDetailsAction.deleted(state.data.serverName)));
+      emit(state.copyWith(action: const ServerDetailsAction.none()));
+    } catch (e) {
+      _onException(emit, e);
+      rethrow;
+    } finally {
+      emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.idle));
+    }
   }
 
-  void _profileLoaded(_ProfilesLoaded event, Emitter<ServerDetailsState> emit) => emit(
-        state.copyWith(availableRoutingProfiles: event.profiles),
-      );
+  Future<void> _onException(
+    Emitter<ServerDetailsState> emit,
+    Object exception,
+  ) async {
+    final PresentationError error = ErrorUtils.toPresentationError(exception: exception);
 
-  @override
-  Future<void> close() {
-    _routingSub?.cancel();
-    return super.close();
+    if (error is PresentationFieldError) {
+      emit(state.copyWith(fieldErrors: error.fields));
+    }
+    emit(state.copyWith(action: ServerDetailsAction.presentationError(error)));
+    emit(state.copyWith(action: const ServerDetailsAction.none()));
   }
 }

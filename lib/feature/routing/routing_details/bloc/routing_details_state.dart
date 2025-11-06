@@ -11,9 +11,12 @@ sealed class RoutingDetailsState with _$RoutingDetailsState {
     @Default(RoutingDetailsData()) RoutingDetailsData initialData,
     @Default(RoutingDetailsLoadingStatus.initialLoading) RoutingDetailsLoadingStatus loadingStatus,
     @Default(RoutingDetailsAction.none()) RoutingDetailsAction action,
+    @Default(false) bool hasInvalidRules,
   }) = _RoutingDetailsState;
 
-  bool get hasChanges => data != initialData;
+  DeepCollectionEquality get _collectionEquality => const DeepCollectionEquality();
+
+  bool get hasChanges => !_collectionEquality.equals(data, initialData);
 
   bool get isEditing => routingId != null;
 }
@@ -34,6 +37,18 @@ sealed class RoutingDetailsAction with _$RoutingDetailsAction {
   ) = RoutingDetailsPresentationError;
 
   const factory RoutingDetailsAction.saved() = RoutingDetailsSaved;
+
+  const factory RoutingDetailsAction.created(
+    String name,
+  ) = RoutingDetailsCreated;
+
+  const factory RoutingDetailsAction.deleted(
+    String name,
+  ) = RoutingDetailsDeleted;
+
+  const factory RoutingDetailsAction.cleared() = RoutingDetailsCleared;
+
+  const factory RoutingDetailsAction.defaultModeChanged() = RoutingDetailsDefaultModeChanged;
 
   const factory RoutingDetailsAction.none() = _RoutingDetailsNone;
 }
