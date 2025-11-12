@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:collection';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:vpn/common/error/error_utils.dart';
@@ -37,6 +37,7 @@ class ServersBloc extends Bloc<ServersEvent, ServersState> {
         state.copyWith(
           loadingState: ServerLoadingState.idle,
           serverList: servers,
+          selectedServerId: servers.where((s) => s.selected).firstOrNull?.id,
         ),
       );
     } catch (e) {
@@ -59,7 +60,12 @@ class ServersBloc extends Bloc<ServersEvent, ServersState> {
     try {
       emit(state.copyWith(loadingState: ServerLoadingState.loading));
       await _serverRepository.setSelectedServerId(id: event.serverId!);
-      emit(state.copyWith(selectedServerId: event.serverId));
+
+      emit(
+        state.copyWith(
+          selectedServerId: event.serverId,
+        ),
+      );
     } catch (e) {
       _onException(emit, e);
       rethrow;

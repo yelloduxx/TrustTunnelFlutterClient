@@ -39,28 +39,31 @@ class VpnScope extends StatefulWidget {
 
 class _VpnScopeState extends State<VpnScope> {
   Stream<VpnState>? _vpnStream;
-  bool _running = false;
 
   Future<void> _start({
     required Server server,
     required RoutingProfile routingProfile,
   }) async {
-    if (_running) {
+    if (_vpnStream != null) {
       await _stop();
     }
 
-    _vpnStream = await widget.vpnRepository.startListenToStates(
+    final newServerStream = await widget.vpnRepository.startListenToStates(
       server: server,
       routingProfile: routingProfile,
     );
 
-    _running = true;
+    if (mounted) {
+      setState(() {
+        _vpnStream = newServerStream;
+      });
+    }
   }
 
   Future<void> _stop() async {
     await widget.vpnRepository.stop();
-    await Future.delayed(Duration(seconds: 5));
-    _running = false;
+    await Future.delayed(Duration(milliseconds: 100));
+    _vpnStream = null;
   }
 
   @override

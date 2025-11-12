@@ -8,7 +8,8 @@ abstract class ValidationUtils {
   static const domainRawRegex =
       r'^(?:localhost|'
       r'(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+'
-      r'(?:[A-Za-z]{2,63}|xn--[A-Za-z0-9-]{2,58}))\.?$';
+      r'(?:[A-Za-z]{2,63}|xn--[A-Za-z0-9-]{2,58}))'
+      r'(?:\|[A-Za-z0-9.-]+)?\.?$';
 
   static const dotRawRegex =
       r'^tls://'

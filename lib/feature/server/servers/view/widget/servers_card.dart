@@ -43,6 +43,7 @@ class _ServersCardState extends State<ServersCard> {
       server: widget.server,
     ),
     trailing: BlocBuilder<ServersBloc, ServersState>(
+      key: ValueKey(_vpnStatus),
       buildWhen: (previous, current) => previous.selectedServerId != current.selectedServerId,
       builder: (context, state) {
         final vpnManagerState = state.selectedServerId == widget.server.id ? _vpnStatus : VpnState.disconnected;
