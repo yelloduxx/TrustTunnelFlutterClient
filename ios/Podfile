@@ -27,7 +27,7 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 
 flutter_ios_podfile_setup
 
-pod 'TrustTunnelClient', :podspec => 'https://github.com/TrustTunnel/TrustTunnelClient/releases/download/v0.99.22-apple/TrustTunnelClient.podspec'
+pod 'TrustTunnelClient', :podspec => '../specs/TrustTunnelClient.podspec'
 
 target 'Runner' do
   use_frameworks!

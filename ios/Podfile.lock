@@ -30,7 +30,7 @@ PODS:
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
     - sqlite3/session
-  - TrustTunnelClient (0.99.22)
+  - TrustTunnelClient (0.99.36)
   - url_launcher_ios (0.0.1):
     - Flutter
   - vpn_plugin (0.0.1):
@@ -42,7 +42,7 @@ DEPENDENCIES:
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
-  - TrustTunnelClient (from `https://github.com/TrustTunnel/TrustTunnelClient/releases/download/v0.99.22-apple/TrustTunnelClient.podspec`)
+  - TrustTunnelClient (from `../specs/TrustTunnelClient.podspec`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - vpn_plugin (from `.symlinks/plugins/vpn_plugin/ios`)
 
@@ -60,7 +60,7 @@ EXTERNAL SOURCES:
   sqlite3_flutter_libs:
     :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
   TrustTunnelClient:
-    :podspec: https://github.com/TrustTunnel/TrustTunnelClient/releases/download/v0.99.22-apple/TrustTunnelClient.podspec
+    :podspec: "../specs/TrustTunnelClient.podspec"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   vpn_plugin:
@@ -72,10 +72,10 @@ SPEC CHECKSUMS:
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   sqlite3: 73513155ec6979715d3904ef53a8d68892d4032b
   sqlite3_flutter_libs: 83f8e9f5b6554077f1d93119fe20ebaa5f3a9ef1
-  TrustTunnelClient: d4166bde73654f50722ea13a428a64d04310afae
+  TrustTunnelClient: 8a1419406856c35ad1298c79de5c7928ef686682
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
   vpn_plugin: d8f4ce48bfe0365011dd972df33d0b6020220d74
 
-PODFILE CHECKSUM: d3695277648c8c55d422277fa93adc0764d545e4
+PODFILE CHECKSUM: e84f6b0b9a26f7ef74d536f604118acc4840ca13
 
 COCOAPODS: 1.16.2
