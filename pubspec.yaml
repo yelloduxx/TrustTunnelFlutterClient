@@ -5,8 +5,15 @@ publish_to: 'none'
 
 version: 1.0.0+1
 
+version_titles:
+  versionTitleReleaseNumber: 0
+  versionTitleRcNumber: 0
+  versionTitleBetaNumber: 0
+  versionTitleNightlyNumber: 0
+  versionTitlePreNightlyNumber: 0
+
 environment:
-  flutter: ^3.35.4
+  flutter: 3.35.4
   sdk: '>=3.8.0 <4.0.0'
 
 dependencies:

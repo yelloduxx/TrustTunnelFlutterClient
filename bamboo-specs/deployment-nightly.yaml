@@ -1,0 +1,36 @@
+---
+version: 2
+deployment:
+  name: iOS • TrustTunnel • Nightly
+  source-plan: TT-IOSBUILDINGTODEPLOY
+
+release-naming:
+  next-version-name: ${bamboo.data.version_title} (${bamboo.data.version} [${bamboo.data.build_number}])
+  applies-to-branches: true
+  auto-increment: false
+  auto-increment-variables: []
+
+environments:
+- TestFlight • Nightly • 100 ％
+
+TestFlight • Nightly • 100 ％:
+  triggers: []
+  tasks:
+    - clean
+    - checkout:
+        repository: vpn-oss-gui
+        path: trusttunnel
+        force-clean-build: 'true'
+    - checkout:
+        repository: git-scripts
+        path: git-scripts
+        force-clean-build: 'true'
+    - artifact-download:
+        artifacts:
+        - destination: trusttunnel
+    - script: mkdir -p "trusttunnel/build" && mv "trusttunnel/TrustTunnel.ipa" "trusttunnel/build/TrustTunnel.ipa"
+    - script: trusttunnel/bamboo-specs/scripts/deploy_to_testflight.sh "$PWD/trusttunnel" "$bamboo_submit_beta_review"
+    - script: trusttunnel/bamboo-specs/scripts/increment_version_title_and_push.sh "${bamboo_working_directory}/git-scripts/git_kit.sh"
+  requirements:
+    - ephemeral
+    - image: registry.int.agrd.dev/macos/tahoe-build-agent-xcode26.1.1:latest
