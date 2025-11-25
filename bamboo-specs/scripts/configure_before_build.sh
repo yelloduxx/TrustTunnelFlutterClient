@@ -43,6 +43,9 @@ fi
 echo "${bamboo_fastlaneAppStoreApiInfoSecret}" | base64 --decode > "${project_dir}/ios/fastlane/AppStoreApiInfo.json"
 echo "${bamboo_fastlaneEnvSecret}" | base64 --decode > "${project_dir}/ios/fastlane/.env"
 
+# Configure project's dependencies
+make .dart_tool/package_config.json
+
 # Configure bundler
 cd ios
 bundle config set --local path '.bundle/vendor'
