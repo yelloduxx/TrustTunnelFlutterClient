@@ -21,8 +21,8 @@ triggers: []
 
 variables:
   bamboo_build_channel: can be prenightly/nightly/beta/rc/release
-  bamboo_distribute_external: true
-  bamboo_submit_beta_review: true
+  bamboo_distribute_external: false
+  bamboo_submit_beta_review: false
 
 branches:
   create: manually
