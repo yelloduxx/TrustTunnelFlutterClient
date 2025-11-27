@@ -70,12 +70,12 @@ Building and publishing:
     - script: find . -mindepth 1 \( -path "./trusttunnel/TrustTunnel.ipa" -o -path "./trusttunnel/TrustTunnel.app.zip" -o -path "./trusttunnel/changelog.txt" -o -path "./trusttunnel/qa_changelog.md" -o -path "./trusttunnel/variables.txt" \) -o -delete; exit 0
   artifacts:
     - name: TrustTunnel.ipa
-      location: trusttunnel/ios/build
+      location: trusttunnel
       pattern: 'TrustTunnel.ipa'
       shared: true
       required: true
     - name: TrustTunnel.app.zip
-      location: trusttunnel/ios/build
+      location: trusttunnel
       pattern: 'TrustTunnel.app.zip'
       shared: true
       required: true
