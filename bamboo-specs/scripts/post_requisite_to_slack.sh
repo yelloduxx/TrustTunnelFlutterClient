@@ -20,7 +20,7 @@ if [ "$slack_kit" == "" ]; then
 fi
 
 # Let's define all necessary variables
-slack_channel="#trusttunnel-qa-flutter-builds"
+slack_channel="#trusttunnel-qa-builds"
 uniq_name="TrustTunnel for iOS"
 text=`cat <<EOF
 _*## ${uniq_name} \\\`[${build_channel}]\\\`*_ :apple-grey:

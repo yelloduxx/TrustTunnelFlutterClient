@@ -11,7 +11,7 @@ if [[ "$build_channel" == "beta" ]] || [[ "$build_channel" == "rc" ]] || [[ "$bu
     echo "The build channel is correct, the posting to slack is allowed"
 else
     echo "Unknown build channel: ${build_channel}. The building for simulator is not allowed"
-    mkdir -p "build" && touch "build/TrustTunnel.app.zip" # Let's create an empty file for Bamboo artifact's publishing
+    mkdir -p "build" && touch "ios/build/TrustTunnel.app.zip" # Let's create an empty file for Bamboo artifact's publishing
     exit 0
 fi
 

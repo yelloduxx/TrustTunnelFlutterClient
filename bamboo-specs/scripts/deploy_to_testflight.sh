@@ -17,19 +17,20 @@ cd $(dirname $0)
 cd ../..
 
 
-
-if grep -q "<html>" "${PWD}/changelog.txt"; then
+changelog_path="${PWD}/changelog.txt"
+if grep -q "<html>" "${changelog_path}"; then
     echo "The changelog.txt file contains an <html> tag. Let's replace it to the 'Minor fixes' phrase."
-    echo "Minor fixes" > "${PWD}/changelog.txt"
+    echo "Minor fixes" > "${changelog_path}"
 fi
 
-changelog_text=$(cat "${PWD}/changelog.txt")
+
+changelog_text=$(cat "${changelog_path}")
 echo "Welcome to TrustTunnel ${bamboo_data_version_title}!" > changelog.txt
-echo "" >> "${PWD}/changelog.txt"
-echo "" >> "${PWD}/changelog.txt"
-echo "## Release notes" >> "${PWD}/changelog.txt"
-echo "" >> "${PWD}/changelog.txt"
-echo "$changelog_text" >> "${PWD}/changelog.txt"
+echo "" >> "${changelog_path}"
+echo "" >> "${changelog_path}"
+echo "## Release notes" >> "${changelog_path}"
+echo "" >> "${changelog_path}"
+echo "$changelog_text" >> "${changelog_path}"
 
 
 
@@ -44,6 +45,6 @@ if [ $? -eq 1 ]; then exit 1; fi
 
 
 
-bundle exec fastlane deploy_to_testflight changelog_path:"${PWD}/changelog.txt" track:"$bamboo_build_channel" distribute_external:"$bamboo_distribute_external" submit_beta_review:"$submit_beta_review"
+bundle exec fastlane deploy_to_testflight changelog_path:"${changelog_path}" track:"$bamboo_build_channel" distribute_external:"$bamboo_distribute_external" submit_beta_review:"$submit_beta_review"
 
 exit $?

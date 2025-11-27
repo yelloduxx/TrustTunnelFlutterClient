@@ -64,7 +64,7 @@ if [[ "$current_branch" == "" ]]; then
 fi
 
 # Let's collect a changelog
-url="https://jirahub.int.agrd.dev/v1/release_notes/changelog.${changelog_file_type}?repo=ADGUARD-IOS/vpn&github_repo=AdguardTeam/AdGuardVPNForiOS&from_ref=${previous_tag}&private=${collect_private_notes}&branch=${current_branch}"
+url="https://jirahub.int.agrd.dev/v1/release_notes/changelog.${changelog_file_type}?repo=ADGUARD-CORE-LIBS/vpn-oss-gui&from_ref=${previous_tag}&private=${collect_private_notes}&branch=${current_branch}"
 echo "URL is ${url}"
 curl ${url} > "$filename"
 
