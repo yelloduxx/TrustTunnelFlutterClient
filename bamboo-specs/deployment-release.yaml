@@ -28,7 +28,7 @@ TestFlight • Release • 100 ％:
     - artifact-download:
         artifacts:
         - destination: trusttunnel
-    - script: mkdir -p "trusttunnel/build" && mv "trusttunnel/TrustTunnel.ipa" "trusttunnel/ios/build/TrustTunnel.ipa"
+    - script: mkdir -p "trusttunnel/ios/build" && mv "trusttunnel/TrustTunnel.ipa" "trusttunnel/ios/build/TrustTunnel.ipa"
     - script: trusttunnel/bamboo-specs/scripts/deploy_to_testflight.sh "$PWD/trusttunnel"
   requirements:
     - ephemeral
