@@ -27,7 +27,7 @@ class _ServersCardState extends State<ServersCard> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _vpnStatus = VpnScope.of(context).state;
+    _vpnStatus = VpnScope.vpnControllerOf(context).state;
   }
 
   @override
@@ -71,7 +71,7 @@ class _ServersCardState extends State<ServersCard> {
     ),
   );
   Future<void> _disconnectFromVpn(BuildContext context) {
-    final controller = VpnScope.of(context);
+    final controller = VpnScope.vpnControllerOf(context);
 
     return controller.stop();
   }
@@ -80,7 +80,7 @@ class _ServersCardState extends State<ServersCard> {
     BuildContext context,
     Server server,
   ) async {
-    final controller = VpnScope.of(context);
+    final controller = VpnScope.vpnControllerOf(context);
     await controller.start(
       server: server,
       routingProfile: server.routingProfile,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
-import 'package:vpn/common/localization/extensions/locale_enum_extension.dart';
-import 'package:vpn/data/model/vpn_request.dart';
+import 'package:vpn/data/model/vpn_log.dart';
 
 class QueryLogCard extends StatelessWidget {
-  final VpnRequest log;
+  final VpnLog log;
 
   const QueryLogCard({
     super.key,
@@ -27,34 +27,23 @@ class QueryLogCard extends StatelessWidget {
             _ipAddressLine(),
             style: context.textTheme.bodySmall,
           ),
-          if (log.domain != null) ...[
-            const SizedBox(height: 3),
-            Text(
-              _domainLine()!,
-              style: context.textTheme.bodySmall,
-            ),
-          ],
         ],
       ),
     ),
   );
 
-  String _titleLine(BuildContext context) =>
-      '${log.zonedDateTime}    ${log.protocolName} -> ${log.decision.localized(context)}';
+  String _titleLine(BuildContext context) {
+    final dateTimeFormat = DateFormat.yMd('ru').add_Hms();
 
-  String _ipAddressLine() {
-    String source = log.sourceIpAddress;
-    if (log.sourcePort != null) {
-      source += ':${log.sourcePort!}';
-    }
-
-    String destination = log.destinationIpAddress;
-    if (log.destinationPort != null) {
-      destination += ':${log.destinationPort!}';
-    }
-
-    return '$source -> $destination';
+    return '${dateTimeFormat.format(log.timeStamp)} ${log.protocol.name} -> ${log.action.name}';
   }
 
-  String? _domainLine() => '(${log.domain})';
+  String _ipAddressLine() {
+    var flow = '${log.source} -> ${log.destination}';
+    if (log.domain != null) {
+      flow += ' (${log.domain})'.replaceAll('-', '‑');
+    }
+
+    return flow;
+  }
 }

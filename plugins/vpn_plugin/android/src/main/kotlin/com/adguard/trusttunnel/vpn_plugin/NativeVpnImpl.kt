@@ -10,18 +10,22 @@ import java.util.Queue
 import com.adguard.trusttunnel.AppNotifier
 import com.adguard.trusttunnel.VpnService
 import io.flutter.plugin.common.EventChannel
+import java.io.File
 
 class NativeVpnImpl(
     private val appContext: Context
 ) : EventChannel.StreamHandler, AppNotifier {
+
     private var events: EventChannel.EventSink? = null
     private var currentState = VpnManagerState.DISCONNECTED
     private val main = Handler(Looper.getMainLooper())
-    private val queryLogHandler = QueryLogStreamHandler()
+
+    val queryLogHandler: QueryLogStreamHandler = QueryLogStreamHandler()
 
     init {
         VpnService.startNetworkManager(appContext)
-        VpnService.setAppNotifier(this)
+        val queryLogFile = File(appContext.filesDir, "query_log.dat")
+        VpnService.setAppNotifier(queryLogFile, this)
     }
 
     fun startPrepared(ctx: Context, config: String) {
@@ -45,11 +49,10 @@ class NativeVpnImpl(
     override fun onCancel(arguments: Any?) {
         Log.i("VPN_PLUGIN", "onCancel() -> unsubscribe")
         try {
-    events = null
+            events = null
         } catch (t: Throwable) {
             Log.w("VPN_PLUGIN", "clearStateNotifier failed", t)
         }
-        events = null
     }
 
     override fun onStateChanged(state: Int) {
@@ -73,6 +76,7 @@ class NativeVpnImpl(
 }
 
 class QueryLogStreamHandler : EventChannel.StreamHandler {
+
     private var events: EventChannel.EventSink? = null
     private val main = Handler(Looper.getMainLooper())
     private val queue: Queue<String> = ArrayDeque()
@@ -93,7 +97,6 @@ class QueryLogStreamHandler : EventChannel.StreamHandler {
         } catch (t: Throwable) {
             Log.w("VPN_PLUGIN", "clearNotifier failed for QueryLog", t)
         }
-        events = null
     }
 
     private fun postEvent(value: Any) {

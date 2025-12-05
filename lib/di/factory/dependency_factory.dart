@@ -46,7 +46,7 @@ class DependencyFactoryImpl implements DependencyFactory {
   ThemeData get lightThemeData => _lightThemeData ??= LightTheme().data;
 
   @override
-  VpnPlugin get vpnPlugin => _vpnPlugin ??= VpnPlugin();
+  VpnPlugin get vpnPlugin => _vpnPlugin ??= VpnPluginImpl();
 
   @override
   SettingsDataSource get settingsDataSource => _settingsDataSource ??= SettingsDataSourceImpl(database: database);

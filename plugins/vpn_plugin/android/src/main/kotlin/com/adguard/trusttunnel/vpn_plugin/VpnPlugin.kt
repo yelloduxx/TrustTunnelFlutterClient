@@ -16,16 +16,20 @@ class VpnPlugin :
     FlutterPlugin,
     ActivityAware,
     PluginRegistry.ActivityResultListener,
-    IVpnManager {                         
+    IVpnManager {
 
     companion object {
         private const val REQ_VPN_PREPARE = 1001
+        private const val STATE_CHANNEL_NAME = "vpn_plugin_event_channel"
+        private const val QUERY_LOG_CHANNEL_NAME = "vpn_plugin_event_channel_query_log"
     }
 
     private lateinit var appContext: Context
     private var activity: Activity? = null
 
-    private var eventChannel: EventChannel? = null
+    private var stateChannel: EventChannel? = null
+    private var queryLogChannel: EventChannel? = null
+    
     private lateinit var vpnImpl: NativeVpnImpl
 
     private var pendingConfig: String? = null
@@ -38,15 +42,20 @@ class VpnPlugin :
 
         IVpnManager.setUp(messenger, this)
 
-        eventChannel = EventChannel(messenger, "vpn_plugin_event_channel").apply {
+        stateChannel = EventChannel(messenger, STATE_CHANNEL_NAME).apply {
             setStreamHandler(vpnImpl)
+        }
+
+        queryLogChannel = EventChannel(messenger, QUERY_LOG_CHANNEL_NAME).apply {
+            setStreamHandler(vpnImpl.queryLogHandler)
         }
     }
 
-
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-        eventChannel?.setStreamHandler(null)
-        eventChannel = null
+        stateChannel?.setStreamHandler(null)
+        queryLogChannel?.setStreamHandler(null)
+        stateChannel = null
+        queryLogChannel = null
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {

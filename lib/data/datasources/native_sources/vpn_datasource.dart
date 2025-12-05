@@ -6,9 +6,12 @@ import 'package:vpn/common/utils/vpn_mode_encoder.dart';
 import 'package:vpn/data/datasources/vpn_datasource.dart';
 import 'package:vpn/data/model/routing_profile.dart';
 import 'package:vpn/data/model/server.dart';
+import 'package:vpn/data/model/vpn_log.dart';
 import 'package:vpn/data/model/vpn_state.dart';
+import 'package:vpn/feature/vpn/domain/services/vpn_log_converter.dart';
 import 'package:vpn_plugin/models/configuration.dart';
 import 'package:vpn_plugin/models/endpoint.dart';
+import 'package:vpn_plugin/models/query_log_row.dart';
 import 'package:vpn_plugin/models/socks.dart';
 import 'package:vpn_plugin/models/tun.dart';
 import 'package:vpn_plugin/platform_api.g.dart' as p;
@@ -30,6 +33,18 @@ class VpnDataSourceImpl implements VpnDataSource {
       handleDone: (sink) async {
         await _platformApi.stop();
         sink.add(VpnState.disconnected);
+        sink.close();
+      },
+    ),
+  );
+
+  @override
+  Stream<VpnLog> get vpnLogs => _platformApi.queryLog.transform(
+    StreamTransformer<QueryLogRow, VpnLog>.fromHandlers(
+      handleData: (data, sink) => sink.add(
+        VpnLogConverter().convert(data),
+      ),
+      handleDone: (sink) {
         sink.close();
       },
     ),
