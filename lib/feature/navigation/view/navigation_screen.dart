@@ -76,13 +76,13 @@ class _NavigationScreenState extends State<NavigationScreen> {
   void _onDestinationSelected(int selectedIndex) {
     if (_selectedTabNotifier.value != selectedIndex) {
       _selectedTabNotifier.value = selectedIndex;
-
-      _navigatorKey.currentState!.pushReplacement(
+      _navigatorKey.currentState!.pushAndRemoveUntil(
         PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) => getScreenByIndex(selectedIndex),
           transitionDuration: Duration.zero,
           reverseTransitionDuration: Duration.zero,
         ),
+        (_) => false,
       );
     }
   }
