@@ -16,47 +16,49 @@ class ServerDetailsFullScreenView extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: BlocBuilder<ServerDetailsBloc, ServerDetailsState>(
-      buildWhen: (previous, current) => previous.hasChanges != current.hasChanges,
-      builder: (context, state) => CustomScrollView(
-        physics: const ClampingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: CustomAppBar(
-              actions: const [ServerDetailsScreenAppBarAction()],
-              leadingIconType: AppBarLeadingIconType.back,
-              centerTitle: true,
-              onBackPressed: () => onDiscardChanges.call(state.hasChanges),
-              title: state.isEditing ? context.ln.editServer : context.ln.addServer,
+  Widget build(BuildContext context) => SafeArea(
+    child: Scaffold(
+      body: BlocBuilder<ServerDetailsBloc, ServerDetailsState>(
+        buildWhen: (previous, current) => previous.hasChanges != current.hasChanges,
+        builder: (context, state) => CustomScrollView(
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: CustomAppBar(
+                actions: const [ServerDetailsScreenAppBarAction()],
+                leadingIconType: AppBarLeadingIconType.back,
+                centerTitle: true,
+                onBackPressed: () => onDiscardChanges.call(state.hasChanges),
+                title: state.isEditing ? context.ln.editServer : context.ln.addServer,
+              ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: body,
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            fillOverscroll: true,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Spacer(),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: FilledButton(
-                    onPressed: state.hasChanges
-                        ? () => context.read<ServerDetailsBloc>().add(const ServerDetailsEvent.submit())
-                        : null,
-                    child: Text(
-                      state.isEditing ? context.ln.save : context.ln.add,
+            SliverToBoxAdapter(
+              child: body,
+            ),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              fillOverscroll: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Spacer(),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FilledButton(
+                      onPressed: state.hasChanges
+                          ? () => context.read<ServerDetailsBloc>().add(const ServerDetailsEvent.submit())
+                          : null,
+                      child: Text(
+                        state.isEditing ? context.ln.save : context.ln.add,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );
