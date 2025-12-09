@@ -118,8 +118,12 @@ class ServerDetailsBloc extends Bloc<ServerDetailsEvent, ServerDetailsState> {
     Emitter<ServerDetailsState> emit,
   ) async {
     emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.loading));
-
-    final List<PresentationField> filedErrors = _serverDetailsService.validateData(data: state.data);
+    final servers = await _serverRepository.getAllServers();
+    
+    final List<PresentationField> filedErrors = _serverDetailsService.validateData(
+      data: state.data,
+      otherServersNames: servers.map((server) => server.name).toSet(),
+    );
 
     if (filedErrors.isNotEmpty) {
       emit(

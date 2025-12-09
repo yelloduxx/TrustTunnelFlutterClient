@@ -7,7 +7,10 @@ import 'package:vpn/data/model/server.dart';
 import 'package:vpn/feature/server/server_details/data/server_details_data.dart';
 
 abstract class ServerDetailsService {
-  List<PresentationField> validateData({required ServerDetailsData data});
+  List<PresentationField> validateData({
+    required ServerDetailsData data,
+    Set<String> otherServersNames = const {},
+  });
 
   AddServerRequest toAddServerRequest({required ServerDetailsData data});
 
@@ -18,12 +21,12 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
   @override
   List<PresentationField> validateData({
     required ServerDetailsData data,
-    Set<ServerDetailsData> otherServers = const {},
+    Set<String> otherServersNames = const {},
   }) {
     final List<PresentationField> fields = [];
     final serverNameValidationResult = _validateServerName(
       data.serverName,
-      otherServers.map((e) => e.serverName).toSet(),
+      otherServersNames,
     );
     if (serverNameValidationResult != null) {
       fields.add(serverNameValidationResult);
