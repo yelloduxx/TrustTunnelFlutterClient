@@ -16,7 +16,9 @@ abstract class ErrorUtils {
   };
 
   static String getFieldErrorString(PresentationField field, AppLocalizations ln) => switch (field.code) {
-    PresentationFieldErrorCode.alreadyExists when field.fieldName == PresentationFieldName.serverName =>
+    PresentationFieldErrorCode.alreadyExists
+        when (field.fieldName == PresentationFieldName.serverName ||
+            field.fieldName == PresentationFieldName.profileName) =>
       ln.nameAlreadyExistError,
     PresentationFieldErrorCode.fieldWrongValue when field.fieldName == PresentationFieldName.ipAddress =>
       ln.ipAddressWrongFieldError,
@@ -33,6 +35,7 @@ abstract class ErrorUtils {
             field.fieldName == PresentationFieldName.dnsServers ||
             field.fieldName == PresentationFieldName.password ||
             field.fieldName == PresentationFieldName.serverName ||
+            field.fieldName == PresentationFieldName.profileName ||
             field.fieldName == PresentationFieldName.rule ||
             field.fieldName == PresentationFieldName.url =>
       ln.pleaseFillField,
@@ -60,7 +63,7 @@ abstract class ErrorUtils {
     if (exception is! PlatformException || exception.details is! PlatformErrorResponse) {
       return PresentationBaseError(code: PresentationErrorCode.unknown);
     }
-    
+
     final PlatformErrorResponse errorResponse = exception.details as PlatformErrorResponse;
 
     if (errorResponse.fieldErrors == null) {
@@ -68,16 +71,15 @@ abstract class ErrorUtils {
     }
 
     return PresentationFieldError(
-      fields:
-          errorResponse.fieldErrors!
-              .cast<PlatformFieldError>()
-              .map(
-                (platformFieldError) => PresentationField(
-                  code: toPresentationFieldErrorCode(platformFieldError.code),
-                  fieldName: toPresentationFieldName(platformFieldError.fieldName),
-                ),
-              )
-              .toList(),
+      fields: errorResponse.fieldErrors!
+          .cast<PlatformFieldError>()
+          .map(
+            (platformFieldError) => PresentationField(
+              code: toPresentationFieldErrorCode(platformFieldError.code),
+              fieldName: toPresentationFieldName(platformFieldError.fieldName),
+            ),
+          )
+          .toList(),
     );
   }
 }

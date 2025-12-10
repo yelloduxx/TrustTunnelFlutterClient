@@ -150,14 +150,14 @@ class _ServerDetailsFormState extends State<ServerDetailsForm> {
     List<String>? dnsServers,
   }) => context.read<ServerDetailsBloc>().add(
     ServerDetailsEvent.dataChanged(
-      serverName: serverName,
-      ipAddress: ipAddress,
-      domain: domain,
-      username: username,
-      password: password,
+      serverName: serverName?.trim(),
+      ipAddress: ipAddress?.trim(),
+      domain: domain?.trim(),
+      username: username?.trim(),
+      password: password?.trim(),
       protocol: protocol,
       routingProfileId: routingProfileId,
-      dnsServers: dnsServers,
+      dnsServers: dnsServers?.map((e) => e.trim()).toList(),
     ),
   );
 }

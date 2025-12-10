@@ -86,10 +86,10 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
 
   PresentationField? _validateServerName(String serverName, Set<String> otherServerNames) {
     final fieldName = PresentationFieldName.serverName;
-    if (serverName.isEmpty) {
+    if (serverName.trim().isEmpty) {
       return _getRequiredField(fieldName);
     }
-    if (otherServerNames.contains(serverName)) {
+    if (otherServerNames.map((e) => e.trim().toLowerCase()).contains(serverName.trim().toLowerCase())) {
       return _getAlreadyExistsField(fieldName);
     }
 

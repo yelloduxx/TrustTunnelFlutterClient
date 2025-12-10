@@ -117,7 +117,6 @@ class ServerDetailsBloc extends Bloc<ServerDetailsEvent, ServerDetailsState> {
     _Submit event,
     Emitter<ServerDetailsState> emit,
   ) async {
-    emit(state.copyWith(loadingStatus: ServerDetailsLoadingStatus.loading));
     final servers = await _serverRepository.getAllServers();
 
     final List<PresentationField> filedErrors = _serverDetailsService.validateData(

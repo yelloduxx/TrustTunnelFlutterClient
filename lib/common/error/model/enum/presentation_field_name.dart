@@ -1,5 +1,6 @@
 enum PresentationFieldName {
   serverName,
+  profileName,
   ipAddress,
   domain,
   userName,

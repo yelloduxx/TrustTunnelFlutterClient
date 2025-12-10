@@ -8,6 +8,8 @@ import 'package:vpn/di/common/initialization_helper.dart';
 import 'package:vpn/di/dependency_scope.dart';
 import 'package:vpn/feature/app/app.dart';
 import 'package:vpn/feature/initialization/initialization_bloc.dart';
+import 'package:vpn/feature/routing/routing/bloc/routing_bloc.dart';
+import 'package:vpn/feature/server/servers/bloc/servers_bloc.dart';
 import 'package:vpn/feature/settings/excluded_routes/bloc/excluded_routes_bloc.dart';
 import 'package:vpn/feature/vpn/widgets/vpn_scope.dart';
 
@@ -27,11 +29,28 @@ void main() {
                 dependenciesFactory: result.dependenciesFactory,
                 blocFactory: result.blocFactory,
                 repositoryFactory: result.repositoryFactory,
-                child: BlocProvider<ExcludedRoutesBloc>(
-                  create: (context) => context.blocFactory.excludedRoutesBloc()
-                    ..add(
-                      const ExcludedRoutesEvent.init(),
+
+                child: MultiBlocProvider(
+                  providers: [
+                    BlocProvider<ServersBloc>(
+                      create: (context) => context.blocFactory.serversBloc()
+                        ..add(
+                          const ServersEvent.fetch(),
+                        ),
                     ),
+                    BlocProvider<RoutingBloc>(
+                      create: (context) => context.blocFactory.routingBloc()
+                        ..add(
+                          const RoutingEvent.fetch(),
+                        ),
+                    ),
+                    BlocProvider<ExcludedRoutesBloc>(
+                      create: (context) => context.blocFactory.excludedRoutesBloc()
+                        ..add(
+                          const ExcludedRoutesEvent.init(),
+                        ),
+                    ),
+                  ],
                   child: VpnScope(
                     vpnRepository: result.repositoryFactory.vpnRepository,
                     child: const App(),

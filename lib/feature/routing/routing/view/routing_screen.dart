@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vpn/common/extensions/context_extensions.dart';
 import 'package:vpn/feature/routing/routing/bloc/routing_bloc.dart';
 import 'package:vpn/feature/routing/routing/view/widget/routing_screen_view.dart';
 
-class RoutingScreen extends StatelessWidget {
+class RoutingScreen extends StatefulWidget {
   const RoutingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => BlocProvider<RoutingBloc>(
-    lazy: false,
-    create: (context) => context.blocFactory.routingBloc()
-      ..add(
-        const RoutingEvent.fetch(),
-      ),
-    child: const RoutingScreenView(),
-  );
+  State<RoutingScreen> createState() => _RoutingScreenState();
+}
+
+class _RoutingScreenState extends State<RoutingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.blocFactory.routingBloc().add(
+      const RoutingEvent.fetch(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => const RoutingScreenView();
 }

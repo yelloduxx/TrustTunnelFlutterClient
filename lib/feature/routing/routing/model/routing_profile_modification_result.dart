@@ -1,0 +1,4 @@
+enum RoutingProfileModificationResult {
+  saved,
+  deleted,
+}

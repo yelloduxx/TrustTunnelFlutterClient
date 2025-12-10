@@ -130,6 +130,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           readOnly: widget.readOnly,
           scrollController: _scrollController,
           cursorWidth: 1,
+          autofocus: widget.autofocus,
           cursorHeight: context.textTheme.bodyLarge?.fontSize,
           textAlignVertical: TextAlignVertical.center,
           inputFormatters: widget.inputFormatters,
@@ -139,7 +140,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
           maxLines: widget.maxLines,
           maxLength: _focusNode.hasFocus ? widget.maxLength : null,
           keyboardType: widget.keyboardType,
-          autofocus: true,
           validator: widget.validator,
           spellCheckConfiguration: spellCheckConfig,
           decoration: InputDecoration(
