@@ -6,8 +6,10 @@ set -x
 cd $(dirname $0)
 cd ../..
 
+
+#temporary removed [[ "$build_channel" == "rc" ]] || [[ "$build_channel" == "release" ]]
 build_channel="$1"
-if [[ "$build_channel" == "beta" ]] || [[ "$build_channel" == "rc" ]] || [[ "$build_channel" == "release" ]]; then
+if [[ "$build_channel" == "beta" ]]; then
     echo "The build channel is correct, the posting to slack is allowed"
 else
     echo "Unknown build channel: ${build_channel}. The post to slack is not allowed"
