@@ -112,6 +112,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final spellCheckConfig = widget.spellCheckService != null
         ? SpellCheckConfiguration(
             spellCheckService: widget.spellCheckService!,
+            spellCheckSuggestionsToolbarBuilder: (_, editableTextState) =>
+                AdaptiveTextSelectionToolbar.editableText(editableTextState: editableTextState),
             misspelledTextStyle: context.theme.extension<CustomMissSpelledTextTheme>()?.apply(
               context.textTheme.bodyLarge ?? DefaultTextStyle.of(context).style,
             ),
