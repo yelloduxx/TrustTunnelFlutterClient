@@ -144,6 +144,8 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
     final allowableRegex = RegExp(ValidationUtils.allowableStartRegex);
 
     for (var dnsServer in dnsServers) {
+      final rawServer = dnsServer;
+
       if (allowableRegex.hasMatch(dnsServer)) {
         dnsServer = dnsServer.replaceFirst(allowableRegex, '');
       }
@@ -172,7 +174,10 @@ class ServerDetailsServiceImpl implements ServerDetailsService {
           return _getFieldWrongValue(fieldName);
         }
 
-      if (!ValidationUtils.validateIpAddress(dnsServer, allowPort: false) &&
+      final isValidURI = Uri.tryParse(rawServer)?.hasAbsolutePath ?? false;
+      
+      if (!isValidURI &&
+          !ValidationUtils.validateIpAddress(dnsServer, allowPort: false) &&
           ValidationUtils.tryParseDomain(dnsServer) == null) {
         return _getFieldWrongValue(fieldName);
       }
