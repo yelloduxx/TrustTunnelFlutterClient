@@ -31,6 +31,14 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+
+def getSigningProp = { String name ->
+    def v = project.findProperty(name)
+    if (v != null) return v.toString()
+    v = localProperties.getProperty(name)
+    return v != null ? v.toString() : null
+}
+
 android {
     namespace = "com.adguard.trusttunnel"
     compileSdk = flutter.compileSdkVersion
@@ -58,10 +66,10 @@ android {
 
     signingConfigs {
         release {
-            keyAlias = project.getProperty("signingConfigKeyAlias")
-            keyPassword = project.getProperty("signingConfigKeyPassword")
-            storeFile = rootProject.file(project.getProperty("signingConfigKeyStorePath"))
-            storePassword = project.getProperty("signingConfigKeyStorePassword")
+            keyAlias = getSigningProp("signingConfigKeyAlias")
+            keyPassword = getSigningProp("signingConfigKeyPassword")
+            storeFile = rootProject.file(getSigningProp("signingConfigKeyStorePath"))
+            storePassword = getSigningProp("signingConfigKeyStorePassword")
         }
     }
 

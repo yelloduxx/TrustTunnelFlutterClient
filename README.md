@@ -15,7 +15,7 @@
   · <a href="https://agrd.io/android_trusttunnel">Play Store</a>
 </p>
 
-**TrustTunnel Flutter Client** is a mobile VPN client for **Android and iOS**, built with Flutter.  
+**TrustTunnel Flutter Client** is a mobile VPN client for **Android and iOS**, built with Flutter.
 It provides a clean and focused graphical interface for connecting to **self-hosted TrustTunnel VPN servers**.
 
 The application acts as a thin, user-facing layer on top of the TrustTunnel VPN stack. It does not attempt to hide the underlying architecture or networking model. Instead, it exposes core concepts — servers, endpoints, credentials, and transport protocols — in a clear and predictable form suitable for both beginners and experienced users.
@@ -24,16 +24,16 @@ Whether you are setting up your first self-hosted VPN or operating your own infr
 
 ### Why TrustTunnel Flutter Client
 
-- **Cross-platform by design**  
+- **Cross-platform by design**
   Built with Flutter, the client provides a consistent experience on Android and iOS while integrating directly with system VPN APIs on each platform.
 
-- **Clean separation of concerns**  
+- **Clean separation of concerns**
   VPN functionality lives in a dedicated Flutter plugin with native bindings, while the application focuses on user experience and configuration. This architecture keeps the codebase understandable and easy to maintain.
 
-- **Self-hosted by default**  
+- **Self-hosted by default**
   No bundled servers, no shared exit nodes, and no third-party VPN providers. You connect only to servers you install and operate yourself.
 
-- **Transparent and controllable**  
+- **Transparent and controllable**
   The client exposes key concepts such as endpoints, credentials, protocols, and routing behavior instead of hiding them behind abstractions, giving you full visibility into how your VPN works.
 
 ## Table of Contents
@@ -62,7 +62,7 @@ Before working with the application, ensure that your environment is ready:
 - Android and/or iOS development tooling configured on your system
 - Basic build utilities, including `make`
 
-Flutter installation instructions are available in the official documentation:  
+Flutter installation instructions are available in the official documentation:
 https://docs.flutter.dev/get-started
 
 ### Building
@@ -74,32 +74,56 @@ To build and run the application follow this steps:
    git clone https://github.com/TrustTunnel/TrustTunnelFlutterClient.git
    cd TrustTunnelFlutterClient
    ```
+
 2. Use make to initialize project
    ```shell
    make init
    ```
-3. If you building iOS application, make sure that pods are installed
+
+3. If you building Android application, make sure that signing config provided
+
+   Run the following command once:
+   ```shell
+   make aux-setup-android-signing
+   ```
+
+   During keystore generation, keytool will interactively ask for certificate details, so feel free to set any values
+
+4. If you building iOS application, make sure that pods are installed
    ```shell
    cd ios
    pod install --repo-update
    ```
-4. After initialization, the application can be built or launched using standard Flutter tooling.
+    Also make sure that project uses correct signing configuration
+
+    To do so, configure signing in Xcode:
+     - Open the workspace: `ios/Runner.xcworkspace` via Xcode
+     - Select the Runner target
+     - Open the Signing & Capabilities tab
+     - Select your Apple Developer Team
+     - Enable “Automatically manage signing” (recommended),
+    or disable it and select the required certificate and provisioning profile manually
+
+5. After initialization, the application can be built or launched using standard Flutter tooling.
    ```shell
    flutter build
    ```
 
-This initialization step is required only once before the first run.
+This initialization step is required only once, before the first launch.
 
-TrustTunnel Flutter Client requires a **TrustTunnel VPN server**. The mobile app itself does not provide VPN functionality without a server.
-
-Before using the app, consider installing and configuring a TrustTunnel server. Instructions for server installation and configuration are available here:  
-https://github.com/TrustTunnel/TrustTunnel
+> [!NOTE]
+> TrustTunnel Flutter Client requires a TrustTunnel VPN server.
+> Before using the app, install and configure a TrustTunnel server by following the
+> <a href="https://github.com/TrustTunnel/TrustTunnel?tab=readme-ov-file#endpoint-setup">server setup instructions</a>.
 
 ## Usage
+
 ### Quick Start
 
-To start using VPN you need to connect to your TrustTunnel VPN server. To do so, <a href="https://github.com/TrustTunnel/TrustTunnel?tab=readme-ov-file#generate-client-config">generate a client configuration</a>. This file contains all necessary parameters to establish a secure connection with app. 
-For next step, you need this configuration, which looks like this:
+To use the VPN, connect the app to your TrustTunnel server.
+
+Export a <a href="https://github.com/TrustTunnel/TrustTunnel?tab=readme-ov-file#export-client-configuration">client configuration</a> from the server and use it to establish a secure connection.
+The configuration contains all required connection parameters and will be used in the next step:
 ```shell
 # This file was automatically generated by endpoint and could be used in vpn client.
 
@@ -136,6 +160,13 @@ upstream_fallback_protocol = ""
 anti_dpi = false
 ```
 
+> [!WARNING]
+> TrustTunnel Flutter Client **doesn't support** self-signed certificates **yet**.
+> If you want to use the TrustTunnel Flutter Client, you should have a valid
+> certificate issued by a publicly trusted Certificate Authority (CA) associated
+> with a registered domain for the IP address of the endpoint. Otherwise,
+> the TrustTunnel Flutter Client will be unable to connect to the endpoint.
+
 ### Server Configuration
 After generating the configuration on the server, open the **TrustTunnel Flutter Client** and navigate to the **Servers** section. From there, open the **Add Server / Edit Server** screen.
 
@@ -154,15 +185,10 @@ Protocol mapping in the app is straightforward:
 - `http2` corresponds to HTTP/2
 - `http3` corresponds to QUIC
 
-
->In version 1.0.0, custom certificates cannot be entered manually. 
->Certificate verification is performed using the system trust store.
->Read more:
-
 Once all fields are filled in, save the server. It will appear in the server list and be ready for connection.
 
 ### Routing Profiles
-Routing Profiles define **how network traffic is classified and routed** when a VPN connection is active.  
+Routing Profiles define **how network traffic is classified and routed** when a VPN connection is active.
 
 A routing profile is a named set of routing rules combined with a routing mode. Profiles are evaluated on the client side before traffic is forwarded, making routing behavior transparent and predictable.
 
@@ -177,28 +203,28 @@ The selected mode defines how the rules are interpreted. In VPN mode, rules act 
 
 Routing rules describe traffic destinations and each rule is evaluated independently and applied in a straightforward manner.
 
-After saving a routing profile, **make sure it is assigned to the desired server** in the server settings screen.  
+After saving a routing profile, **make sure it is assigned to the desired server** in the server settings screen.
 
 This approach allows the same server to be reused with different routing behaviors while keeping server configuration and routing logic clearly separated.
 
 
 
 ### Excluded Routes
-Excluded Routes provide a **low-level routing override** that applies independently of routing profiles.  
+Excluded Routes provide a **low-level routing override** that applies independently of routing profiles.
 This section is intended for explicitly excluding entire network ranges from being routed through the VPN tunnel.
 
-These routes are evaluated at the networking layer and take precedence over higher-level routing rules.  
+These routes are evaluated at the networking layer and take precedence over higher-level routing rules.
 Typical use cases include excluding local networks, private subnets, or system-reserved address ranges that must never be routed through a tunnel.
 
-The input format is intentionally minimal and strict. Only CIDR ranges are supported.  
+The input format is intentionally minimal and strict. Only CIDR ranges are supported.
 Each range must be entered on its own line to keep the configuration readable and easy to audit.
 
 
 ### Query Logs
-Query Logs provide **real-time visibility into VPN activity** directly from the client application.  
+Query Logs provide **real-time visibility into VPN activity** directly from the client application.
 This section presents a dynamically updating list of events produced by the VPN engine while the connection is active.
 
-Each log entry represents a single networking decision made by the VPN stack.  
+Each log entry represents a single networking decision made by the VPN stack.
 The log captures what happened to a connection, which transport protocol was used, where the traffic originated, and where it was routed.
 
 ## How TrustTunnel Works
@@ -223,8 +249,8 @@ This architecture keeps responsibilities well-defined, simplifies maintenance, a
 
 The application supports development and testing on Android and iOS platforms.
 
-However, **VPN functionality must be tested on physical devices**.  
+However, **VPN functionality must be tested on physical devices**.
 Emulators and simulators do not fully replicate system VPN behavior and may introduce false positives or platform-specific issues.
 
-For reliable results and correct VPN lifecycle handling, always validate functionality on real hardware.  
+For reliable results and correct VPN lifecycle handling, always validate functionality on real hardware.
 Connection state changes and errors displayed in the UI directly reflect real network and system conditions.
