@@ -3,10 +3,10 @@ description: "Mobile VPN client for Android and iOS, built with Flutter"
 
 publish_to: 'none'
 
-version: 1.0.1+3501
+version: 1.0.2+3501
 
 version_titles:
-  versionTitleReleaseNumber: 1
+  versionTitleReleaseNumber: 2
   versionTitleRcNumber: 0
   versionTitleBetaNumber: 0
   versionTitleNightlyNumber: 1
