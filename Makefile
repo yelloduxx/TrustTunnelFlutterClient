@@ -71,10 +71,10 @@ aux-setup-android-signing:
 	grep -vE '^[[:space:]]*signingConfigKey(Alias|Password|StorePath|StorePassword)[[:space:]]*=' android/local.properties > android/local.properties.tmp || true; \
 	mv android/local.properties.tmp android/local.properties; \
 	printf "%s\n" \
-		"signingConfigKeyAlias='trusttunnel'" \
-		"signingConfigKeyPassword='$$PASSWORD'" \
-		"signingConfigKeyStorePath=file('./trusttunnel.keystore')" \
-		"signingConfigKeyStorePassword='$$PASSWORD'" \
+		"signingConfigKeyAlias=trusttunnel" \
+		"signingConfigKeyPassword=$$PASSWORD" \
+		"signingConfigKeyStorePath=./trusttunnel.keystore" \
+		"signingConfigKeyStorePassword=$$PASSWORD" \
 		>> android/local.properties; \
 	echo "* Android signing setup done. *"
 
