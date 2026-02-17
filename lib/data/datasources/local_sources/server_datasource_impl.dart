@@ -37,6 +37,7 @@ class ServerDataSourceImpl implements ServerDataSource {
         password: request.password,
         vpnProtocolId: request.vpnProtocol.value,
         routingProfileId: request.routingProfileId,
+        subscriptionUrl: Value(request.subscriptionUrl),
       ),
     );
 
@@ -59,6 +60,7 @@ class ServerDataSourceImpl implements ServerDataSource {
       vpnProtocol: request.vpnProtocol,
       routingProfileId: request.routingProfileId,
       dnsServers: request.dnsServers,
+      subscriptionUrl: request.subscriptionUrl,
     );
   }
 
@@ -93,6 +95,8 @@ class ServerDataSourceImpl implements ServerDataSource {
             dnsServers: dnsByServer[e.id] ?? const <String>[],
             routingProfileId: e.routingProfileId,
             selected: e.selected,
+            subscriptionUrl: e.subscriptionUrl,
+            subscriptionUpdatedAt: e.subscriptionUpdatedAt,
           ),
         )
         .toList();
@@ -165,6 +169,42 @@ class ServerDataSourceImpl implements ServerDataSource {
       dnsServers: dnsServers.map((e) => e.data).toList(),
       routingProfileId: server.routingProfileId,
       selected: server.selected,
+      subscriptionUrl: server.subscriptionUrl,
+      subscriptionUpdatedAt: server.subscriptionUpdatedAt,
+    );
+  }
+
+  @override
+  Future<void> updateServerFromSubscription({
+    required int id,
+    required String ipAddress,
+    required String domain,
+    required String username,
+    required String password,
+    required int vpnProtocolId,
+    required List<String> dnsServers,
+  }) async {
+    final update = database.servers.update()..where((e) => e.id.equals(id));
+
+    await database.dnsServers.deleteWhere((e) => e.serverId.equals(id));
+    await database.dnsServers.insertAll(
+      dnsServers.map(
+        (s) => db.DnsServersCompanion.insert(
+          serverId: id,
+          data: s,
+        ),
+      ),
+    );
+
+    await update.write(
+      db.ServersCompanion(
+        ipAddress: Value(ipAddress),
+        domain: Value(domain),
+        login: Value(username),
+        password: Value(password),
+        vpnProtocolId: Value(vpnProtocolId),
+        subscriptionUpdatedAt: Value(DateTime.now().millisecondsSinceEpoch),
+      ),
     );
   }
 

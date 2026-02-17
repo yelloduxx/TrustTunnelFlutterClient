@@ -22,12 +22,13 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.inMemory(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) async {
       await m.createAll();
+      final now = DateTime.now().toIso8601String();
       if (await routingModes.count().getSingle() == 0) {
         await into(routingModes).insert(
           RoutingModesCompanion.insert(
@@ -110,6 +111,39 @@ class AppDatabase extends _$AppDatabase {
             ),
           ),
         );
+      }
+
+      if (await routingSyncSettings.count().getSingle() == 0) {
+        await into(routingSyncSettings).insert(
+          RoutingSyncSettingsCompanion.insert(
+            id: const Value(0),
+            enabled: const Value(true),
+            intervalMinutes: const Value(30),
+            updatedAt: now,
+          ),
+        );
+      }
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.createTable(managedRoutingSources);
+        await m.createTable(routingSyncSettings);
+
+        final count = await routingSyncSettings.count().getSingle();
+        if (count == 0) {
+          await into(routingSyncSettings).insert(
+            RoutingSyncSettingsCompanion.insert(
+              id: const Value(0),
+              enabled: const Value(true),
+              intervalMinutes: const Value(30),
+              updatedAt: DateTime.now().toIso8601String(),
+            ),
+          );
+        }
+      }
+      if (from < 3) {
+        await customStatement('ALTER TABLE servers ADD COLUMN subscription_url TEXT');
+        await customStatement('ALTER TABLE servers ADD COLUMN subscription_updated_at INTEGER');
       }
     },
   );

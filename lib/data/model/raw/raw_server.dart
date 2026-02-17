@@ -46,6 +46,12 @@ class RawServer {
   /// Whether this server is marked as the currently selected one.
   final bool selected;
 
+  /// Subscription URL for automatic config updates.
+  final String? subscriptionUrl;
+
+  /// When the subscription was last refreshed (unix ms).
+  final int? subscriptionUpdatedAt;
+
   /// {@macro raw_server}
   const RawServer({
     required this.id,
@@ -58,6 +64,8 @@ class RawServer {
     required this.dnsServers,
     required this.routingProfileId,
     this.selected = false,
+    this.subscriptionUrl,
+    this.subscriptionUpdatedAt,
   });
 
   @override
@@ -72,6 +80,8 @@ class RawServer {
     Object.hashAll(dnsServers),
     routingProfileId,
     selected,
+    subscriptionUrl,
+    subscriptionUpdatedAt,
   );
 
   @override
@@ -102,7 +112,9 @@ class RawServer {
         other.vpnProtocol == vpnProtocol &&
         listEquals(other.dnsServers, dnsServers) &&
         other.routingProfileId == routingProfileId &&
-        other.selected == selected;
+        other.selected == selected &&
+        other.subscriptionUrl == subscriptionUrl &&
+        other.subscriptionUpdatedAt == subscriptionUpdatedAt;
   }
 
   /// Creates a copy of this server with the given fields replaced.
@@ -119,6 +131,8 @@ class RawServer {
     List<String>? dnsServers,
     int? routingProfileId,
     bool? selected,
+    String? subscriptionUrl,
+    int? subscriptionUpdatedAt,
   }) => RawServer(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -130,5 +144,7 @@ class RawServer {
     dnsServers: dnsServers ?? this.dnsServers,
     routingProfileId: routingProfileId ?? this.routingProfileId,
     selected: selected ?? this.selected,
+    subscriptionUrl: subscriptionUrl ?? this.subscriptionUrl,
+    subscriptionUpdatedAt: subscriptionUpdatedAt ?? this.subscriptionUpdatedAt,
   );
 }

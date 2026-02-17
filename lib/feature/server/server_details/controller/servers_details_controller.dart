@@ -157,6 +157,7 @@ final class ServerDetailsController extends BaseStateController<ServerDetailsSta
             password: state.data.password,
             vpnProtocol: state.data.protocol,
             routingProfileId: state.data.routingProfileId,
+            subscriptionUrl: null,
           ),
         );
       } else {
@@ -170,6 +171,7 @@ final class ServerDetailsController extends BaseStateController<ServerDetailsSta
             password: state.data.password,
             vpnProtocol: state.data.protocol,
             routingProfileId: state.data.routingProfileId,
+            subscriptionUrl: null,
           ),
         );
       }

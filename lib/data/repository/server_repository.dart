@@ -16,6 +16,16 @@ abstract class ServerRepository {
   Future<void> setNewServer({required int id, required AddServerRequest request});
 
   Future<void> removeServer({required int serverId});
+
+  Future<void> updateServerFromSubscription({
+    required int id,
+    required String ipAddress,
+    required String domain,
+    required String username,
+    required String password,
+    required int vpnProtocolId,
+    required List<String> dnsServers,
+  });
 }
 
 class ServerRepositoryImpl implements ServerRepository {
@@ -48,6 +58,7 @@ class ServerRepositoryImpl implements ServerRepository {
       vpnProtocol: server.vpnProtocol,
       dnsServers: server.dnsServers,
       routingProfile: profile,
+      subscriptionUrl: server.subscriptionUrl,
     );
   }
 
@@ -70,6 +81,7 @@ class ServerRepositoryImpl implements ServerRepository {
             dnsServers: e.dnsServers,
             routingProfile: profilesMap[e.routingProfileId]!,
             selected: e.selected,
+            subscriptionUrl: e.subscriptionUrl,
           ),
         )
         .toList();
@@ -101,6 +113,26 @@ class ServerRepositoryImpl implements ServerRepository {
       dnsServers: server.dnsServers,
       routingProfile: profile,
       selected: server.selected,
+      subscriptionUrl: server.subscriptionUrl,
     );
   }
+
+  @override
+  Future<void> updateServerFromSubscription({
+    required int id,
+    required String ipAddress,
+    required String domain,
+    required String username,
+    required String password,
+    required int vpnProtocolId,
+    required List<String> dnsServers,
+  }) => _serverDataSource.updateServerFromSubscription(
+    id: id,
+    ipAddress: ipAddress,
+    domain: domain,
+    username: username,
+    password: password,
+    vpnProtocolId: vpnProtocolId,
+    dnsServers: dnsServers,
+  );
 }

@@ -50,4 +50,19 @@ abstract class ServerDataSource {
   /// DNS server list.
   /// {@endtemplate}
   Future<void> setNewServer({required int id, required AddServerRequest request});
+
+  /// Updates a server's connection parameters from a subscription refresh.
+  ///
+  /// Only updates connection-related fields (address, domain, credentials,
+  /// protocol) and the subscription timestamp. Does not touch routing profile,
+  /// name, or selected state.
+  Future<void> updateServerFromSubscription({
+    required int id,
+    required String ipAddress,
+    required String domain,
+    required String username,
+    required String password,
+    required int vpnProtocolId,
+    required List<String> dnsServers,
+  });
 }

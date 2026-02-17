@@ -33,4 +33,7 @@ typedef AddServerRequest = ({
 
   /// DNS upstream addresses associated with this server.
   List<String> dnsServers,
+
+  /// Subscription URL for automatic config updates (nullable).
+  String? subscriptionUrl,
 });
