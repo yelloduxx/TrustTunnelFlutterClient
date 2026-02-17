@@ -3,6 +3,7 @@ import 'package:trusttunnel/common/assets/asset_icons.dart';
 import 'package:trusttunnel/common/extensions/context_extensions.dart';
 import 'package:trusttunnel/common/localization/localization.dart';
 import 'package:trusttunnel/data/model/server.dart';
+import 'package:trusttunnel/feature/server/import/widgets/server_config_import_flow.dart';
 import 'package:trusttunnel/feature/server/server_details/widgets/server_details_popup.dart';
 import 'package:trusttunnel/feature/server/servers/widget/scope/servers_scope.dart';
 import 'package:trusttunnel/feature/server/servers/widget/scope/servers_scope_aspect.dart';
@@ -52,26 +53,44 @@ class _ServersScreenViewState extends State<ServersScreenView> {
             ? const ServersEmptyPlaceholder()
             : ListView.builder(
                 padding: const EdgeInsets.only(bottom: 80),
-                itemCount: _servers.length,
-                itemBuilder: (_, index) => Column(
-                  children: [
-                    ServersCard(
-                      server: _servers[index],
-                    ),
+                itemCount: _servers.length + 1,
+                itemBuilder: (_, index) {
+                  if (index == 0) {
+                    return const Padding(
+                      padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text(
+                            'Tip: tap server name to edit settings. '
+                            'Use Connect button to start VPN.',
+                          ),
+                        ),
+                      ),
+                    );
+                  }
 
-                    if (index != _servers.length - 1) const Divider(),
-                  ],
-                ),
+                  final serverIndex = index - 1;
+                  return Column(
+                    children: [
+                      ServersCard(
+                        server: _servers[serverIndex],
+                      ),
+                      if (serverIndex != _servers.length - 1) const Divider(),
+                    ],
+                  );
+                },
               ),
-        floatingActionButton: _servers.isEmpty
-            ? const SizedBox.shrink()
-            : Builder(
-                builder: (context) => CustomFloatingActionButton.extended(
-                  icon: AssetIcons.add,
-                  onPressed: () => _pushServerDetailsScreen(context),
-                  label: context.ln.addServer,
-                ),
-              ),
+        floatingActionButton: Builder(
+          builder: (context) => CustomFloatingActionButton.extended(
+            icon: AssetIcons.add,
+            onPressed: () => ServerConfigImportFlow.showImportOptions(
+              context,
+              onAddManually: () => _pushServerDetailsScreen(context),
+            ),
+            label: context.ln.addServer,
+          ),
+        ),
       ),
     ),
   );

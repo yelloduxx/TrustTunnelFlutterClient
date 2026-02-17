@@ -111,7 +111,7 @@ class _ServerDetailsFullScreenViewState extends State<ServerDetailsFullScreenVie
                 child: FilledButton(
                   onPressed: _hasChanges ? () => _submit(context) : null,
                   child: Text(
-                    _editing ? context.ln.save : context.ln.add,
+                    _editing ? 'Save server' : 'Create server',
                   ),
                 ),
               ),

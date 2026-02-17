@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:trusttunnel/data/datasources/routing_datasource.dart';
+import 'package:trusttunnel/data/model/managed_routing_source.dart';
 import 'package:trusttunnel/data/model/raw/add_routing_profile_request.dart';
 import 'package:trusttunnel/data/model/routing_mode.dart';
 import 'package:trusttunnel/data/model/routing_profile.dart';
@@ -21,6 +22,14 @@ abstract class RoutingRepository {
   Future<RoutingProfile?> getProfileById({required int id});
 
   Future<void> deleteProfile({required int id});
+
+  Future<ManagedRoutingSource?> getManagedSourceByProfileId({required int profileId});
+
+  Future<List<ManagedRoutingSource>> getManagedSources();
+
+  Future<void> upsertManagedSource({required ManagedRoutingSource source});
+
+  Future<void> deleteManagedSource({required int profileId});
 }
 
 class RoutingRepositoryImpl implements RoutingRepository {
@@ -67,4 +76,19 @@ class RoutingRepositoryImpl implements RoutingRepository {
 
   @override
   Future<void> deleteProfile({required int id}) => _routingDataSource.deleteProfile(id: id);
+
+  @override
+  Future<ManagedRoutingSource?> getManagedSourceByProfileId({required int profileId}) =>
+      _routingDataSource.getManagedSourceByProfileId(profileId: profileId);
+
+  @override
+  Future<List<ManagedRoutingSource>> getManagedSources() => _routingDataSource.getManagedSources();
+
+  @override
+  Future<void> upsertManagedSource({required ManagedRoutingSource source}) =>
+      _routingDataSource.upsertManagedSource(source: source);
+
+  @override
+  Future<void> deleteManagedSource({required int profileId}) =>
+      _routingDataSource.deleteManagedSource(profileId: profileId);
 }

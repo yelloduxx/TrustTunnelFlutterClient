@@ -1,4 +1,5 @@
 import 'package:trusttunnel/data/model/raw/add_routing_profile_request.dart';
+import 'package:trusttunnel/data/model/managed_routing_source.dart';
 import 'package:trusttunnel/data/model/routing_mode.dart';
 import 'package:trusttunnel/data/model/routing_profile.dart';
 
@@ -73,4 +74,12 @@ abstract class RoutingDataSource {
   /// other entities refer to this profile (e.g. servers bound to a profile).
   /// {@endtemplate}
   Future<void> deleteProfile({required int id});
+
+  Future<ManagedRoutingSource?> getManagedSourceByProfileId({required int profileId});
+
+  Future<List<ManagedRoutingSource>> getManagedSources();
+
+  Future<void> upsertManagedSource({required ManagedRoutingSource source});
+
+  Future<void> deleteManagedSource({required int profileId});
 }

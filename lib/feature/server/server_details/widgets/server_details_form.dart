@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:trusttunnel/common/error/model/enum/presentation_field_name.dart';
 import 'package:trusttunnel/common/error/model/presentation_field.dart';
+import 'package:trusttunnel/common/extensions/context_extensions.dart';
 import 'package:trusttunnel/common/localization/extensions/locale_enum_extension.dart';
 import 'package:trusttunnel/common/localization/localization.dart';
 import 'package:trusttunnel/common/utils/validation_utils.dart';
@@ -26,6 +27,7 @@ class _ServerDetailsFormState extends State<ServerDetailsForm> {
   late List<PresentationField> _fieldErrors;
   late List<RoutingProfile> _routingProfiles;
   late RoutingProfile _pickedRoutingProfile;
+  bool _obscurePassword = true;
 
   @override
   void initState() {
@@ -57,120 +59,164 @@ class _ServerDetailsFormState extends State<ServerDetailsForm> {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      spacing: 32,
-      children: [
-        CustomTextField(
-          value: _formData.serverName,
-          label: context.ln.serverName,
-          hint: context.ln.serverName,
-          onChanged: (serverName) => _onDataChanged(
-            context,
-            serverName: serverName,
-          ),
-          error: ValidationUtils.getErrorString(
-            context,
-            _fieldErrors,
-            PresentationFieldName.serverName,
-          ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFD8E2FF)),
+                borderRadius: BorderRadius.circular(12),
+                color: const Color(0xFFF3F7FF),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: const Text(
+                'Quick setup: fill Server, Login, then Save. '
+                'Network settings are prefilled and can usually stay as-is.',
+              ),
+            ),
+            const SizedBox(height: 20),
+            _sectionTitle(context, '1. Server'),
+            const SizedBox(height: 12),
+            CustomTextField(
+              value: _formData.serverName,
+              label: context.ln.serverName,
+              hint: 'Home VPN',
+              helper: 'Any friendly name, visible only in the app',
+              onChanged: (serverName) => _onDataChanged(
+                context,
+                serverName: serverName,
+              ),
+              error: ValidationUtils.getErrorString(
+                context,
+                _fieldErrors,
+                PresentationFieldName.serverName,
+              ),
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              value: _formData.ipAddress,
+              label: context.ln.enterIpAddressLabel,
+              hint: context.ln.enterIpAddressHint,
+              helper: 'Public IP of your VPN server',
+              onChanged: (ipAddress) => _onDataChanged(
+                context,
+                ipAddress: ipAddress,
+              ),
+              error: ValidationUtils.getErrorString(
+                context,
+                _fieldErrors,
+                PresentationFieldName.ipAddress,
+              ),
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              value: _formData.domain,
+              label: context.ln.enterDomainLabel,
+              hint: context.ln.enterDomainHint,
+              helper: 'Domain from TLS certificate, for example vpn.example.com',
+              onChanged: (domain) => _onDataChanged(
+                context,
+                domain: domain,
+              ),
+              error: ValidationUtils.getErrorString(
+                context,
+                _fieldErrors,
+                PresentationFieldName.domain,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _sectionTitle(context, '2. Login'),
+            const SizedBox(height: 12),
+            CustomTextField(
+              value: _formData.username,
+              label: context.ln.username,
+              hint: context.ln.enterUsername,
+              onChanged: (username) => _onDataChanged(
+                context,
+                username: username,
+              ),
+              error: ValidationUtils.getErrorString(
+                context,
+                _fieldErrors,
+                PresentationFieldName.userName,
+              ),
+            ),
+            const SizedBox(height: 16),
+            CustomTextField.customSuffixIcon(
+              value: _formData.password,
+              label: context.ln.password,
+              hint: context.ln.enterPassword,
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              ),
+              onChanged: (password) => _onDataChanged(
+                context,
+                password: password,
+              ),
+              error: ValidationUtils.getErrorString(
+                context,
+                _fieldErrors,
+                PresentationFieldName.password,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _sectionTitle(context, '3. Network settings'),
+            const SizedBox(height: 12),
+            CustomDropdownMenu<VpnProtocol>.expanded(
+              value: _formData.protocol,
+              values: VpnProtocol.values,
+              toText: (value) => value.localized(context),
+              labelText: context.ln.protocol,
+              onChanged: (protocol) => _onDataChanged(
+                context,
+                protocol: protocol,
+              ),
+            ),
+            const SizedBox(height: 16),
+            CustomDropdownMenu<RoutingProfile>.expanded(
+              value: _pickedRoutingProfile,
+              values: _routingProfiles,
+              toText: (value) => value.name,
+              labelText: context.ln.routingProfile,
+              onChanged: (profile) => _onDataChanged(
+                context,
+                routingProfileId: profile?.id,
+              ),
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              value: _formData.dnsServers.join('\n'),
+              hint: context.ln.enterDnsServerHint,
+              label: context.ln.enterDnsServerLabel,
+              helper: 'Default is already filled: 1.1.1.1 and 8.8.8.8',
+              minLines: 1,
+              maxLines: 4,
+              onChanged: (dns) => _onDataChanged(
+                context,
+                dnsServers: dns
+                    .split('\n')
+                    .map((v) => v.trim())
+                    .where((v) => v.isNotEmpty)
+                    .toList(),
+              ),
+              error: ValidationUtils.getErrorString(
+                context,
+                _fieldErrors,
+                PresentationFieldName.dnsServers,
+              ),
+            ),
+          ],
         ),
-        CustomTextField(
-          value: _formData.ipAddress,
-          label: context.ln.enterIpAddressLabel,
-          hint: context.ln.enterIpAddressHint,
-          onChanged: (ipAddress) => _onDataChanged(
-            context,
-            ipAddress: ipAddress,
-          ),
-          error: ValidationUtils.getErrorString(
-            context,
-            _fieldErrors,
-            PresentationFieldName.ipAddress,
-          ),
-        ),
-        CustomTextField(
-          value: _formData.domain,
-          label: context.ln.enterDomainLabel,
-          hint: context.ln.enterDomainHint,
-          onChanged: (domain) => _onDataChanged(
-            context,
-            domain: domain,
-          ),
-          error: ValidationUtils.getErrorString(
-            context,
-            _fieldErrors,
-            PresentationFieldName.domain,
-          ),
-        ),
-        CustomTextField(
-          value: _formData.username,
-          label: context.ln.username,
-          hint: context.ln.enterUsername,
-          onChanged: (username) => _onDataChanged(
-            context,
-            username: username,
-          ),
-          error: ValidationUtils.getErrorString(
-            context,
-            _fieldErrors,
-            PresentationFieldName.userName,
-          ),
-        ),
-        CustomTextField(
-          value: _formData.password,
-          label: context.ln.password,
-          hint: context.ln.enterPassword,
-          onChanged: (password) => _onDataChanged(
-            context,
-            password: password,
-          ),
-          error: ValidationUtils.getErrorString(
-            context,
-            _fieldErrors,
-            PresentationFieldName.password,
-          ),
-        ),
-        CustomDropdownMenu<VpnProtocol>.expanded(
-          value: _formData.protocol,
-          values: VpnProtocol.values,
-          toText: (value) => value.localized(context),
-          labelText: context.ln.protocol,
-          onChanged: (protocol) => _onDataChanged(
-            context,
-            protocol: protocol,
-          ),
-        ),
-        CustomDropdownMenu<RoutingProfile>.expanded(
-          value: _pickedRoutingProfile,
-          values: _routingProfiles,
-          toText: (value) => value.name,
-          labelText: context.ln.routingProfile,
-          onChanged: (profile) => _onDataChanged(
-            context,
-            routingProfileId: profile?.id,
-          ),
-        ),
-        CustomTextField(
-          value: _formData.dnsServers.join('\n'),
-          hint: context.ln.enterDnsServerHint,
-          label: context.ln.enterDnsServerLabel,
-          minLines: 1,
-          maxLines: 4,
-          onChanged: (dns) => _onDataChanged(
-            context,
-            dnsServers: dns.trim().split('\n'),
-          ),
-          error: ValidationUtils.getErrorString(
-            context,
-            _fieldErrors,
-            PresentationFieldName.dnsServers,
-          ),
-        ),
-      ],
-    ),
-  );
+      );
+
+  Widget _sectionTitle(BuildContext context, String text) => Text(
+        text,
+        style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+      );
 
   RoutingProfile _getSelectedRoutingProfile(List<RoutingProfile> availableRoutingProfiles, int routingProfileId) =>
       availableRoutingProfiles.firstWhereOrNull((profile) => profile.id == routingProfileId) ??

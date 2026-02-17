@@ -43,11 +43,14 @@ class _ServersCardState extends State<ServersCard> {
   @override
   Widget build(BuildContext context) {
     final vpnManagerState = _pickedServer?.id == widget.server.id ? _vpnStatus : VpnState.disconnected;
+    final subtitle = widget.server.domain.isNotEmpty
+        ? '${widget.server.ipAddress} • ${widget.server.domain}'
+        : widget.server.ipAddress;
 
     return CustomListTileSeparated(
       title: widget.server.name,
       titleStyle: context.textTheme.titleSmall,
-      subtitle: widget.server.ipAddress,
+      subtitle: subtitle,
       onTileTap: () => _pushServerDetailsScreen(
         context,
         server: widget.server,

@@ -1,3 +1,5 @@
+import 'package:trusttunnel/data/model/routing_sync_settings.dart';
+
 /// {@template settings_data_source}
 /// Persistence interface for application-level settings related to VPN.
 ///
@@ -17,4 +19,13 @@ abstract class SettingsDataSource {
   /// Loads the currently stored excluded routes list.
   /// {@endtemplate}
   Future<List<String>> getExcludedRoutes();
+
+  /// Loads global routing auto-sync settings.
+  Future<RoutingSyncSettings> getRoutingSyncSettings();
+
+  /// Updates global routing auto-sync settings.
+  Future<void> setRoutingSyncSettings({
+    required bool enabled,
+    required int intervalMinutes,
+  });
 }

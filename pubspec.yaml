@@ -37,6 +37,8 @@ dependencies:
   rxdart: 0.28.0
   package_info_plus: 9.0.0
   url_launcher: 6.3.2
+  app_links: 6.4.1
+  file_picker: 10.3.10
   drift: 2.30.0
   path_provider: 2.1.5
   punycoder: 0.2.2
@@ -45,6 +47,8 @@ dependencies:
   sqlite3_flutter_libs: 0.5.41
   html: 0.15.6
   flutter_native_splash: 2.4.7
+  protobuf: 4.2.0
+  crypto: 3.0.6
 
 dev_dependencies:
   flutter_test:

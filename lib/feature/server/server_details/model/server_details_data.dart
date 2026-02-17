@@ -79,7 +79,7 @@ class ServerDetailsData {
     this.password = '',
     this.protocol = VpnProtocol.http2,
     this.routingProfileId = RoutingProfileUtils.defaultRoutingProfileId,
-    this.dnsServers = const <String>[],
+    this.dnsServers = const <String>['1.1.1.1', '8.8.8.8'],
   });
 
   @override

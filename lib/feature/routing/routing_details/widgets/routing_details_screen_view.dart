@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:trusttunnel/common/extensions/context_extensions.dart';
 import 'package:trusttunnel/common/localization/extensions/locale_enum_extension.dart';
 import 'package:trusttunnel/common/localization/localization.dart';
+import 'package:trusttunnel/data/model/managed_routing_source.dart';
 import 'package:trusttunnel/data/model/routing_mode.dart';
 import 'package:trusttunnel/data/model/routing_profile.dart';
 import 'package:trusttunnel/data/model/vpn_state.dart';
@@ -38,6 +39,8 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
   late bool _loading;
   late String _name;
   late RoutingMode _mode;
+  ManagedRoutingSource? _managedSource;
+  int? _managedProfileId;
 
   @override
   void initState() {
@@ -60,6 +63,7 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
     _hasChanges = newData.hasChanges;
     _name = newData.name;
     _mode = newData.data.defaultMode;
+    _refreshManagedMeta(newData.id);
 
     _loading = RoutingDetailsScope.controllerOf(context, aspect: RoutingDetailsScopeAspect.loading).loading;
   }
@@ -102,6 +106,7 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (_managedSource != null) _managedBanner(context),
                     const Expanded(
                       child: RoutingDetailsForm(),
                     ),
@@ -115,6 +120,62 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
       ),
     ),
   );
+
+  Widget _managedBanner(BuildContext context) {
+    final source = _managedSource!;
+    final syncState = source.syncEnabled && !source.localOverride ? 'Auto-update enabled' : 'Auto-update disabled';
+    final blockInfo = source.unsupportedBlockRules > 0
+        ? 'Block rules skipped: ${source.unsupportedBlockRules}'
+        : 'No block rules in profile';
+    final sourceLabel = _formatManagedSourceLabel(source.sourceUrl);
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.colors.backgroundAdditional,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Managed HAPP profile',
+            style: context.textTheme.titleSmall,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            sourceLabel,
+            style: context.textTheme.bodySmall,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '$syncState. $blockInfo.',
+            style: context.textTheme.bodySmall,
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatManagedSourceLabel(String sourceUrl) {
+    final parsed = Uri.tryParse(sourceUrl);
+    if (parsed == null) {
+      return sourceUrl;
+    }
+
+    final scheme = parsed.scheme.toLowerCase();
+    if (scheme == 'happ' && parsed.host.toLowerCase() == 'routing' && parsed.pathSegments.isNotEmpty) {
+      final action = parsed.pathSegments.first.toLowerCase();
+      if (action == 'add' || action == 'onadd') {
+        return 'HAPP deep link snapshot ($action)';
+      }
+    }
+
+    return sourceUrl;
+  }
 
   void onUpdated(
     VpnController controller,
@@ -225,6 +286,7 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
 
     if (!_isEditing) {
       context.showInfoSnackBar(message: context.ln.profileCreatedSnackbar(_name));
+      _refreshManagedMeta(RoutingDetailsScope.controllerOf(context, listen: false).id);
 
       return;
     }
@@ -247,6 +309,7 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
       routingProfile,
       ExcludedRoutesScope.controllerOf(context, listen: false),
     );
+    _refreshManagedMeta(currentProfileState.id);
   }
 
   void _showNotSavedChangesWarning(BuildContext context) {
@@ -261,5 +324,30 @@ class _RoutingDetailsScreenViewState extends State<RoutingDetailsScreenView> {
         ),
       ),
     );
+  }
+
+  Future<void> _refreshManagedMeta(int? profileId) async {
+    if (_managedProfileId == profileId && profileId != null) {
+      return;
+    }
+
+    _managedProfileId = profileId;
+    if (profileId == null) {
+      if (_managedSource != null && mounted) {
+        setState(() {
+          _managedSource = null;
+        });
+      }
+      return;
+    }
+
+    final source = await context.repositoryFactory.routingRepository.getManagedSourceByProfileId(profileId: profileId);
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _managedSource = source;
+    });
   }
 }

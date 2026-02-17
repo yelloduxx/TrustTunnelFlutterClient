@@ -107,7 +107,7 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
           ),
         )).id;
       } else {
-        Future.wait([
+        await Future.wait([
           _repository.setDefaultRoutingMode(id: profileId, mode: state.data.defaultMode),
 
           _repository.setRules(
@@ -122,6 +122,8 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
             rules: state.data.vpnRules,
           ),
         ]);
+
+        await _markManagedProfileAsLocallyModified(profileId);
       }
 
       onSaved();
@@ -134,6 +136,11 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
     VoidCallback onCleared,
   ) => handle(
     () async {
+      final profileId = _profileId;
+      if (profileId == null) {
+        return;
+      }
+
       setState(
         RoutingDetailsState.loading(
           data: state.data,
@@ -145,16 +152,17 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
 
       await Future.wait([
         _repository.setRules(
-          id: _profileId!,
+          id: profileId,
           mode: RoutingMode.vpn,
           rules: [],
         ),
         _repository.setRules(
-          id: _profileId,
+          id: profileId,
           mode: RoutingMode.bypass,
           rules: [],
         ),
       ]);
+      await _markManagedProfileAsLocallyModified(profileId);
 
       setState(
         RoutingDetailsState.idle(
@@ -179,6 +187,11 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
 
   void changeDefaultRoutingMode(RoutingMode mode, VoidCallback onChanged) => handle(
     () async {
+      final profileId = _profileId;
+      if (profileId == null) {
+        return;
+      }
+
       setState(
         RoutingDetailsState.loading(
           data: state.data,
@@ -188,7 +201,8 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
         ),
       );
 
-      await _repository.setDefaultRoutingMode(id: _profileId!, mode: mode);
+      await _repository.setDefaultRoutingMode(id: profileId, mode: mode);
+      await _markManagedProfileAsLocallyModified(profileId);
 
       setState(
         RoutingDetailsState.idle(
@@ -229,4 +243,19 @@ final class RoutingDetailsController extends BaseStateController<RoutingDetailsS
       name: state.name,
     ),
   );
+
+  Future<void> _markManagedProfileAsLocallyModified(int profileId) async {
+    final source = await _repository.getManagedSourceByProfileId(profileId: profileId);
+    if (source == null || (source.localOverride && !source.syncEnabled)) {
+      return;
+    }
+
+    await _repository.upsertManagedSource(
+      source: source.copyWith(
+        localOverride: true,
+        syncEnabled: false,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
 }

@@ -6,3 +6,5 @@ import 'excluded_routes_table.drift';
 import 'servers_table.drift';
 import 'dns_servers_table.drift';
 import 'profile_rules_table.drift';
+import 'managed_routing_sources_table.drift';
+import 'routing_sync_settings_table.drift';

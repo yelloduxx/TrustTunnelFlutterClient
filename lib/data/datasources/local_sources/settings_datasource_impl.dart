@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:trusttunnel/data/database/app_database.dart' as db;
 import 'package:trusttunnel/data/datasources/settings_datasource.dart';
+import 'package:trusttunnel/data/model/routing_sync_settings.dart';
 
 /// {@template settings_data_source_impl}
 /// Drift-backed implementation of [SettingsDataSource].
@@ -35,6 +36,49 @@ class SettingsDataSourceImpl implements SettingsDataSource {
         (e) => db.ExcludedRoutesCompanion.insert(
           value: e,
         ),
+      ),
+    );
+  }
+
+  @override
+  Future<RoutingSyncSettings> getRoutingSyncSettings() async {
+    final row = await (database.select(database.routingSyncSettings)..where((tbl) => tbl.id.equals(0))).getSingleOrNull();
+    if (row == null) {
+      final now = DateTime.now().toIso8601String();
+      await database.into(database.routingSyncSettings).insert(
+        db.RoutingSyncSettingsCompanion.insert(
+          id: const Value(0),
+          enabled: const Value(true),
+          intervalMinutes: const Value(30),
+          updatedAt: now,
+        ),
+      );
+
+      return RoutingSyncSettings(
+        enabled: true,
+        intervalMinutes: 30,
+        updatedAt: DateTime.parse(now),
+      );
+    }
+
+    return RoutingSyncSettings(
+      enabled: row.enabled,
+      intervalMinutes: row.intervalMinutes,
+      updatedAt: DateTime.tryParse(row.updatedAt) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    );
+  }
+
+  @override
+  Future<void> setRoutingSyncSettings({
+    required bool enabled,
+    required int intervalMinutes,
+  }) async {
+    await database.into(database.routingSyncSettings).insertOnConflictUpdate(
+      db.RoutingSyncSettingsCompanion.insert(
+        id: const Value(0),
+        enabled: Value(enabled),
+        intervalMinutes: Value(intervalMinutes),
+        updatedAt: DateTime.now().toIso8601String(),
       ),
     );
   }

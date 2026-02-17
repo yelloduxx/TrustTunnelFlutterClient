@@ -1,30 +1,36 @@
 {
   "@@locale": "en",
-  "appTitle": "Vpn",
+  "appTitle": "TrustTunnel VPN",
   "servers": "Servers",
   "routing": "Routing",
   "settings": "Settings",
-  "addServer": "Add server",
+  "addServer": "Add VPN server",
+  "importConfig": "Import config",
+  "importConfigFromFile": "Import from file",
+  "importConfigFromLink": "Import from link",
+  "importConfigLinkHint": "Paste tt:// link",
+  "importConfigInvalidFormat": "Config format is invalid. Please use a valid .toml or tt:// link.",
+  "importConfigFailed": "Couldn't import config. Please try again.",
   "add": "Add",
   "editServer": "Edit server",
-  "serverName": "Server name",
+  "serverName": "Server nickname",
   "username": "Username",
   "enterUsername": "Enter username",
   "password": "Password",
   "enterPassword": "Enter password",
   "protocol": "Protocol",
   "routingProfile": "Routing profile",
-  "enterDnsServerLabel": "DNS server addresses, one per line",
-  "enterDnsServerHint": "IP address, tls://, https://, quic://, or h3://",
-  "enterIpAddressLabel": "IP address of the running VPN server",
-  "enterIpAddressHint": "IPv4 or IPv6",
-  "enterDomainLabel": "Domain name from server certificate",
-  "enterDomainHint": "Domain or IP address",
+  "enterDnsServerLabel": "DNS servers (one per line)",
+  "enterDnsServerHint": "Example: 1.1.1.1",
+  "enterIpAddressLabel": "Server IP address",
+  "enterIpAddressHint": "Example: 77.238.253.107",
+  "enterDomainLabel": "Secure domain (TLS certificate)",
+  "enterDomainHint": "Example: vds.bronos.ru",
   "defaultProfile": "Default profile",
-  "serversEmptyTitle": "Create your first server",
-  "serversEmptyDescription": "Create a server for secure and anonymous data transfer",
-  "create": "Create",
-  "save": "Save",
+  "serversEmptyTitle": "Set up VPN in 1 minute",
+  "serversEmptyDescription": "Tap \"Create server\" and fill in address + login from your admin panel.",
+  "create": "Create server",
+  "save": "Save changes",
   "unknownError": "Unknown Error",
   "nameAlreadyExistError": "This name is already used",
   "ipAddressWrongFieldError": "Use the format x.x.x.x or x:x:x:x:x:x:x:x",
@@ -102,6 +108,14 @@
       }
     }
   },
+  "serverImportedSnackbar": "Server \"{serverName}\" imported",
+  "@serverImportedSnackbar": {
+    "placeholders": {
+      "serverName": {
+        "type": "String"
+      }
+    }
+  },
   "profileCreatedSnackbar": "Profile <b>{profileName}</b> created",
   "@profileCreatedSnackbar": {
     "placeholders": {
@@ -111,6 +125,9 @@
     }
   },
   "allRulesDeleted": "All rules deleted",
+  "importConfigFromClipboard": "Import from clipboard",
+  "importConfigClipboardEmpty": "Clipboard is empty or has no valid link",
+  "addServerManually": "Enter manually",
   "quic": "QUIC",
   "http2": "HTTP/2",
   "bypass": "Bypass",

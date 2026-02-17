@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:trusttunnel/data/database/app_database.dart' as db;
 import 'package:trusttunnel/data/datasources/routing_datasource.dart';
+import 'package:trusttunnel/data/model/managed_routing_source.dart';
 import 'package:trusttunnel/data/model/raw/add_routing_profile_request.dart';
 import 'package:trusttunnel/data/model/routing_mode.dart';
 import 'package:trusttunnel/data/model/routing_profile.dart';
@@ -210,6 +211,54 @@ class RoutingDataSourceImpl implements RoutingDataSource {
     await deleteStatement.go();
   }
 
+  @override
+  Future<ManagedRoutingSource?> getManagedSourceByProfileId({required int profileId}) async {
+    final row =
+        await (database.select(database.managedRoutingSources)..where((tbl) => tbl.profileId.equals(profileId)))
+            .getSingleOrNull();
+
+    if (row == null) {
+      return null;
+    }
+
+    return _toManagedSource(row);
+  }
+
+  @override
+  Future<List<ManagedRoutingSource>> getManagedSources() async {
+    final rows = await database.select(database.managedRoutingSources).get();
+
+    return rows.map(_toManagedSource).toList();
+  }
+
+  @override
+  Future<void> upsertManagedSource({required ManagedRoutingSource source}) => database
+      .into(database.managedRoutingSources)
+      .insertOnConflictUpdate(
+        db.ManagedRoutingSourcesCompanion.insert(
+          profileId: Value(source.profileId),
+          sourceUrl: source.sourceUrl,
+          geositeUrl: source.geositeUrl,
+          geoipUrl: source.geoipUrl,
+          routeOrder: source.routeOrder.join(','),
+          globalMode: source.globalMode.value,
+          syncEnabled: Value(source.syncEnabled),
+          localOverride: Value(source.localOverride),
+          contentHash: Value(source.contentHash),
+          eTag: Value(source.eTag),
+          unsupportedBlockRules: Value(source.unsupportedBlockRules),
+          lastSuccessAt: Value(source.lastSuccessAt?.toIso8601String()),
+          lastErrorAt: Value(source.lastErrorAt?.toIso8601String()),
+          lastErrorMessage: Value(source.lastErrorMessage),
+          createdAt: source.createdAt.toIso8601String(),
+          updatedAt: source.updatedAt.toIso8601String(),
+        ),
+      );
+
+  @override
+  Future<void> deleteManagedSource({required int profileId}) =>
+      database.managedRoutingSources.deleteWhere((tbl) => tbl.profileId.equals(profileId));
+
   /// Loads all rule rows for the given profile ids.
   ///
   /// Rules are returned in insertion order (ascending by row id).
@@ -226,4 +275,27 @@ class RoutingDataSourceImpl implements RoutingDataSource {
 
     return select.get();
   }
+
+  ManagedRoutingSource _toManagedSource(db.ManagedRoutingSource row) => ManagedRoutingSource(
+    profileId: row.profileId,
+    sourceUrl: row.sourceUrl,
+    geositeUrl: row.geositeUrl,
+    geoipUrl: row.geoipUrl,
+    routeOrder: row.routeOrder
+        .split(',')
+        .map((item) => item.trim())
+        .where((item) => item.isNotEmpty)
+        .toList(),
+    globalMode: ManagedRoutingGlobalMode.parse(row.globalMode),
+    syncEnabled: row.syncEnabled,
+    localOverride: row.localOverride,
+    contentHash: row.contentHash,
+    eTag: row.eTag,
+    unsupportedBlockRules: row.unsupportedBlockRules,
+    lastSuccessAt: row.lastSuccessAt == null ? null : DateTime.tryParse(row.lastSuccessAt!),
+    lastErrorAt: row.lastErrorAt == null ? null : DateTime.tryParse(row.lastErrorAt!),
+    lastErrorMessage: row.lastErrorMessage,
+    createdAt: DateTime.tryParse(row.createdAt) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt: DateTime.tryParse(row.updatedAt) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  );
 }

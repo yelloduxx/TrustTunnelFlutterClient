@@ -4,6 +4,7 @@ import 'package:trusttunnel/common/localization/localization.dart';
 import 'package:trusttunnel/common/utils/url_utils.dart';
 import 'package:trusttunnel/feature/settings/excluded_routes/widgets/excluded_routes_screen.dart';
 import 'package:trusttunnel/feature/settings/query_log/widgets/query_log_screen.dart';
+import 'package:trusttunnel/feature/settings/routing_sync/widgets/routing_sync_settings_screen.dart';
 import 'package:trusttunnel/feature/settings/settings_about/about_screen.dart';
 import 'package:trusttunnel/widgets/common/custom_arrow_list_tile.dart';
 import 'package:trusttunnel/widgets/custom_app_bar.dart';
@@ -31,6 +32,11 @@ class SettingsScreen extends StatelessWidget {
           ),
           const Divider(),
           CustomArrowListTile(
+            title: 'Routing sync',
+            onTap: () => _pushRoutingSyncScreen(context),
+          ),
+          const Divider(),
+          CustomArrowListTile(
             title: context.ln.followUsOnGithub,
             onTap: _openGithubOrganization,
           ),
@@ -50,6 +56,10 @@ class SettingsScreen extends StatelessWidget {
 
   void _pushExcludedRoutesScreen(BuildContext context) => context.push(
     const ExcludedRoutesScreen(),
+  );
+
+  void _pushRoutingSyncScreen(BuildContext context) => context.push(
+    const RoutingSyncSettingsScreen(),
   );
 
   void _openGithubOrganization() => UrlUtils.openWebPage(UrlUtils.githubTrustTunnelTeam);

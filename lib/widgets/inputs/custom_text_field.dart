@@ -12,6 +12,7 @@ class CustomTextField extends StatefulWidget {
   final String? error;
   final bool enabled;
   final bool readOnly;
+  final bool obscureText;
   final String? label;
   final int? maxLines;
   final int? minLines;
@@ -34,6 +35,7 @@ class CustomTextField extends StatefulWidget {
     this.error,
     this.enabled = true,
     this.readOnly = false,
+    this.obscureText = false,
     this.showClearButton = true,
     this.label,
     this.maxLines = 1,
@@ -61,6 +63,7 @@ class CustomTextField extends StatefulWidget {
     this.error,
     this.enabled = true,
     this.readOnly = false,
+    this.obscureText = false,
     this.label,
     this.maxLines = 1,
     this.minLines,
@@ -143,6 +146,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           maxLength: _focusNode.hasFocus ? widget.maxLength : null,
           keyboardType: widget.keyboardType,
           validator: widget.validator,
+          obscureText: widget.obscureText,
           spellCheckConfiguration: spellCheckConfig,
           decoration: InputDecoration(
             hintText: widget.hint,
