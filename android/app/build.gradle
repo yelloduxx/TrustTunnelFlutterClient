@@ -39,6 +39,17 @@ def getSigningProp = { String name ->
     return v != null ? v.toString() : null
 }
 
+def signingKeyAlias = getSigningProp("signingConfigKeyAlias")
+def signingKeyPassword = getSigningProp("signingConfigKeyPassword")
+def signingStorePath = getSigningProp("signingConfigKeyStorePath")
+def signingStorePassword = getSigningProp("signingConfigKeyStorePassword")
+def hasReleaseSigningConfig = (
+    signingKeyAlias != null &&
+    signingKeyPassword != null &&
+    signingStorePath != null &&
+    signingStorePassword != null
+)
+
 android {
     namespace = "com.adguard.trusttunnel"
     compileSdk = flutter.compileSdkVersion
@@ -66,16 +77,18 @@ android {
 
     signingConfigs {
         release {
-            keyAlias = getSigningProp("signingConfigKeyAlias")
-            keyPassword = getSigningProp("signingConfigKeyPassword")
-            storeFile = rootProject.file(getSigningProp("signingConfigKeyStorePath"))
-            storePassword = getSigningProp("signingConfigKeyStorePassword")
+            if (hasReleaseSigningConfig) {
+                keyAlias = signingKeyAlias
+                keyPassword = signingKeyPassword
+                storeFile = rootProject.file(signingStorePath)
+                storePassword = signingStorePassword
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig hasReleaseSigningConfig ? signingConfigs.release : signingConfigs.debug
         }
     }
 }
